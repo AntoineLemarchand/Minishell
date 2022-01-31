@@ -4,9 +4,8 @@ define compiling
 endef
 
 define building
-	@printf '%s\n' "-> Building $1"
+	@printf '%s\n' "Building $1"
 	@make -sC $1 > /dev/null
-	@echo "√"
 endef
 
 define finishing
@@ -16,19 +15,17 @@ endef
 
 define cleaning
 	@echo -n Cleaning
-	@printf '\n\t%s\n' $1
+	@printf ' %s\n' $1
 	@make $2 -sC $1 > /dev/null
 endef
 
 define removing
-	@printf ' %s ' $1
+	@printf ' %s\n' $1
 	@$(RM) $1 > /dev/null
 endef
 
 SRCS			= $(addprefix srcs/, \
 					main.c \
-					echo.c \
-					executils.c \
 					)
 
 OBJS			= $(SRCS:.c=.o)
@@ -43,7 +40,7 @@ CFLAGS			= -Wall -Wextra -Werror -g
 
 CPPFLAGS		= -Iincludes
 
-LIBS			= libft/libft.a
+LIBS			= -lreadline libft/libft.a
 
 %.o : %.c
 				$(call compiling,$<,$(<:.c=.o),0)
@@ -55,8 +52,8 @@ ${NAME}:		$(OBJS)
 all:			$(NAME)
 
 clean:	
-				@echo -n Removing
 				$(call cleaning,libft,fclean)
+				@echo -n Removing
 				$(call removing,$(OBJS))
 
 fclean:			clean
