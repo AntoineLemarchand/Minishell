@@ -6,7 +6,7 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:09:43 by imarushe          #+#    #+#             */
-/*   Updated: 2022/01/31 13:05:20 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/01/31 16:44:18 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,15 +22,15 @@ void	ft_merde(void)
 int	main(int ac, char **av, char **env)
 {
 	char	*input;
+
 	(void)ac;
 	(void)av;
-	(void)env; // to secure
-
+	(void)env;
 	while (1)
 	{
-		input =	readline("MRDSHLL%>");
+		input = readline("MRDSHLL%>");
 		add_history(input);
-		printf("%s\n",input);
+		printf("%s\n", input);
 	}
 	return (0);
 }
