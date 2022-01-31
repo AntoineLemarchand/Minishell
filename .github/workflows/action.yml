@@ -11,7 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     name: build
     steps:
-    - run: make
+    - run: | 
+        make
   norminette:
     runs-on: ubuntu-latest
     name: norminette
