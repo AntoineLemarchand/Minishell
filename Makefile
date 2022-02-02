@@ -25,6 +25,10 @@ define removing
 endef
 
 SRCS			= $(addprefix srcs/, \
+				  	executils.c \
+				  	parsing.c \
+					pipe.c \
+					lexer.c \
 					main.c \
 					)
 
