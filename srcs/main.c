@@ -6,7 +6,7 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:09:43 by imarushe          #+#    #+#             */
-/*   Updated: 2022/02/02 18:17:20 by imarushe         ###   ########.fr       */
+/*   Updated: 2022/02/02 18:21:19 by imarushe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ static char	*ft_env_var(char *var, char **env)
 	while (env[i])
 	{
 		if (!ft_strncmp(env[i], var, ft_strlen(var)))
-			return (ft_strdup(&env[i][4]));
+			return (ft_strdup(&env[i][ft_strlen(var)]));
 		i++;
 	}
 	return (NULL);
