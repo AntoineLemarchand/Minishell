@@ -6,7 +6,7 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:09:43 by imarushe          #+#    #+#             */
-/*   Updated: 2022/02/03 11:54:56 by imarushe         ###   ########.fr       */
+/*   Updated: 2022/02/03 16:02:49 by imarushe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@ static bool	ft_isinn_cmd(char *cmd)
 		return (true);
 	else if (!ft_strncmp("echo", cmd, ft_strlen(cmd)))
 		return (true);
-	else if (!ft_strncmp("env", cmd, ft_strlen(cmd)))
-		return (true);
+//	else if (!ft_strncmp("env", cmd, ft_strlen(cmd)))
+//		return (true);
 	else if (!ft_strncmp("exit", cmd, ft_strlen(cmd)))
 		return (true);
 	else if (!ft_strncmp("export", cmd, ft_strlen(cmd)))
@@ -32,6 +32,7 @@ static bool	ft_isinn_cmd(char *cmd)
 		return (false);
 }
 
+/*
 static char	*ft_env_var(char *var, char **env)
 {
 	int		i;
@@ -45,42 +46,53 @@ static char	*ft_env_var(char *var, char **env)
 	}
 	return (NULL);
 }
+*/
 
 static char	*ft_pwd(void)
 {
 	char	*cwd;
 
-	cwd = (char *)malloc(sizeof(char) * PATH_MAX + 5);//strlen("PWD=") + 1
+	cwd = (char *)malloc(sizeof(char) * (PATH_MAX + 1));
 	if (!cwd)
 		return (NULL);
-	ft_strlcat(cwd, "PWD=", (ft_strlen(cwd) + 4));
-	if (!getcwd(&cwd[4], PATH_MAX)) 
+	if (!getcwd(cwd, PATH_MAX)) 
 		printf("MRD! getcwd\n");
 	return (cwd);
 }
 
 static void	ft_inn_cd(char *path, char **env)
 {
-	char	*oldpwd = NULL;
-	char	*pwd = NULL;
-	char	*pwd_ptr = NULL;
+//	char	*oldpwd = NULL;
+//	char	*pwd = NULL;
+//	char	*pwd_ptr = NULL;
+	(void)env;
 
 	if (!path)
 		return;
 	if (!chdir(path))
-	{//SGFT inside this loop
-		pwd = ft_strrchr(ft_env_var("PWD=", env), '=') + 1;
-		oldpwd = ft_strrchr(ft_env_var("OLDPWD=", env), '=') + 1;
+	{
+		// Implement part of inner env (var that doesnt changed, like PWD)
+		/*pwd = ft_strdup(ft_env_var("PWD=", env));
+		printf("var %s, pwd %s\n", ft_env_var("PWD=", env), pwd);
+
+		oldpwd = ft_strdup(ft_env_var("OLDPWD=", env));
+		printf("var %s, old %s\n", ft_env_var("OLDPWD=", env), oldpwd);
 		if (oldpwd && pwd) 
-			ft_strlcpy(oldpwd, pwd, ft_strlen(pwd));
+		{
+			printf("1\n");
+			oldpwd = ft_strdup(pwd);
+			//ft_strlcpy(oldpwd, pwd, (ft_strlen(pwd) + 1));
+			printf("2\n");
+
+		}
 		if (pwd) 
 		{
-			pwd = &pwd[-4];//-ft_strlen("PWD=")
+//			pwd = &pwd[-4];//-ft_strlen("PWD=")
 			pwd_ptr = ft_pwd();
 			ft_strlcpy(pwd, pwd_ptr, ft_strlen(pwd_ptr));
 			free(pwd_ptr);
 			pwd_ptr = NULL;
-		}
+		}*/
 	}
 	else
 		printf("Mrd! chdir\n");
@@ -92,14 +104,14 @@ static void	ft_runinn_cmd(char **cmd, char **env)
 		ft_inn_cd(cmd[1], env);
 	else if (!ft_strncmp("echo", cmd[0], ft_strlen(cmd[0])))
 		printf("inn echo\n");
-	else if (!ft_strncmp("env", cmd[0], ft_strlen(cmd[0])))
-		printf("inn env\n");
+//	else if (!ft_strncmp("env", cmd[0], ft_strlen(cmd[0])))
+//		printf("inn env\n");
 	else if (!ft_strncmp("exit", cmd[0], ft_strlen(cmd[0])))
 		printf("inn exit\n");
 	else if (!ft_strncmp("export", cmd[0], ft_strlen(cmd[0])))
 		printf("inn export\n");
 	else if (!ft_strncmp("pwd", cmd[0], ft_strlen(cmd[0])))
-		printf("MRD_PWD=%s\n", ft_env_var("PWD=", env));
+		printf("MRD_PWD=%s\n", ft_pwd());
 	else if (!ft_strncmp("unset", cmd[0], ft_strlen(cmd[0])))
 		printf("inn unset\n");
 }
