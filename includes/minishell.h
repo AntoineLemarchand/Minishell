@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/31 11:48:25 by alemarch          #+#    #+#             */
-/*   Updated: 2022/02/02 11:29:26 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/02/03 18:54:09 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,15 +20,21 @@
 # include <sys/wait.h>
 # include "libft.h"
 
+typedef struct s_command {
+	char	*cmd;
+	char	*infile;
+	char	*outfile;
+}	t_command;
+
 // executils.c
-char	*ft_joincommand(char *s1, char *s2);
-void	ft_freesplit(char **split);
+char		*ft_joincommand(char *s1, char *s2);
+void		ft_freesplit(char **split);
 // lexer.c
-char	**lexer(char *inputline, char **env);
+t_command	**ft_lexer(char *inputline);
 // pipe.c
-int		ft_exec(char *action, char **env);
-int		ft_fork(int fd, char *action, char **env);
-char	*ft_getpath(char *command, char **env);
+int			ft_exec(char *action, char **env);
+int			ft_fork(int fd, char *action, char **env);
+char		*ft_getpath(char *command, char **env);
 // echo.c
-void	ft_echo(int ac, char **av);
+void		ft_echo(int ac, char **av);
 #endif

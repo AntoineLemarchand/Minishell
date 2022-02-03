@@ -6,7 +6,7 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:09:43 by imarushe          #+#    #+#             */
-/*   Updated: 2022/02/02 11:31:24 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/02/03 18:48:06 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,9 @@ void	ft_merde(void)
 
 int	main(int ac, char **av, char **env)
 {
-	char	*input;
-	char	**tokens;
-	int		i;
+	char		*input;
+	t_command	**tokens;
+	int			i;
 
 	(void)ac;
 	(void)av;
@@ -33,10 +33,18 @@ int	main(int ac, char **av, char **env)
 		{
 			input = readline("MRDSHLL%> ");
 			add_history(input);
-			tokens = lexer(input, env);
+			tokens = ft_lexer(input);
 			i = 0;
 			while (tokens[i])
-				printf("%s\n", tokens[i++]);
+			{
+				printf("CMD:\n");
+				printf("[\n");
+				printf("\tIN:  %s\n", tokens[i]->infile);
+				printf("\tCMD: %s\n", tokens[i]->cmd);
+				printf("\tOUT: %s\n", tokens[i]->outfile);
+				printf("]\n");
+				i++;
+			}
 		}
 	}
 	return (0);
