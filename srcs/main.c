@@ -6,7 +6,7 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:09:43 by imarushe          #+#    #+#             */
-/*   Updated: 2022/02/02 18:21:19 by imarushe         ###   ########.fr       */
+/*   Updated: 2022/02/03 11:54:56 by imarushe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,10 +46,50 @@ static char	*ft_env_var(char *var, char **env)
 	return (NULL);
 }
 
+static char	*ft_pwd(void)
+{
+	char	*cwd;
+
+	cwd = (char *)malloc(sizeof(char) * PATH_MAX + 5);//strlen("PWD=") + 1
+	if (!cwd)
+		return (NULL);
+	ft_strlcat(cwd, "PWD=", (ft_strlen(cwd) + 4));
+	if (!getcwd(&cwd[4], PATH_MAX)) 
+		printf("MRD! getcwd\n");
+	return (cwd);
+}
+
+static void	ft_inn_cd(char *path, char **env)
+{
+	char	*oldpwd = NULL;
+	char	*pwd = NULL;
+	char	*pwd_ptr = NULL;
+
+	if (!path)
+		return;
+	if (!chdir(path))
+	{//SGFT inside this loop
+		pwd = ft_strrchr(ft_env_var("PWD=", env), '=') + 1;
+		oldpwd = ft_strrchr(ft_env_var("OLDPWD=", env), '=') + 1;
+		if (oldpwd && pwd) 
+			ft_strlcpy(oldpwd, pwd, ft_strlen(pwd));
+		if (pwd) 
+		{
+			pwd = &pwd[-4];//-ft_strlen("PWD=")
+			pwd_ptr = ft_pwd();
+			ft_strlcpy(pwd, pwd_ptr, ft_strlen(pwd_ptr));
+			free(pwd_ptr);
+			pwd_ptr = NULL;
+		}
+	}
+	else
+		printf("Mrd! chdir\n");
+}
+
 static void	ft_runinn_cmd(char **cmd, char **env)
 {
 	if (!ft_strncmp("cd", cmd[0], ft_strlen(cmd[0])))
-		printf("inn cd\n");
+		ft_inn_cd(cmd[1], env);
 	else if (!ft_strncmp("echo", cmd[0], ft_strlen(cmd[0])))
 		printf("inn echo\n");
 	else if (!ft_strncmp("env", cmd[0], ft_strlen(cmd[0])))
@@ -59,7 +99,7 @@ static void	ft_runinn_cmd(char **cmd, char **env)
 	else if (!ft_strncmp("export", cmd[0], ft_strlen(cmd[0])))
 		printf("inn export\n");
 	else if (!ft_strncmp("pwd", cmd[0], ft_strlen(cmd[0])))
-		printf("%s\n", ft_env_var("PWD=", env));
+		printf("MRD_PWD=%s\n", ft_env_var("PWD=", env));
 	else if (!ft_strncmp("unset", cmd[0], ft_strlen(cmd[0])))
 		printf("inn unset\n");
 }
@@ -73,6 +113,7 @@ static bool	ft_abs_path(char **cmd, char **env)
 	int		i;
 
 	idx = 0;
+	bin = NULL;
 	path = NULL;
 	if (cmd[0][0] != '/' && ft_strncmp(cmd[0], "./", 2) != 0)
 	{
