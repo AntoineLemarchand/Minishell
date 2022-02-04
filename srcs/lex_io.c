@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/04 09:35:12 by alemarch          #+#    #+#             */
-/*   Updated: 2022/02/04 13:04:04 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/02/04 14:04:49 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,9 @@ static char	*load_infile(char *line)
 	char	*ret;
 
 	i = 0;
-	while (line[i] && line [i] != '<')
+	while (line[i] && line [i] == ' ')
 		i++;
-	if (!line[i])
+	if (line[i] != '<')
 		return (NULL);
 	i++;
 	while (line[i] && line[i] == ' ')
