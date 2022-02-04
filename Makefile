@@ -28,6 +28,8 @@ SRCS			= $(addprefix srcs/, \
 				  	executils.c \
 				  	parsing.c \
 					pipe.c \
+					lex_io.c \
+					lex_cmd.c \
 					lexer.c \
 					main.c \
 					)

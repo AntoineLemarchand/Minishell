@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/31 11:48:25 by alemarch          #+#    #+#             */
-/*   Updated: 2022/02/03 18:54:09 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/02/04 11:32:01 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,16 @@ typedef struct s_command {
 	char	*cmd;
 	char	*infile;
 	char	*outfile;
+	int		appendmode;
 }	t_command;
 
 // executils.c
 char		*ft_joincommand(char *s1, char *s2);
 void		ft_freesplit(char **split);
+// lex_io.c
+int			load_io(char *line, t_command *cmd);
+// lex_cmd.c
+int			load_cmd(char *line, t_command *cmd);
 // lexer.c
 t_command	**ft_lexer(char *inputline);
 // pipe.c

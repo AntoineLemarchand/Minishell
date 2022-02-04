@@ -6,18 +6,13 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:09:43 by imarushe          #+#    #+#             */
-/*   Updated: 2022/02/03 18:48:06 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/02/04 11:23:48 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 char	*readline(const char *prompt);
-
-void	ft_merde(void)
-{
-	printf("Merde!");
-}
 
 int	main(int ac, char **av, char **env)
 {
@@ -33,6 +28,11 @@ int	main(int ac, char **av, char **env)
 		{
 			input = readline("MRDSHLL%> ");
 			add_history(input);
+			if (!input)
+			{
+				printf("\nexit\n");
+				return (0);
+			}
 			tokens = ft_lexer(input);
 			i = 0;
 			while (tokens[i])
@@ -42,6 +42,7 @@ int	main(int ac, char **av, char **env)
 				printf("\tIN:  %s\n", tokens[i]->infile);
 				printf("\tCMD: %s\n", tokens[i]->cmd);
 				printf("\tOUT: %s\n", tokens[i]->outfile);
+				printf("\tAPPENDMODE: %d\n", tokens[i]->appendmode);
 				printf("]\n");
 				i++;
 			}

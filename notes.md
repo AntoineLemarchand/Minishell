@@ -26,20 +26,8 @@
 '> file2.txt'
 [OUTPUT: 'file2.txt']
 
-## Parsing
-
-SimpleComman
-[
-	PIPE	:	[CMD: 'ls -l']
-				[CMD: 'wc -w']
-				[CMD: 'cat << hello']
-	IN		:	'file1'
-	OUT		:	'file2.txt'
-]
-
 <	: at the beginning of a command
 >	: at the end of a command
+>>	: at the end of a command
 <<	: parsed after in command exec
 | : between command (so after a command)
-
-plan :	s_command → char* command, char* input = NULL(0), char* outfile = NULL(1);

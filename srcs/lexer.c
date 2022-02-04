@@ -6,62 +6,11 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 10:23:31 by alemarch          #+#    #+#             */
-/*   Updated: 2022/02/03 18:55:16 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/02/04 11:51:12 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static char	*loadfile(char *path, int isinput)
-{
-	char	*ret;
-	int		size;
-	int		i;
-
-	path++;
-	while (*path && *path == ' ')
-		path++;
-	size = 0;
-	if (isinput)
-		while (path[size] && path[size] != ' ')
-			size++;
-	else
-		while (path[size] && (path[size] != '|' || path[size] != '\0'))
-			size++;
-	ret = malloc(size);
-	if (!ret)
-		return (NULL);
-	i = 0;
-	while (i < size)
-	{
-		ret[i] = path[i];
-		i++;
-	}
-	ret[i] = '\0';
-	return (ret);
-}
-
-static char	*loadcmd(char *cmd)
-{
-	char	*ret;
-	int		size;
-	int		i;
-
-	size = 0;
-	while (cmd[size] && cmd[size] != '>')
-		size++;
-	ret = malloc(size);
-	if (!ret)
-		return (NULL);
-	i = 0;
-	while (i < size)
-	{
-		ret[i] = cmd[i];
-		i++;
-	}
-	ret[i] = '\0';
-	return (ret);
-}
 
 void	free_cmd(t_command *cmd)
 {
@@ -76,44 +25,28 @@ void	free_cmd(t_command *cmd)
 static t_command	*parsecmd(char *cmd)
 {
 	int			i;
+	int			end;
 	t_command	*ret;
 
 	i = 0;
 	ret = malloc(sizeof(t_command));
-	while (cmd[i] && cmd[i] == ' ')
-		i++;
-	if (cmd[i] == '<')
-	{
-		ret->infile = loadfile((cmd + i), 1);
-		if (!ret->infile)
-		{
-			free_cmd(ret);
-			return (NULL);
-		}
-		i += ft_strlen(ret->infile) + 2;
-	}
-	else
-		ret->infile = 0;
-	while (cmd[i] && cmd[i] == ' ')
-		i++;
-	ret->cmd = loadcmd((cmd + i));
-	if (!ret->cmd)
+	if (load_io(cmd, ret) || load_cmd(cmd, ret))
 	{
 		free_cmd(ret);
 		return (NULL);
 	}
-	i += ft_strlen(ret->cmd);
-	if (cmd[i] == '>')
+	if (ret->outfile)
 	{
-		ret->outfile = loadfile((cmd + i), 0);
-		if (!ret->outfile)
-		{
-			free_cmd(ret);
-			return (NULL);
-		}
+		end = ft_strlen(cmd);
+		while (cmd[end] != '>')
+			end--;
+		if (end - 1 && cmd[end - 1] == '>')
+			ret->appendmode = 1;
+		else
+			ret->appendmode = 0;
 	}
 	else
-		ret->outfile = 0;
+		ret->appendmode = 0;
 	return (ret);
 }
 
@@ -124,23 +57,20 @@ static t_command	**addcmd(t_command **cmdtable, t_command *newcmd)
 	int			i;
 
 	if (!cmdtable)
-	{
 		ret = malloc(2 * sizeof(t_command *));
-		if (!ret)
-			return (NULL);
-		ret[0] = newcmd;
-		ret[1] = NULL;
-		return (ret);
-	}
 	size = 0;
-	while (cmdtable[size])
+	while (cmdtable && cmdtable[size])
 		size++;
-	ret = malloc((size + 1) * sizeof(t_command *));
+	if (cmdtable)
+		ret = malloc((size + 1) * sizeof(t_command *));
 	if (!ret)
 		return (NULL);
-	i = -1;
-	while (++i < size)
+	i = 0;
+	while (cmdtable && i < size)
+	{
 		ret[i] = cmdtable[i];
+		i++;
+	}
 	ret[i] = newcmd;
 	ret[i + 1] = NULL;
 	free(cmdtable);
