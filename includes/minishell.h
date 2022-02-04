@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/31 11:48:25 by alemarch          #+#    #+#             */
-/*   Updated: 2022/02/04 11:32:01 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/02/04 12:24:01 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ int			load_io(char *line, t_command *cmd);
 // lex_cmd.c
 int			load_cmd(char *line, t_command *cmd);
 // lexer.c
+void		free_cmd(t_command *cmd);
 t_command	**ft_lexer(char *inputline);
 // pipe.c
 int			ft_exec(char *action, char **env);

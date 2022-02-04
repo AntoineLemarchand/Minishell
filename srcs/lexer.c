@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 10:23:31 by alemarch          #+#    #+#             */
-/*   Updated: 2022/02/04 11:51:12 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/02/04 13:00:52 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,15 @@
 
 void	free_cmd(t_command *cmd)
 {
-	free(cmd->cmd);
-	if (cmd->infile)
-		free(cmd->infile);
-	if (cmd->outfile)
-		free(cmd->outfile);
-	free(cmd);
+	if (cmd)
+	{
+		if (cmd->infile)
+			free(cmd->infile);
+		if (cmd->outfile)
+			free(cmd->outfile);
+		free(cmd->cmd);
+		free(cmd);
+	}
 }
 
 static t_command	*parsecmd(char *cmd)
@@ -62,11 +65,11 @@ static t_command	**addcmd(t_command **cmdtable, t_command *newcmd)
 	while (cmdtable && cmdtable[size])
 		size++;
 	if (cmdtable)
-		ret = malloc((size + 1) * sizeof(t_command *));
+		ret = malloc((size + 2) * sizeof(t_command *));
 	if (!ret)
 		return (NULL);
 	i = 0;
-	while (cmdtable && i < size)
+	while (cmdtable && cmdtable[i])
 	{
 		ret[i] = cmdtable[i];
 		i++;
@@ -100,5 +103,6 @@ t_command	**ft_lexer(char *inputline)
 		ret = addcmd(ret, newcmd);
 		i++;
 	}
+	ft_freesplit(commands);
 	return (ret);
 }

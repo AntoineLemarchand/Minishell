@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/04 11:27:22 by alemarch          #+#    #+#             */
-/*   Updated: 2022/02/04 11:32:18 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/02/04 12:09:50 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ int	load_cmd(char *line, t_command *cmd)
 		ret[i] = line[start + i];
 		i++;
 	}
-	ret[end] = '\0';
+	ret[i] = '\0';
 	cmd->cmd = ret;
 	return (0);
 }

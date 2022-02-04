@@ -6,7 +6,7 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:09:43 by imarushe          #+#    #+#             */
-/*   Updated: 2022/02/04 11:23:48 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/02/04 12:59:56 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,7 @@ int	main(int ac, char **av, char **env)
 			input = readline("MRDSHLL%> ");
 			add_history(input);
 			if (!input)
-			{
-				printf("\nexit\n");
-				return (0);
-			}
+				break;
 			tokens = ft_lexer(input);
 			i = 0;
 			while (tokens[i])
@@ -44,9 +41,15 @@ int	main(int ac, char **av, char **env)
 				printf("\tOUT: %s\n", tokens[i]->outfile);
 				printf("\tAPPENDMODE: %d\n", tokens[i]->appendmode);
 				printf("]\n");
+				free_cmd(tokens[i]);
 				i++;
 			}
+			free(input);
+			free(tokens);
 		}
+		rl_clear_history();
+		printf("\nexit\n");
+		return (0);
 	}
 	return (0);
 }

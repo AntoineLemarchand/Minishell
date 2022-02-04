@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/04 09:35:12 by alemarch          #+#    #+#             */
-/*   Updated: 2022/02/04 11:27:18 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/02/04 12:12:57 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static char	*dup_word(char *str)
 	else
 		while (str[i] && str[i] != '\0' && str[i] != '|' && str[i] != ' ')
 			i++;
-	ret = malloc(i);
+	ret = malloc(i + 1);
 	if (!ret)
 		return (NULL);
 	j = 0;
@@ -48,10 +48,10 @@ static char	*load_infile(char *line)
 	i = 0;
 	while (line[i] && line [i] != '<')
 		i++;
-	i++;
 	if (!line[i])
 		return (NULL);
-	while (line[i] == ' ')
+	i++;
+	while (line[i] && line[i] == ' ')
 		i++;
 	ret = dup_word((line + i));
 	if (!ret)
@@ -65,9 +65,9 @@ static char	*load_outfile(char *line)
 	char	*ret;
 
 	i = ft_strlen(line) - 1;
-	while (line[i] && line [i] != '>')
+	while (i && line [i] != '>')
 		i--;
-	if (!line[i])
+	if (!i)
 		return (NULL);
 	i++;
 	while (line[i] == ' ')
