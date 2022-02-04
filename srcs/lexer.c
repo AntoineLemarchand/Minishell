@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 10:23:31 by alemarch          #+#    #+#             */
-/*   Updated: 2022/02/04 13:06:03 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/02/04 13:20:26 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,9 @@ void	free_cmd(t_command *cmd)
 
 static t_command	*parsecmd(char *cmd)
 {
-	int			i;
 	int			end;
 	t_command	*ret;
 
-	i = 0;
 	ret = malloc(sizeof(t_command));
 	if (load_io(cmd, ret) || load_cmd(cmd, ret))
 	{
