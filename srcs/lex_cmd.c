@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/04 11:27:22 by alemarch          #+#    #+#             */
-/*   Updated: 2022/02/04 13:11:34 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/02/04 13:14:32 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ static int	get_cmdend(char *line)
 		i--;
 	if (i == 0)
 		return (i);
-	i--;
 	while (i > 0 && line[i] == ' ')
 		i--;
 	return (i);

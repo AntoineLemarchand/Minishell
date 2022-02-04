@@ -6,7 +6,7 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:09:43 by imarushe          #+#    #+#             */
-/*   Updated: 2022/02/04 12:59:56 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/02/04 13:16:51 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	main(int ac, char **av, char **env)
 			input = readline("MRDSHLL%> ");
 			add_history(input);
 			if (!input)
-				break;
+				break ;
 			tokens = ft_lexer(input);
 			i = 0;
 			while (tokens[i])
