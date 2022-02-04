@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/04 11:27:22 by alemarch          #+#    #+#             */
-/*   Updated: 2022/02/04 13:59:22 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/02/04 14:43:14 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@ static int	get_cmdend(char *line)
 
 	i = ft_strlen(line) - 1;
 	while (i > 0 && line[i] != '>')
+		i--;
+	if (i - 1 && line[i - 1] == '>')
 		i--;
 	if (i == 0)
 		return (ft_strlen(line));

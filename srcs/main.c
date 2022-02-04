@@ -6,7 +6,7 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:09:43 by imarushe          #+#    #+#             */
-/*   Updated: 2022/02/04 14:07:16 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/02/04 14:42:07 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ int	main(int ac, char **av, char **env)
 			tokens = ft_lexer(input);
 			i = 0;
 			while (tokens[i])
-				printtok(tokens[i]);
+				printtok(tokens[i++]);
 			free(input);
 			free(tokens);
 		}
