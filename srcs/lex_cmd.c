@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/04 11:27:22 by alemarch          #+#    #+#             */
-/*   Updated: 2022/02/04 12:09:50 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/02/04 13:11:34 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,9 @@ static int	get_cmdend(char *line)
 	while (i > 0 && line[i] != '>')
 		i--;
 	if (i == 0)
-		return (ft_strlen(line));
+		return (i);
 	i--;
-	while (i > 0 && line [i] == ' ')
+	while (i > 0 && line[i] == ' ')
 		i--;
 	return (i);
 }
@@ -55,7 +55,7 @@ int	load_cmd(char *line, t_command *cmd)
 
 	start = get_cmdstart(line);
 	end = get_cmdend(line);
-	if (start == end)
+	if (start == end || start == (int)ft_strlen(line) || !end)
 	{
 		cmd->cmd = NULL;
 		return (0);

@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 10:23:31 by alemarch          #+#    #+#             */
-/*   Updated: 2022/02/04 13:00:52 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/02/04 13:06:03 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ static t_command	*parsecmd(char *cmd)
 		end = ft_strlen(cmd);
 		while (cmd[end] != '>')
 			end--;
-		if (end - 1 && cmd[end - 1] == '>')
+		if (end - 1 >= 0 && cmd[end - 1] == '>')
 			ret->appendmode = 1;
 		else
 			ret->appendmode = 0;
