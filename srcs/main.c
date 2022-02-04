@@ -6,7 +6,7 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:09:43 by imarushe          #+#    #+#             */
-/*   Updated: 2022/02/04 13:16:51 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/02/04 13:29:38 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@ int	main(int ac, char **av, char **env)
 {
 	char		*input;
 	t_command	**tokens;
-	int			i;
 
 	(void)ac;
 	(void)av;
@@ -31,19 +30,6 @@ int	main(int ac, char **av, char **env)
 			if (!input)
 				break ;
 			tokens = ft_lexer(input);
-			i = 0;
-			while (tokens[i])
-			{
-				printf("CMD:\n");
-				printf("[\n");
-				printf("\tIN:  %s\n", tokens[i]->infile);
-				printf("\tCMD: %s\n", tokens[i]->cmd);
-				printf("\tOUT: %s\n", tokens[i]->outfile);
-				printf("\tAPPENDMODE: %d\n", tokens[i]->appendmode);
-				printf("]\n");
-				free_cmd(tokens[i]);
-				i++;
-			}
 			free(input);
 			free(tokens);
 		}
