@@ -6,7 +6,7 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:09:43 by imarushe          #+#    #+#             */
-/*   Updated: 2022/02/04 14:42:07 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/02/07 10:21:42 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,13 @@ char	*readline(const char *prompt);
 
 void	printtok(t_command *token)
 {
-	printf("SIMPLECMD: [\n\tCMD: %s\n\t"
+	printf("SIMPLECMD: \n[\tCMD: %s\n\t"
 		"IN: %s\n\tOUT: %s\n\tAPPEND: %d\n]\n",
 		token->cmd,
 		token->infile,
 		token->outfile,
 		token->appendmode);
-	free(token);
+	free_cmd(token);
 }
 
 int	main(int ac, char **av, char **env)
@@ -53,21 +53,3 @@ int	main(int ac, char **av, char **env)
 	}
 	return (0);
 }
-/*
-int	main(void)
-{
-	char	*inpt;
-	int		i;
-
-	i = 0;
-	while (i < 10)
-	{
-		inpt = readline("MRDSHLL%> ");
-		add_history(inpt);
-		printf("%s", inpt);
-		printf("\n");
-		++i;
-	}
-	return (0);
-}
-*/

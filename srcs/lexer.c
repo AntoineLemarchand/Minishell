@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 10:23:31 by alemarch          #+#    #+#             */
-/*   Updated: 2022/02/04 13:20:26 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/02/07 09:58:29 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@ void	free_cmd(t_command *cmd)
 			free(cmd->infile);
 		if (cmd->outfile)
 			free(cmd->outfile);
-		free(cmd->cmd);
+		if (cmd->cmd)
+			free(cmd->cmd);
 		free(cmd);
 	}
 }
