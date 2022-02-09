@@ -6,116 +6,78 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:09:43 by imarushe          #+#    #+#             */
-/*   Updated: 2022/02/09 10:44:12 by imarushe         ###   ########.fr       */
+/*   Updated: 2022/02/09 21:42:44 by imarushe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static t_env	*first = NULL;
+static t_env	*g_start = NULL;
 
-static bool	ft_isinn_cmd(char *cmd)
-{
-	if (!ft_strncmp("cd", cmd, ft_strlen(cmd)))
-		return (true);
-	else if (!ft_strncmp("echo", cmd, ft_strlen(cmd)))
-		return (true);
-//	else if (!ft_strncmp("env", cmd, ft_strlen(cmd)))
-//		return (true);
-	else if (!ft_strncmp("exit", cmd, ft_strlen(cmd)))
-		return (true);
-	else if (!ft_strncmp("export", cmd, ft_strlen(cmd)))
-		return (true);
-	else if (!ft_strncmp("pwd", cmd, ft_strlen(cmd)))
-		return (true);
-	else if (!ft_strncmp("unset", cmd, ft_strlen(cmd)))
-		return (true);
-	else
-		return (false);
-}
-
-/*
-static char	*ft_env_var(char *var, char **env)
-{
-	int		i;
-
-	i = 0;
-	while (env[i])
-	{
-		if (!ft_strncmp(env[i], var, ft_strlen(var)))
-			return (ft_strdup(&env[i][ft_strlen(var)]));
-		i++;
-	}
-	return (NULL);
-}
-*/
-
-static char	*ft_pwd(void)
+static char	*built_in_pwd(void)
 {
 	char	*cwd;
 
-	cwd = (char *)malloc(sizeof(char) * (PATH_MAX + 1));
+	cwd = malloc(sizeof(char) * PATH_MAX + strlen("PWD=") + 1);
 	if (!cwd)
 		return (NULL);
-	if (!getcwd(cwd, PATH_MAX)) 
-		printf("MRD! getcwd\n");
+	strcat(cwd, "PWD=");
+	if (!getcwd(&cwd[4], PATH_MAX))
+		printf("Mrd! Current WD!");
 	return (cwd);
 }
 
-static void	ft_inn_cd(char *path, char **env)
+static char	*get_env_var(char *var)
 {
-//	char	*oldpwd = NULL;
-//	char	*pwd = NULL;
-//	char	*pwd_ptr = NULL;
-	(void)env;
+	t_env	*temp;
+	size_t	size;
 
-	if (!path)
-		return;
-	if (!chdir(path))
+	size = 0;
+	temp = g_start;
+	size = ft_strlen(var);
+	while (temp)
 	{
-		// Implement part of inner env (var that doesnt changed, like PWD)
-		/*pwd = ft_strdup(ft_env_var("PWD=", env));
-		printf("var %s, pwd %s\n", ft_env_var("PWD=", env), pwd);
-
-		oldpwd = ft_strdup(ft_env_var("OLDPWD=", env));
-		printf("var %s, old %s\n", ft_env_var("OLDPWD=", env), oldpwd);
-		if (oldpwd && pwd) 
-		{
-			printf("1\n");
-			oldpwd = ft_strdup(pwd);
-			//ft_strlcpy(oldpwd, pwd, (ft_strlen(pwd) + 1));
-			printf("2\n");
-
-		}
-		if (pwd) 
-		{
-//			pwd = &pwd[-4];//-ft_strlen("PWD=")
-			pwd_ptr = ft_pwd();
-			ft_strlcpy(pwd, pwd_ptr, ft_strlen(pwd_ptr));
-			free(pwd_ptr);
-			pwd_ptr = NULL;
-		}*/
+		if (!ft_strncmp(var, temp->var, size))
+			return (temp->var);
+		temp = temp->next;
 	}
-	else
-		printf("Mrd! chdir\n");
+	return (NULL);
 }
 
-static void	ft_runinn_cmd(char **cmd, char **env)
+static void	ft_free_array(char **array)
 {
-	if (!ft_strncmp("cd", cmd[0], ft_strlen(cmd[0])))
-		ft_inn_cd(cmd[1], env);
-	else if (!ft_strncmp("echo", cmd[0], ft_strlen(cmd[0])))
-		printf("inn echo\n");
-//	else if (!ft_strncmp("env", cmd[0], ft_strlen(cmd[0])))
-//		printf("inn env\n");
-	else if (!ft_strncmp("exit", cmd[0], ft_strlen(cmd[0])))
-		printf("inn exit\n");
-	else if (!ft_strncmp("export", cmd[0], ft_strlen(cmd[0])))
-		printf("inn export\n");
-	else if (!ft_strncmp("pwd", cmd[0], ft_strlen(cmd[0])))
-		printf("MRD_PWD=%s\n", ft_pwd());
-	else if (!ft_strncmp("unset", cmd[0], ft_strlen(cmd[0])))
-		printf("inn unset\n");
+	int	i;
+
+	i = 0;
+	while (array[i])
+	{
+		free(array[i]);
+		array[i] = NULL;
+	}
+	free(array);
+	array = NULL;
+}
+
+static void	ft_run_cmd(char **cmd, char **env)
+{
+	pid_t	pid;
+	int		status;
+
+	status = 0;
+	pid = fork();
+	if (pid == -1)
+		printf("Mrd! Fork!\n");
+	else if (pid > 0)
+	{
+		waitpid(pid, &status, 0);
+		kill(pid, SIGTERM);
+	}
+	else
+	{
+		if (execve(cmd[0], cmd, env) == -1)
+			printf("Mrd! Shell!\n");
+		exit(EXIT_FAILURE);
+	}
 }
 
 static bool	ft_abs_path(char **cmd, char **env)
@@ -123,45 +85,45 @@ static bool	ft_abs_path(char **cmd, char **env)
 	char	*path;
 	char	*bin;
 	char	**path_split;
-	size_t	idx;
-	int		i;
+	size_t	i;
+	int		j;
 
-	idx = 0;
+	i = 0;
 	bin = NULL;
 	path = NULL;
 	if (cmd[0][0] != '/' && ft_strncmp(cmd[0], "./", 2) != 0)
 	{
-		i = 0;
-		while (env[i])
+		j = 0;
+		while (env[j])
 		{
-			if (!ft_strncmp(env[i], "PATH=", 5))
+			if (!ft_strncmp(env[j], "PATH=", 5))
 			{
-				path = ft_strdup(&env[i][5]);
+				path = ft_strdup(&env[j][5]);
 				break ;
 			}
-			i++;
+			j++;
 		}
 		if (!path)
 			return (false);
 		path_split = ft_split(path, ':');
 		free(path);
 		path = NULL;
-		while (path_split[idx])
+		while (path_split[i])
 		{
-			bin = malloc((ft_strlen(path_split[idx]) + ft_strlen(cmd[0]) + 2));
+			bin = malloc((ft_strlen(path_split[i]) + ft_strlen(cmd[0]) + 2));
 			if (bin == NULL)
 				break ;
-			ft_strlcat(bin, path_split[idx], (ft_strlen(bin) \
-						+ ft_strlen(path_split[idx]) + 1));
+			ft_strlcat(bin, path_split[i], (ft_strlen(bin) \
+						+ ft_strlen(path_split[i]) + 1));
 			ft_strlcat(bin, "/", (ft_strlen(bin) + 2));
 			ft_strlcat(bin, cmd[0], (ft_strlen(bin) + ft_strlen(cmd[0]) + 1));
 			if (access(bin, F_OK) == 0)
 				break ;
 			free(bin);
 			bin = NULL;
-			idx++;
+			i++;
 		}
-		//todo free_all(path_split);
+		ft_free_array(path_split);
 		free(cmd[0]);
 		cmd[0] = bin;
 	}
@@ -175,164 +137,234 @@ static bool	ft_abs_path(char **cmd, char **env)
 	return (true);
 }
 
-static void	ft_run_cmd(char **cmd, char **env)
+static bool	ft_isinn_cmd(char *cmd)
 {
-	pid_t	pid;
-	int		status;
+	int			i;
+	const char	*inn_cmd[] = {"pwd", "cd", "env", NULL};
 
-	status = 0;
-	pid = fork();
-	if (pid == -1)
-		printf("Mrd!\n");
-	else if (pid > 0)
+	i = 0;
+	while (inn_cmd[i])
 	{
-		waitpid(pid, &status, 0);
-		kill(pid, SIGTERM);
+		if (!ft_strncmp(inn_cmd[i], cmd, ft_strlen(cmd)))
+			return (true);
+		i++;
+	}
+	return (false);
+}
+
+static void	ft_inn_cd(char *path)
+{
+	char	*oldpwd;
+	char	*pwd;
+	char	*pwd_ptr;
+
+	if (!path)
+		return ;
+	if (!chdir(path))
+	{
+		pwd = ft_strrchr(get_env_var("PWD="), '=') + 1;
+		oldpwd = ft_strrchr(get_env_var("OLDPWD="), '=') + 1;
+		if (oldpwd && pwd)
+			ft_strlcpy(oldpwd, pwd, ft_strlen(pwd) + 1);
+		if (pwd)
+		{
+			pwd = &pwd[-ft_strlen("PWD=")];
+			pwd_ptr = built_in_pwd();
+			ft_strlcpy(pwd, pwd_ptr, ft_strlen(pwd_ptr) + 1);
+			free(pwd_ptr);
+			pwd_ptr = NULL;
+		}
 	}
 	else
+		printf("Mrd! Chdir!");
+}
+
+static void	ft_inn_env(void)
+{
+	t_env	*temp;
+
+	temp = g_start;
+	while (temp)
 	{
-		if (execve(cmd[0], cmd, env) == -1)
-			printf("Mrd!\n");
-		exit(0);
+		printf("%s\n", temp->var);
+		temp = temp->next;
 	}
 }
 
-
-
-
-
-static void	add_tail(char *var)
+static void	ft_runinn_cmd(char **cmd)
 {
-	t_env	*ptr = first;
-	t_env	*new_node = NULL;
+	if (!ft_strncmp(cmd[0], "pwd", 3))
+		printf("%s\n", get_env_var("PWD="));
+	else if (!ft_strncmp(cmd[0], "cd", 2))
+		ft_inn_cd(cmd[1]);
+	else if (!ft_strncmp(cmd[0], "env", 3))
+		ft_inn_env();
+}
 
+static void	ft_add_env(char *var)
+{
+	t_env	*ptr;
+	t_env	*new_node;
+
+	ptr = g_start;
 	new_node = (t_env *)malloc(sizeof(t_env));
-	if (new_node == NULL) {
-		printf("Mrd! Alloc fail\n");
+	if (!new_node)
+	{
+		printf("Mrd! Malloc fail!\n");
 		return ;
 	}
-
 	new_node->var = var;
 	new_node->next = NULL;
-
-	if (ptr == NULL) {
-		first = new_node;
-	} else {
-		while (ptr->next != NULL)
+	if (!ptr)
+		g_start = new_node;
+	else
+	{
+		while (ptr->next)
 			ptr = ptr->next;
 		ptr->next = new_node;
 	}
 }
 
-static char	*built_in_pwd(void)
+static void	ft_add_var(char *var)
 {
-	char	*cwd = NULL;
+	struct passwd	*pw;
+	char			*result;
 
-	// On alloue la longueur de PWD= + PATH_MAX + 1 pour le \0
-	cwd = (char *)calloc(sizeof(char), PATH_MAX + strlen("PWD=") + 1);
-	if (cwd == NULL)
-		return (NULL);
-
-	// On concatene le nom de la variable
-	strcat(cwd, "PWD=");
-
-	// et on stock le path actuelle apres le = de PATH=
-	if (getcwd(&cwd[4], PATH_MAX) == NULL) {
-		perror("getcwd()");
+	pw = getpwuid(getuid());
+	if (!ft_strncmp(var, "HOME", 4))
+	{
+		result = malloc(sizeof(char) * (ft_strlen(pw->pw_dir) + 6));
+		if (!result)
+		{
+			printf("Mrd! Cannot add HOME!\n");
+			return ;
+		}
+		ft_strlcat(result, "HOME=", ft_strlen(result) + 6);
+		ft_strlcat(result, pw->pw_dir, ft_strlen(result) \
+				+ ft_strlen(pw->pw_dir));
 	}
-
-	return (cwd);
+	else if (!ft_strncmp(var, "PATH", 4))
+	{
+		result = ft_strdup("PATH=/bin:/usr/bin");
+		if (!result)
+		{
+			printf("Mrd! Cannot add PATH!\n");
+			return ;
+		}
+	}
+	else if (!ft_strncmp(var, "OLDPWD", 6))
+	{
+		result = ft_strdup("OLDPWD=");
+		if (!result)
+		{
+			printf("Mrd! Cannot add OLDPWD!\n");
+			return ;
+		}
+	}
+	else if (!ft_strncmp(var, "PWD", 3))
+	{
+		result = built_in_pwd();
+		if (!result)
+		{
+			printf("Mrd! Cannot add PWD!\n");
+			return ;
+		}
+	}
+	else if (!ft_strncmp(var, "SHLVL", 5))
+	{
+		result = ft_strdup("SHLVL=1");
+		if (!result)
+		{
+			printf("Mrd! Cannot add OLDPWD!\n");
+			return ;
+		}
+	}
+	ft_add_env(result);
 }
 
-
-static void	add_env_var(char *var)
+static void	ft_make_env(char **envp)
 {
-	struct passwd	*pw = getpwuid(getuid());
-	char			*alloc = NULL;
-
-	if (!strcmp(var, "HOME"))
-	{
-		alloc = (char *)malloc(sizeof(char) * (strlen(pw->pw_dir) + strlen("HOME=") + 1));
-		if (!alloc)
-		{
-			printf("Mrd! add HOME\n");
-			return ;
-		}
-		ft_strlcat(alloc, "HOME=", 5);
-		ft_strlcat(alloc, pw->pw_dir, ft_strlen(pw->pw_dir));
-	}
-	else if (!strcmp(var, "PATH"))
-	{
-		alloc = ft_strdup("PATH=/bin:/usr/bin");
-		if (!alloc)
-		{
-			printf("Mrd! add PATH\n");
-			return ;
-		}
-	}
-	else if (!strcmp(var, "OLDPWD"))
-	{
-		alloc = ft_strdup("OLDPWD=");
-		if (!alloc)
-		{
-			printf("Mrd! add OLDPWD\n");
-			return ;
-		}
-	}
-	else if (!strcmp(var, "PWD"))
-	{
-		alloc = built_in_pwd();
-		if (!alloc)
-		{
-			printf("Mrd! add PWD\n");
-			return ;
-		}
-	}
-	else if (!strcmp(var, "SHLVL"))
-	{
-		alloc = strdup("SHLVL=1");
-		if (!alloc)
-		{
-			printf("Mrd! add OLDPWD\n");
-			return ;
-		}
-	}
-	add_tail(alloc);
-}
-
-
-
-static void	ft_my_env(char **envp)
-{
+	char	*var_list[6];
 	int		i;
-	char	*inn_var[6] = {"PATH", "HOME", "OLDPWD", "PWD", "SHLVL", NULL};
 	int		size;
 
 	i = 0;
 	size = 5;
-
+	var_list[0] = "PATH";
+	var_list[1] = "HOME";
+	var_list[2] = "OLDPWD";
+	var_list[3] = "PWD";
+	var_list[4] = "SHLVL";
+	var_list[5] = NULL;
 	while (envp[i])
 	{
-		add_tail(ft_strdup(envp[i]));
+		ft_add_env(ft_strdup(envp[i]));
 		if (!ft_strncmp(envp[i], "PATH", 4))
-			inn_var[0] = NULL;
+			var_list[0] = NULL;
 		else if (!ft_strncmp(envp[i], "HOME", 4))
-			inn_var[1] = NULL;
+			var_list[1] = NULL;
 		else if (!ft_strncmp(envp[i], "OLDPWD", 6))
-			inn_var[2] = NULL;
+			var_list[2] = NULL;
 		else if (!ft_strncmp(envp[i], "PWD", 3))
-			inn_var[3] = NULL;
+			var_list[3] = NULL;
 		else if (!ft_strncmp(envp[i], "SHLVL", 5))
-			inn_var[4] = NULL;
+			var_list[4] = NULL;
 		i++;
 	}
-
 	i = 0;
 	while (i < size)
 	{
-		if (inn_var[i] != NULL)
-			add_env_var(inn_var[i]);
+		if (var_list[i])
+			ft_add_var(var_list[i]);
 		i++;
+	}
+}
+
+static char	**ft_to_array(void)
+{
+	char	**result;
+	t_env	*temp;
+	size_t	i;
+
+	i = 0;
+	temp = g_start;
+	while (temp)
+	{
+		temp = temp->next;
+		i++;
+	}
+	result = (char **)malloc(sizeof(char *) * (i + 1));
+	if (!result)
+	{
+		printf("Mrd! Malloc!");
+		exit(1);
+	}
+	temp = g_start;
+	i = 0;
+	while (temp)
+	{
+		result[i] = temp->var;
+		temp = temp->next;
+		i++;
+	}
+	return (result);
+}
+
+static void	ft_free_env(void)
+{
+	t_env	*i;
+	t_env	*temp;
+
+	i = g_start;
+	temp = i;
+	while (i)
+	{
+		temp = i;
+		i = i->next;
+		free(temp->var);
+		temp->var = NULL;
+		free(temp);
+		temp = NULL;
 	}
 }
 
@@ -340,41 +372,37 @@ int	main(int argc, char *argv[], char *envp[])
 {
 	char	*input;
 	char	**cmd;
+	char	**env;
 
 	(void)argc;
 	(void)argv;
-
-
-
-	ft_my_env(envp);
-	input = (char *)malloc(sizeof(char) * 1024);
+	ft_make_env(envp);
+	input = malloc(sizeof(char) * 2048);
 	if (!input)
-		return (0);
+		return (EXIT_FAILURE);
 	while (1)
 	{
 		input = readline("MRDSHLL>");
 		add_history(input);
-		// try to split with 32
 		cmd = ft_split(input, ' ');
-		if (!cmd[0])
+		if (cmd[0] == NULL)
 			printf("Mrd! Command not found!\n");
-		// Check if this cmd is local for the our shell
 		else if (ft_isinn_cmd(cmd[0]))
-			// Run local cmd
-			ft_runinn_cmd(cmd, envp); // TODO inner env
+			ft_runinn_cmd(cmd);
 		else
 		{
-			// Check th epath from env for run the shell cmd
-			if (ft_abs_path(cmd, envp)) // TODO inner env
-				// Run shell cmd
-				ft_run_cmd(cmd, envp); // TODO inner env
+			env = ft_to_array();
+			if (ft_abs_path(cmd, env))
+				ft_run_cmd(cmd, env);
 			else
 				printf("Mrd! Command not found!\n");
-			//free(env);
+			free(env);
+			env = NULL;
 		}
-		//free(cmd);
+		ft_free_array(cmd);
 	}
-	//ft_free_all();
+	ft_free_env();
 	printf("A tout!\n");
+	free(input);
 	return (0);
 }
