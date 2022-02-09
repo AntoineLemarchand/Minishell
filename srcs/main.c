@@ -6,11 +6,13 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:09:43 by imarushe          #+#    #+#             */
-/*   Updated: 2022/02/03 16:02:49 by imarushe         ###   ########.fr       */
+/*   Updated: 2022/02/09 10:44:12 by imarushe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static t_env	*first = NULL;
 
 static bool	ft_isinn_cmd(char *cmd)
 {
@@ -195,13 +197,156 @@ static void	ft_run_cmd(char **cmd, char **env)
 	}
 }
 
-int	main(int argc, char *argv[], char *env[])
+
+
+
+
+static void	add_tail(char *var)
+{
+	t_env	*ptr = first;
+	t_env	*new_node = NULL;
+
+	new_node = (t_env *)malloc(sizeof(t_env));
+	if (new_node == NULL) {
+		printf("Mrd! Alloc fail\n");
+		return ;
+	}
+
+	new_node->var = var;
+	new_node->next = NULL;
+
+	if (ptr == NULL) {
+		first = new_node;
+	} else {
+		while (ptr->next != NULL)
+			ptr = ptr->next;
+		ptr->next = new_node;
+	}
+}
+
+static char	*built_in_pwd(void)
+{
+	char	*cwd = NULL;
+
+	// On alloue la longueur de PWD= + PATH_MAX + 1 pour le \0
+	cwd = (char *)calloc(sizeof(char), PATH_MAX + strlen("PWD=") + 1);
+	if (cwd == NULL)
+		return (NULL);
+
+	// On concatene le nom de la variable
+	strcat(cwd, "PWD=");
+
+	// et on stock le path actuelle apres le = de PATH=
+	if (getcwd(&cwd[4], PATH_MAX) == NULL) {
+		perror("getcwd()");
+	}
+
+	return (cwd);
+}
+
+
+static void	add_env_var(char *var)
+{
+	struct passwd	*pw = getpwuid(getuid());
+	char			*alloc = NULL;
+
+	if (!strcmp(var, "HOME"))
+	{
+		alloc = (char *)malloc(sizeof(char) * (strlen(pw->pw_dir) + strlen("HOME=") + 1));
+		if (!alloc)
+		{
+			printf("Mrd! add HOME\n");
+			return ;
+		}
+		ft_strlcat(alloc, "HOME=", 5);
+		ft_strlcat(alloc, pw->pw_dir, ft_strlen(pw->pw_dir));
+	}
+	else if (!strcmp(var, "PATH"))
+	{
+		alloc = ft_strdup("PATH=/bin:/usr/bin");
+		if (!alloc)
+		{
+			printf("Mrd! add PATH\n");
+			return ;
+		}
+	}
+	else if (!strcmp(var, "OLDPWD"))
+	{
+		alloc = ft_strdup("OLDPWD=");
+		if (!alloc)
+		{
+			printf("Mrd! add OLDPWD\n");
+			return ;
+		}
+	}
+	else if (!strcmp(var, "PWD"))
+	{
+		alloc = built_in_pwd();
+		if (!alloc)
+		{
+			printf("Mrd! add PWD\n");
+			return ;
+		}
+	}
+	else if (!strcmp(var, "SHLVL"))
+	{
+		alloc = strdup("SHLVL=1");
+		if (!alloc)
+		{
+			printf("Mrd! add OLDPWD\n");
+			return ;
+		}
+	}
+	add_tail(alloc);
+}
+
+
+
+static void	ft_my_env(char **envp)
+{
+	int		i;
+	char	*inn_var[6] = {"PATH", "HOME", "OLDPWD", "PWD", "SHLVL", NULL};
+	int		size;
+
+	i = 0;
+	size = 5;
+
+	while (envp[i])
+	{
+		add_tail(ft_strdup(envp[i]));
+		if (!ft_strncmp(envp[i], "PATH", 4))
+			inn_var[0] = NULL;
+		else if (!ft_strncmp(envp[i], "HOME", 4))
+			inn_var[1] = NULL;
+		else if (!ft_strncmp(envp[i], "OLDPWD", 6))
+			inn_var[2] = NULL;
+		else if (!ft_strncmp(envp[i], "PWD", 3))
+			inn_var[3] = NULL;
+		else if (!ft_strncmp(envp[i], "SHLVL", 5))
+			inn_var[4] = NULL;
+		i++;
+	}
+
+	i = 0;
+	while (i < size)
+	{
+		if (inn_var[i] != NULL)
+			add_env_var(inn_var[i]);
+		i++;
+	}
+}
+
+int	main(int argc, char *argv[], char *envp[])
 {
 	char	*input;
 	char	**cmd;
 
 	(void)argc;
 	(void)argv;
+
+
+
+	ft_my_env(envp);
 	input = (char *)malloc(sizeof(char) * 1024);
 	if (!input)
 		return (0);
@@ -216,13 +361,13 @@ int	main(int argc, char *argv[], char *env[])
 		// Check if this cmd is local for the our shell
 		else if (ft_isinn_cmd(cmd[0]))
 			// Run local cmd
-			ft_runinn_cmd(cmd, env);
+			ft_runinn_cmd(cmd, envp); // TODO inner env
 		else
 		{
 			// Check th epath from env for run the shell cmd
-			if (ft_abs_path(cmd, env))
+			if (ft_abs_path(cmd, envp)) // TODO inner env
 				// Run shell cmd
-				ft_run_cmd(cmd, env);
+				ft_run_cmd(cmd, envp); // TODO inner env
 			else
 				printf("Mrd! Command not found!\n");
 			//free(env);
