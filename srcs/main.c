@@ -10,8 +10,12 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+//   Run it witout Makefile
+//   gcc -I../includes  main.c -lreadline ../libft/libft.a
+
+
 //#include "minishell.h"
-#include <libft.h>
+#include "libft.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
