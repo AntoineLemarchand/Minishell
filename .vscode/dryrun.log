@@ -1,0 +1,5 @@
+make minishell --dry-run --keep-going --print-directory
+make: Entering directory '/home/imarushe/Minishell'
+make: 'minishell' is up to date.
+make: Leaving directory '/home/imarushe/Minishell'
+ 

@@ -6,11 +6,30 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:09:43 by imarushe          #+#    #+#             */
-/*   Updated: 2022/02/09 21:42:44 by imarushe         ###   ########.fr       */
+/*   Updated: 2022/02/10 13:53:00 by imarushe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+//#include "minishell.h"
+#include <libft.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+#include <sys/wait.h>
+#include <signal.h>
+#include <stdbool.h>
+#include <linux/limits.h>
+#include <pwd.h>
+#include <sys/types.h>
+#include <readline/readline.h>
+#include <readline/history.h>
+
+typedef struct s_env
+{
+	char			*var;
+	struct s_env	*next;
+}					t_env;
 
 static t_env	*g_start = NULL;
 
@@ -32,7 +51,6 @@ static char	*get_env_var(char *var)
 	t_env	*temp;
 	size_t	size;
 
-	size = 0;
 	temp = g_start;
 	size = ft_strlen(var);
 	while (temp)
@@ -383,6 +401,7 @@ int	main(int argc, char *argv[], char *envp[])
 	while (1)
 	{
 		input = readline("MRDSHLL>");
+		input[ft_strlen(input)] = '\0';
 		add_history(input);
 		cmd = ft_split(input, ' ');
 		if (cmd[0] == NULL)
