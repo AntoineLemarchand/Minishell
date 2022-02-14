@@ -6,7 +6,7 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:09:43 by imarushe          #+#    #+#             */
-/*   Updated: 2022/02/10 13:53:00 by imarushe         ###   ########.fr       */
+/*   Updated: 2022/02/14 12:00:03 by imarushe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,7 +162,7 @@ static bool	ft_abs_path(char **cmd, char **env)
 static bool	ft_isinn_cmd(char *cmd)
 {
 	int			i;
-	const char	*inn_cmd[] = {"pwd", "cd", "env", NULL};
+	const char	*inn_cmd[] = {"pwd", "cd", "env", "echo", NULL};
 
 	i = 0;
 	while (inn_cmd[i])
@@ -213,6 +213,14 @@ static void	ft_inn_env(void)
 	}
 }
 
+static void	ft_inn_echo(char **cmd)
+{
+	if (!ft_strncmp(cmd[0], "echo", 4) && cmd[1] && ft_strncmp(cmd[1], "-n", 2))
+		printf("%s\n", cmd[1]);
+	else if (!ft_strncmp(cmd[0], "echo", 4) && cmd[1] && cmd[2] && !ft_strncmp(cmd[1], "-n", 2))
+		printf("%s", cmd[2]);
+}
+
 static void	ft_runinn_cmd(char **cmd)
 {
 	if (!ft_strncmp(cmd[0], "pwd", 3))
@@ -221,6 +229,8 @@ static void	ft_runinn_cmd(char **cmd)
 		ft_inn_cd(cmd[1]);
 	else if (!ft_strncmp(cmd[0], "env", 3))
 		ft_inn_env();
+	else if (!ft_strncmp(cmd[0], "echo", 4))
+		ft_inn_echo(cmd);
 }
 
 static void	ft_add_env(char *var)
