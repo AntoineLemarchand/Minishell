@@ -6,7 +6,7 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:09:43 by imarushe          #+#    #+#             */
-/*   Updated: 2022/02/14 12:00:03 by imarushe         ###   ########.fr       */
+/*   Updated: 2022/02/14 17:28:41 by imarushe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,11 @@
 #include <sys/types.h>
 #include <readline/readline.h>
 #include <readline/history.h>
+
+
+int rl_bind_key (int key, rl_command_func_t *function);
+void rl_clear_history (void);
+
 
 typedef struct s_env
 {
@@ -75,6 +80,7 @@ static void	ft_free_array(char **array)
 	{
 		free(array[i]);
 		array[i] = NULL;
+		i++;
 	}
 	free(array);
 	array = NULL;
@@ -162,7 +168,7 @@ static bool	ft_abs_path(char **cmd, char **env)
 static bool	ft_isinn_cmd(char *cmd)
 {
 	int			i;
-	const char	*inn_cmd[] = {"pwd", "cd", "env", "echo", NULL};
+	const char	*inn_cmd[] = {"pwd", "cd", "env", "echo", "exit", NULL};
 
 	i = 0;
 	while (inn_cmd[i])
@@ -198,7 +204,7 @@ static void	ft_inn_cd(char *path)
 		}
 	}
 	else
-		printf("Mrd! Chdir!");
+		printf("Mrd! Chdir!\n");
 }
 
 static void	ft_inn_env(void)
@@ -215,13 +221,44 @@ static void	ft_inn_env(void)
 
 static void	ft_inn_echo(char **cmd)
 {
-	if (!ft_strncmp(cmd[0], "echo", 4) && cmd[1] && ft_strncmp(cmd[1], "-n", 2))
+	if (!ft_strncmp(cmd[0], "echo", 4) && cmd[1] && cmd[1][0] == '$')
+		printf("%s\n", get_env_var(&cmd[1][1]));
+	else if (!ft_strncmp(cmd[0], "echo", 4) && cmd[1] && ft_strncmp(cmd[1], "-n", 2))
 		printf("%s\n", cmd[1]);
 	else if (!ft_strncmp(cmd[0], "echo", 4) && cmd[1] && cmd[2] && !ft_strncmp(cmd[1], "-n", 2))
 		printf("%s", cmd[2]);
+
 }
 
-static void	ft_runinn_cmd(char **cmd)
+static void	ft_free_env(void)
+{
+	t_env	*i;
+	t_env	*temp;
+
+	i = g_start;
+	temp = i;
+	while (i)
+	{
+		temp = i;
+		i = i->next;
+		free(temp->var);
+		temp->var = NULL;
+		free(temp);
+		temp = NULL;
+	}
+}
+
+static int	ft_exit(char **cmd, char *input)
+{
+	free(input);
+	ft_free_array(cmd);
+	ft_free_env();
+	rl_clear_history();
+	printf("Putain de merde! A tout!\n");
+	exit (0);
+}
+
+static void	ft_runinn_cmd(char **cmd, char *input)
 {
 	if (!ft_strncmp(cmd[0], "pwd", 3))
 		printf("%s\n", get_env_var("PWD="));
@@ -231,6 +268,8 @@ static void	ft_runinn_cmd(char **cmd)
 		ft_inn_env();
 	else if (!ft_strncmp(cmd[0], "echo", 4))
 		ft_inn_echo(cmd);
+	else if (!ft_strncmp(cmd[0], "exit", 4))
+		ft_exit(cmd, input);
 }
 
 static void	ft_add_env(char *var)
@@ -382,22 +421,12 @@ static char	**ft_to_array(void)
 	return (result);
 }
 
-static void	ft_free_env(void)
+static void	ft_initialize_readline(void)
 {
-	t_env	*i;
-	t_env	*temp;
+	rl_bind_key ('\t', rl_insert);
+//	rl_bind_keyseq ("\\C-d", rl_insert);
 
-	i = g_start;
-	temp = i;
-	while (i)
-	{
-		temp = i;
-		i = i->next;
-		free(temp->var);
-		temp->var = NULL;
-		free(temp);
-		temp = NULL;
-	}
+
 }
 
 int	main(int argc, char *argv[], char *envp[])
@@ -408,20 +437,24 @@ int	main(int argc, char *argv[], char *envp[])
 
 	(void)argc;
 	(void)argv;
+
+	ft_initialize_readline();
 	ft_make_env(envp);
-	input = malloc(sizeof(char) * 2048);
-	if (!input)
-		return (EXIT_FAILURE);
+	input = (char *)NULL;
 	while (1)
 	{
+		if (input)
+			input = (char *)NULL;
 		input = readline("MRDSHLL>");
 		input[ft_strlen(input)] = '\0';
-		add_history(input);
+		if (input && *input)
+			add_history(input);
 		cmd = ft_split(input, ' ');
+
 		if (cmd[0] == NULL)
 			printf("Mrd! Command not found!\n");
 		else if (ft_isinn_cmd(cmd[0]))
-			ft_runinn_cmd(cmd);
+			ft_runinn_cmd(cmd, input);
 		else
 		{
 			env = ft_to_array();

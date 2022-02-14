@@ -41,7 +41,7 @@ static char	*ft_worddup(char const *s, char c)
 	wordlen = 0;
 	while (s[wordlen] && s[wordlen] != c)
 		wordlen++;
-	ret = malloc((wordlen + 1) * sizeof(char));
+	ret = malloc((wordlen) * sizeof(char));
 	if (!ret)
 		return (NULL);
 	while (s[i] != '\0' && i < wordlen)

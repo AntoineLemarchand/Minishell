@@ -34,9 +34,9 @@ NAME			= minishell
 
 RM				= rm -f
 
-CC				= cc
+CC				= gcc
 
-CFLAGS			= -Wall -Wextra -Werror -g
+CFLAGS			= -Wall -Wextra -Werror
 
 CPPFLAGS		= -Iincludes
 
