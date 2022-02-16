@@ -1,9 +1,0 @@
-{
-	"makefile.launchConfigurations": [
-		{
-			"cwd": "/home/imarushe/Minishell",
-			"binaryPath": "/home/imarushe/Minishell/minishell",
-			"binaryArgs": []
-		}
-	]
-}

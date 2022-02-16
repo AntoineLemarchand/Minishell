@@ -1,62 +1,60 @@
-define compiling
-	@printf 'Compiling %s\n' $1
-	@$(CC) $(CFLAGS) $(CPPFLAGS) -c $1 -o $2
-endef
+NAME		=	minishell
 
-define building
-	@printf '%s\n' "Building $1"
-	@make -sC $1 > /dev/null
-endef
+HEADER		=	./includes/
 
-define finishing
-	@printf 'Finishing %s\n' $1
-	@$(CC) $(CFLAGS) $(CPPFLAGS) $2 -o $1 $(LIBS)
-endef
+LIBFT		=	libft/libft.a
 
-define cleaning
-	@echo -n Cleaning
-	@printf ' %s\n' $1
-	@make $2 -sC $1 > /dev/null
-endef
+CC			=	gcc
 
-define removing
-	@printf ' %s\n' $1
-	@$(RM) $1 > /dev/null
-endef
+CFLAGS		=	-Werror -Wall -Wextra -g -I $(HEADER) #-fsanitize=address
 
-SRCS			= $(addprefix srcs/, \
-					main.c \
-					)
+SRCS		=	srcs/main.c \
+				srcs/parsing/sep.c \
+				srcs/parsing/pip.c \
+				srcs/parsing/cmd.c \
+				srcs/parsing/options.c \
+				srcs/parsing/args.c \
+				srcs/parsing/s_quote.c \
+				srcs/parsing/d_quote.c \
+				srcs/parsing/redir.c \
+				srcs/parsing/redir_out.c \
+				srcs/parsing/varenv.c \
+				srcs/parsing/varenv_utils.c \
+				srcs/parsing/error.c \
+				srcs/parsing/free_parsing.c \
+				srcs/parsing/syntax_error.c \
+				srcs/shell/loop.c \
+				srcs/shell/pipe.c \
+				srcs/shell/exec/exec.c \
+				srcs/shell/exec/additional.c \
+				srcs/shell/execution.c \
+				srcs/shell/env/env.c \
+				srcs/shell/env/additional.c \
+				srcs/shell/signal.c \
+				srcs/builtin/cd.c \
+				srcs/builtin/echo.c \
+				srcs/builtin/unset.c \
+				srcs/builtin/env.c \
+				srcs/builtin/export/handler.c \
+				srcs/builtin/export/print.c \
+				srcs/builtin/exit.c \
 
-OBJS			= $(SRCS:.c=.o)
+OBJS		=	$(SRCS:.c=.o)
 
-NAME			= minishell
+all			:	$(NAME)
 
-RM				= rm -f
+$(NAME)		:	$(OBJS) $(LIBFT) $(HEADER)
+				$(CC) $(CFLAGS) $(OBJS) -o $(NAME) $(LIBFT)
 
-CC				= gcc
+$(LIBFT)	:
+				make -C ./libft
 
-CFLAGS			= -Wall -Wextra -Werror
+clean		:
+				rm -rf $(OBJS)
+				make clean -C ./libft
 
-CPPFLAGS		= -Iincludes
+fclean		:	clean
+				rm $(NAME)
+				make fclean -C ./libft
 
-LIBS			= -lreadline libft/libft.a
-
-%.o : %.c
-				$(call compiling,$<,$(<:.c=.o),0)
-
-${NAME}:		$(OBJS)
-				$(call building,libft)
-				$(call finishing,$(NAME), $(OBJS))
-
-all:			$(NAME)
-
-clean:	
-				$(call cleaning,libft,fclean)
-				@echo -n Removing
-				$(call removing,$(OBJS))
-
-fclean:			clean
-				$(call removing,$(NAME))
-
-re:				fclean all
+re			:	fclean all
