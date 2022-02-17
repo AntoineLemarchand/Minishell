@@ -6,11 +6,17 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:09:43 by imarushe          #+#    #+#             */
-/*   Updated: 2022/02/16 13:25:33 by imarushe         ###   ########.fr       */
+/*   Updated: 2022/02/17 11:27:33 by imarushe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+char					**g_envs;
+pid_t					g_pid;
+int						g_error;
+int						g_status;
+int						g_tester;
 
 void	ft_exit(t_copy *copy, int i)
 {

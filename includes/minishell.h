@@ -24,11 +24,11 @@
 # include <errno.h>
 # include "../libft/libft.h"
 
-char					**g_envs;
-pid_t					g_pid;
-int						g_error;
-int						g_status;
-int						g_tester;
+extern char					**g_envs;
+extern pid_t					g_pid;
+extern int						g_error;
+extern int						g_status;
+extern int						g_tester;
 
 typedef struct s_sep
 {
