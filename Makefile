@@ -43,7 +43,7 @@ OBJS		=	$(SRCS:.c=.o)
 
 all			:	$(NAME)
 
-$(NAME)		:	$(OBJS) $(LIBFT) $(HEADER)
+$(NAME)		:	$(OBJS) 
 				$(CC) $(CFLAGS) $(OBJS) -o $(NAME) $(LIBFT)
 
 $(LIBFT)	:

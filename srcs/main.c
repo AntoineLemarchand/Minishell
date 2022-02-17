@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "minishell.h"
 
 void	ft_exit(t_copy *copy, int i)
 {
@@ -22,7 +22,7 @@ void	ft_exit(t_copy *copy, int i)
 	if (copy->cmdssep)
 		free(copy->cmdssep);
 	if (!g_tester && i == 1)
-		ft_putstr_fd("Putain de merde!\n", 2);
+		ft_putstr_fd("A tout!\n", 2);
 	exit(g_status);
 }
 
