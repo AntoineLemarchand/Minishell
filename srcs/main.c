@@ -6,7 +6,7 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:09:43 by imarushe          #+#    #+#             */
-/*   Updated: 2022/02/07 10:21:42 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/02/18 16:31:45 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,42 +14,48 @@
 
 char	*readline(const char *prompt);
 
-void	printtok(t_command *token)
+static int	ft_isempty(char *s)
 {
-	printf("SIMPLECMD: \n[\tCMD: %s\n\t"
-		"IN: %s\n\tOUT: %s\n\tAPPEND: %d\n]\n",
-		token->cmd,
-		token->infile,
-		token->outfile,
-		token->appendmode);
-	free_cmd(token);
+	int	i;
+
+	i = 0;
+	while (s[i])
+	{
+		if (s[i] != ' ' && (s[i] < '\t' || s[i] > '\r'))
+			return (0);
+		i++;
+	}
+	return (1);
 }
 
 int	main(int ac, char **av, char **env)
 {
 	char		*input;
 	int			i;
-	t_command	**tokens;
+	t_tok		**tokens;
 
-	(void)av;
-	if (env && ac == 1)
-	{
-		while (1)
-		{
-			input = readline("MRDSHLL%> ");
-			add_history(input);
-			if (!input)
-				break ;
-			tokens = ft_lexer(input);
-			i = 0;
-			while (tokens[i])
-				printtok(tokens[i++]);
-			free(input);
-			free(tokens);
-		}
-		rl_clear_history();
-		printf("\nexit\n");
+	if (!env || ac != 1)
 		return (0);
+	while (1)
+	{
+		input = readline("MRDSHLL%> ");
+		if (!input)
+			break ;
+		add_history(input);
+		if (!ft_isempty(input))
+		{
+			tokens = ft_lex(input);
+			if (!tokens)
+				printf("%s: syntax error\n", av[0]);
+			i = -1;
+			while (tokens[++i])
+				printf("%i: [value: %s - type: %i]\n",
+					i, tokens[i]->value, tokens[i]->type);
+			free_toks(tokens);
+		}
+		free(input);
 	}
+	rl_clear_history();
+	printf("\nexit\n");
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/31 11:48:25 by alemarch          #+#    #+#             */
-/*   Updated: 2022/02/04 12:24:01 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/02/18 15:58:22 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,27 +20,24 @@
 # include <sys/wait.h>
 # include "libft.h"
 
-typedef struct s_command {
-	char	*cmd;
-	char	*infile;
-	char	*outfile;
-	int		appendmode;
-}	t_command;
+// states
+# define PIPE			0
+# define INREDIR		1
+# define OUTREDIR		2
+# define LITERAL		3
+# define BLANK			4
+# define SIMPLEQUOTE	5
+# define DOUBLEQUOTE	6
+# define VARIABLE		7
 
-// executils.c
-char		*ft_joincommand(char *s1, char *s2);
-void		ft_freesplit(char **split);
-// lex_io.c
-int			load_io(char *line, t_command *cmd);
-// lex_cmd.c
-int			load_cmd(char *line, t_command *cmd);
+typedef struct s_tok {
+	char	*value;
+	int		type;
+}	t_tok;
+// lexer_utils.c
+void	free_toks(t_tok **toks);
+int	toktype(char c);
+t_tok **ft_tokalloc(t_tok **toks);
 // lexer.c
-void		free_cmd(t_command *cmd);
-t_command	**ft_lexer(char *inputline);
-// pipe.c
-int			ft_exec(char *action, char **env);
-int			ft_fork(int fd, char *action, char **env);
-char		*ft_getpath(char *command, char **env);
-// echo.c
-void		ft_echo(int ac, char **av);
+t_tok	**ft_lex(char *input);
 #endif

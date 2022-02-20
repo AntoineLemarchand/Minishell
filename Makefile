@@ -25,11 +25,7 @@ define removing
 endef
 
 SRCS			= $(addprefix srcs/, \
-				  	executils.c \
-				  	parsing.c \
-					pipe.c \
-					lex_io.c \
-					lex_cmd.c \
+				  lexer_utils.c \
 					lexer.c \
 					main.c \
 					)
@@ -40,9 +36,9 @@ NAME			= minishell
 
 RM				= rm -f
 
-CC				= cc
+CC				= gcc
 
-CFLAGS			= -Wall -Wextra -Werror -g
+CFLAGS			= -Wall -Wextra -Werror -g -fsanitize=address
 
 CPPFLAGS		= -Iincludes
 

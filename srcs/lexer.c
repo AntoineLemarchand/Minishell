@@ -6,102 +6,160 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 10:23:31 by alemarch          #+#    #+#             */
-/*   Updated: 2022/02/07 09:58:29 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/02/18 17:49:38 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	free_cmd(t_command *cmd)
+static t_tok	**add_char_tok(t_tok **toks, char input)
 {
-	if (cmd)
-	{
-		if (cmd->infile)
-			free(cmd->infile);
-		if (cmd->outfile)
-			free(cmd->outfile);
-		if (cmd->cmd)
-			free(cmd->cmd);
-		free(cmd);
-	}
-}
+	int	size;
 
-static t_command	*parsecmd(char *cmd)
-{
-	int			end;
-	t_command	*ret;
-
-	ret = malloc(sizeof(t_command));
-	if (load_io(cmd, ret) || load_cmd(cmd, ret))
-	{
-		free_cmd(ret);
-		return (NULL);
-	}
-	if (ret->outfile)
-	{
-		end = ft_strlen(cmd);
-		while (cmd[end] != '>')
-			end--;
-		if (end - 1 >= 0 && cmd[end - 1] == '>')
-			ret->appendmode = 1;
-		else
-			ret->appendmode = 0;
-	}
-	else
-		ret->appendmode = 0;
-	return (ret);
-}
-
-static t_command	**addcmd(t_command **cmdtable, t_command *newcmd)
-{
-	t_command	**ret;
-	int			size;
-	int			i;
-
-	if (!cmdtable)
-		ret = malloc(2 * sizeof(t_command *));
 	size = 0;
-	while (cmdtable && cmdtable[size])
-		size++;
-	if (cmdtable)
-		ret = malloc((size + 2) * sizeof(t_command *));
-	if (!ret)
+	toks = ft_tokalloc(toks);
+	if (!toks)
 		return (NULL);
-	i = 0;
-	while (cmdtable && cmdtable[i])
+	while (toks[size])
+		size++;
+	toks[size] = malloc(sizeof(t_tok));
+	if (!toks[size])
 	{
-		ret[i] = cmdtable[i];
-		i++;
+		free_toks(toks);
+		return (NULL);
 	}
-	ret[i] = newcmd;
-	ret[i + 1] = NULL;
-	free(cmdtable);
+	toks[size]->value = ft_calloc(2, sizeof(char));
+	if (!toks[size]->value)
+	{
+		free_toks(toks);
+		return (NULL);
+	}
+	*toks[size]->value = input;
+	toks[size]->type = toktype(input);
+	return (toks);
+}
+
+static t_tok	**add_tok(t_tok **toks, char *input, int type)
+{
+	int	size;
+
+	size = 0;
+	toks = ft_tokalloc(toks);
+	if (!toks)
+		return (NULL);
+	while (toks[size])
+		size++;
+	toks[size] = malloc(sizeof(t_tok));
+	if (!toks[size])
+	{
+		free_toks(toks);
+		return (NULL);
+	}
+	toks[size]->value = input;
+	toks[size]->type = type;
+	return (toks);
+}
+
+static t_tok	**ft_grouptok(t_tok **toks)
+{
+	t_tok	**ret;
+	int		i;
+	int		size;
+
+	i = -1;
+	size = -1;
+	ret = NULL;
+	while (toks[++i])
+	{
+		if (ret && toks[i]->type == ret[size]->type)
+		{
+			ret[size]->value = ft_strjoinfree(ret[size]->value, toks[i]->value);
+			if (!ret[size]->value)
+				free_toks(toks);
+			if (!ret[size]->value)
+				return (NULL);
+		}
+		else
+		{
+			ret = add_tok(ret, ft_strdup(toks[i]->value), toks[i]->type);
+			if (size++ && !ret)
+				break ;
+		}
+	}
 	return (ret);
 }
 
-t_command	**ft_lexer(char *inputline)
+t_tok	**ft_cleantok(t_tok **toks)
 {
-	t_command	**ret;
-	t_command	*newcmd;
-	char		**commands;
-	int			i;
+	t_tok	**ret;
+	int		i;
+	int		size;
 
-	commands = ft_split(inputline, '|');
-	ret = NULL;
-	if (!commands)
-		return (NULL);
 	i = 0;
-	while (commands[i])
+	size = -1;
+	ret = NULL;
+	while (toks[i])
 	{
-		newcmd = parsecmd(commands[i]);
-		if (!newcmd)
+		if (toks[i]->type == BLANK)
+			;
+		else if (toks[i]->type == VARIABLE)
 		{
-			ft_freesplit(commands);
-			return (NULL);
+			i++;
+			ret = add_tok(ret, ft_strdup(toks[i]->value), VARIABLE);
+			if (size++ && !ret)
+				break ;
 		}
-		ret = addcmd(ret, newcmd);
+		else if (toks[i]->type == SIMPLEQUOTE || toks[i]->type == DOUBLEQUOTE)
+		{
+			i++;
+			while (toks[i]->type != ret[size]->type)
+			{
+				ret[size]->value = ft_strjoinfree(ret[size]->value, toks[i]->value);
+				if (!ret[size]->value)
+					free_toks(toks);
+				if (!ret[size]->value)
+					return (NULL);
+				i++;
+			}
+		}
+		else
+		{
+			ret = add_tok(ret, ft_strdup(toks[i]->value), toks[i]->type);
+			if (size++ && !ret)
+				break ;
+			while (toks[i]->type != ret[size]->type)
+			{
+			}
+		}
 		i++;
 	}
-	ft_freesplit(commands);
 	return (ret);
+}
+
+t_tok	**ft_lex(char *input)
+{
+	int		i;
+	t_tok	**toks;
+	t_tok	**swp;
+
+	i = 0;
+	toks = NULL;
+	while (input[i])
+	{
+		toks = add_char_tok(toks, input[i]);
+		if (!toks)
+			return (NULL);
+		i++;
+	}
+	swp = toks;
+	toks = ft_grouptok(toks);
+	free_toks(swp);
+	if (!toks)
+		return (NULL);
+	swp = toks;
+	toks = ft_cleantok(toks);
+	free_toks(swp);
+	if (!toks)
+		return (NULL);
+	return (toks);
 }
