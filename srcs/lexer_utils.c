@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/18 15:56:55 by alemarch          #+#    #+#             */
-/*   Updated: 2022/02/18 16:30:47 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/02/21 11:39:06 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	free_toks(t_tok **toks)
 	i = 0;
 	while (toks[i])
 	{
-		free(toks[i]->value);
+		free(toks[i]->val);
 		free(toks[i]);
 		i++;
 	}
@@ -42,6 +42,8 @@ int	toktype(char c)
 		return (BLANK);
 	else if (c == '$')
 		return (VARIABLE);
+	else if (ft_isalnum(c))
+		return (ALNUM);
 	else
 		return (LITERAL);
 }

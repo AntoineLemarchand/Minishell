@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/31 11:48:25 by alemarch          #+#    #+#             */
-/*   Updated: 2022/02/18 15:58:22 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/02/21 11:39:23 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,14 +24,15 @@
 # define PIPE			0
 # define INREDIR		1
 # define OUTREDIR		2
-# define LITERAL		3
-# define BLANK			4
-# define SIMPLEQUOTE	5
-# define DOUBLEQUOTE	6
-# define VARIABLE		7
+# define ALNUM			3
+# define LITERAL		4
+# define BLANK			5
+# define SIMPLEQUOTE	6
+# define DOUBLEQUOTE	7
+# define VARIABLE		8
 
 typedef struct s_tok {
-	char	*value;
+	char	*val;
 	int		type;
 }	t_tok;
 // lexer_utils.c

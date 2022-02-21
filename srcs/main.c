@@ -6,7 +6,7 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:09:43 by imarushe          #+#    #+#             */
-/*   Updated: 2022/02/18 16:31:45 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/02/21 11:39:17 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int	main(int ac, char **av, char **env)
 			i = -1;
 			while (tokens[++i])
 				printf("%i: [value: %s - type: %i]\n",
-					i, tokens[i]->value, tokens[i]->type);
+					i, tokens[i]->val, tokens[i]->type);
 			free_toks(tokens);
 		}
 		free(input);

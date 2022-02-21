@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 10:23:31 by alemarch          #+#    #+#             */
-/*   Updated: 2022/02/18 17:49:38 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/02/21 16:49:37 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,13 @@ static t_tok	**add_char_tok(t_tok **toks, char input)
 		free_toks(toks);
 		return (NULL);
 	}
-	toks[size]->value = ft_calloc(2, sizeof(char));
-	if (!toks[size]->value)
+	toks[size]->val = ft_calloc(2, sizeof(char));
+	if (!toks[size]->val)
 	{
 		free_toks(toks);
 		return (NULL);
 	}
-	*toks[size]->value = input;
+	*toks[size]->val = input;
 	toks[size]->type = toktype(input);
 	return (toks);
 }
@@ -55,7 +55,7 @@ static t_tok	**add_tok(t_tok **toks, char *input, int type)
 		free_toks(toks);
 		return (NULL);
 	}
-	toks[size]->value = input;
+	toks[size]->val = input;
 	toks[size]->type = type;
 	return (toks);
 }
@@ -73,15 +73,13 @@ static t_tok	**ft_grouptok(t_tok **toks)
 	{
 		if (ret && toks[i]->type == ret[size]->type)
 		{
-			ret[size]->value = ft_strjoinfree(ret[size]->value, toks[i]->value);
-			if (!ret[size]->value)
-				free_toks(toks);
-			if (!ret[size]->value)
+			ret[size]->val = ft_joinfree(ret[size]->val, toks[i]->val);
+			if (!ret[size]->val)
 				return (NULL);
 		}
 		else
 		{
-			ret = add_tok(ret, ft_strdup(toks[i]->value), toks[i]->type);
+			ret = add_tok(ret, ft_strdup(toks[i]->val), toks[i]->type);
 			if (size++ && !ret)
 				break ;
 		}
@@ -89,49 +87,31 @@ static t_tok	**ft_grouptok(t_tok **toks)
 	return (ret);
 }
 
-t_tok	**ft_cleantok(t_tok **toks)
+t_tok	**ft_cleantok(t_tok **toks, int i, int size, t_tok **ret)
 {
-	t_tok	**ret;
-	int		i;
-	int		size;
-
-	i = 0;
-	size = -1;
-	ret = NULL;
-	while (toks[i])
+	while (toks[++i])
 	{
-		if (toks[i]->type == BLANK)
-			;
-		else if (toks[i]->type == VARIABLE)
+		if (toks[i]->type == DOUBLEQUOTE || toks[i]->type == SIMPLEQUOTE)
 		{
-			i++;
-			ret = add_tok(ret, ft_strdup(toks[i]->value), VARIABLE);
+			if (toks[i + 1] && toks[i + 1]->type == toks[i]->type)
+			{
+				ret = add_tok(ret, ft_strdup("\0"), toks[i]->type);
+				if (size++ && !ret)
+					break ;
+				while (toks[++i]->type != ret[size]->type)
+				{
+					ret[size]->val = ft_joinfree(ret[size]->val, toks[i]->val);
+					if (!ret[size]->val)
+						return (NULL);
+				}
+			}
+		}
+		else if (toks[i]->type != BLANK)
+		{
+			ret = add_tok(ret, ft_strdup(toks[i]->val), toks[i]->type);
 			if (size++ && !ret)
 				break ;
 		}
-		else if (toks[i]->type == SIMPLEQUOTE || toks[i]->type == DOUBLEQUOTE)
-		{
-			i++;
-			while (toks[i]->type != ret[size]->type)
-			{
-				ret[size]->value = ft_strjoinfree(ret[size]->value, toks[i]->value);
-				if (!ret[size]->value)
-					free_toks(toks);
-				if (!ret[size]->value)
-					return (NULL);
-				i++;
-			}
-		}
-		else
-		{
-			ret = add_tok(ret, ft_strdup(toks[i]->value), toks[i]->type);
-			if (size++ && !ret)
-				break ;
-			while (toks[i]->type != ret[size]->type)
-			{
-			}
-		}
-		i++;
 	}
 	return (ret);
 }
@@ -157,7 +137,7 @@ t_tok	**ft_lex(char *input)
 	if (!toks)
 		return (NULL);
 	swp = toks;
-	toks = ft_cleantok(toks);
+	toks = ft_cleantok(toks, -1, -1, NULL);
 	free_toks(swp);
 	if (!toks)
 		return (NULL);
