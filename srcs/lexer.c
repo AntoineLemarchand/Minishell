@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 10:23:31 by alemarch          #+#    #+#             */
-/*   Updated: 2022/02/21 16:49:37 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/02/23 10:10:17 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,22 +91,21 @@ t_tok	**ft_cleantok(t_tok **toks, int i, int size, t_tok **ret)
 {
 	while (toks[++i])
 	{
-		if (toks[i]->type == DOUBLEQUOTE || toks[i]->type == SIMPLEQUOTE)
+		if ((toks[i]->type == DOUBLEQUOTE || toks[i]->type == SIMPLEQUOTE)
+			&& ft_strlen(toks[i]->val) == 1)
 		{
-			if (toks[i + 1] && toks[i + 1]->type == toks[i]->type)
+			ret = add_tok(ret, ft_strdup("\0"), toks[i]->type);
+			if (size++ && !ret)
+				break ;
+			while (toks[++i] && toks[i]->type != ret[size]->type)
 			{
-				ret = add_tok(ret, ft_strdup("\0"), toks[i]->type);
-				if (size++ && !ret)
-					break ;
-				while (toks[++i]->type != ret[size]->type)
-				{
-					ret[size]->val = ft_joinfree(ret[size]->val, toks[i]->val);
-					if (!ret[size]->val)
-						return (NULL);
-				}
+				ret[size]->val = ft_joinfree(ret[size]->val, toks[i]->val);
+				if (!ret[size]->val)
+					return (NULL);
 			}
 		}
-		else if (toks[i]->type != BLANK)
+		else if (toks[i]->type != BLANK 
+			&& toks[i]->type != DOUBLEQUOTE && toks[i]->type != SIMPLEQUOTE)
 		{
 			ret = add_tok(ret, ft_strdup(toks[i]->val), toks[i]->type);
 			if (size++ && !ret)
