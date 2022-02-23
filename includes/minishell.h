@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/31 11:48:25 by alemarch          #+#    #+#             */
-/*   Updated: 2022/02/23 16:40:40 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/02/23 17:07:12 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,8 @@ typedef struct s_tok {
 	char	*val;
 	int		type;
 }	t_tok;
-// ast structs
 
+// ast structs
 typedef struct s_redir {
 	char	*type;
 	char	*val;
@@ -68,7 +68,11 @@ void	free_toks(t_tok **toks);
 int		toktype(char c);
 t_tok	**ft_tokalloc(t_tok **toks);
 //	lexer.c
-t_tok	**ft_lex(char *input);
+t_tok	**ft_lex(char *input, char **env);
+
+//EXPANDING
+//	expander.c
+int	ft_expand(t_tok **toks, char **env);
 
 //PARSING
 //	parser_utils.c

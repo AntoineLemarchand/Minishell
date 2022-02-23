@@ -30,6 +30,10 @@ LEX				= $(addprefix lexing/, \
 					lexer.c \
 					)
 
+EXPAND			= $(addprefix expanding/, \
+					expander.c \
+					)
+
 PARSE			= $(addprefix parsing/, \
 					parser_cmd_utils.c \
 					parser_utils.c \
@@ -42,6 +46,7 @@ EXEC			= $(addprefix execution/, \
 
 SRCS			= $(addprefix srcs/, \
 				  	$(LEX) \
+					$(EXPAND) \
 					$(PARSE) \
 					$(EXEC) \
 					main.c \
