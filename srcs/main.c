@@ -6,7 +6,7 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:09:43 by imarushe          #+#    #+#             */
-/*   Updated: 2022/02/23 15:18:27 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/02/23 15:37:57 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static int	ft_isempty(char *s)
 	return (1);
 }
 
-/* USED FOR DEBUG
+/* USED FOR DEBUG */
 void	printast(t_node	*ast)
 {
 	int	i;
@@ -61,7 +61,6 @@ void	printast(t_node	*ast)
 		}
 	}
 }
-*/
 
 int	main(int ac, char **av, char **env)
 {
@@ -82,6 +81,7 @@ int	main(int ac, char **av, char **env)
 		{
 			tokens = ft_lex(input);
 			ast = ft_create_ast(tokens);
+			printast(ast);
 			free_toks(tokens);
 			free_ast(ast);
 		}

@@ -30,6 +30,7 @@ SRCS			= $(addprefix srcs/, \
 					parser_cmd_utils.c \
 					parser_utils.c \
 					parser.c \
+					exec_simplecmd.c \
 					main.c \
 					)
 
@@ -41,7 +42,7 @@ RM				= rm -f
 
 CC				= gcc
 
-CFLAGS			= -Wall -Wextra -Werror
+CFLAGS			= -Wall -Wextra -Werror -g #-fsanitize=address
 
 CPPFLAGS		= -Iincludes
 
