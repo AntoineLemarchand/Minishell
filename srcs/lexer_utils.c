@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/18 15:56:55 by alemarch          #+#    #+#             */
-/*   Updated: 2022/02/21 11:39:06 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/02/23 10:35:48 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,6 @@ int	toktype(char c)
 		return (DOUBLEQUOTE);
 	else if (c == ' ' || (c >= '\t' && c <= '\r'))
 		return (BLANK);
-	else if (c == '$')
-		return (VARIABLE);
-	else if (ft_isalnum(c))
-		return (ALNUM);
 	else
 		return (LITERAL);
 }

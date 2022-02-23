@@ -25,8 +25,11 @@ define removing
 endef
 
 SRCS			= $(addprefix srcs/, \
-				  lexer_utils.c \
+					lexer_utils.c \
 					lexer.c \
+					parser_cmd_utils.c \
+					parser_utils.c \
+					parser.c \
 					main.c \
 					)
 
@@ -38,7 +41,7 @@ RM				= rm -f
 
 CC				= gcc
 
-CFLAGS			= -Wall -Wextra -Werror -g -fsanitize=address
+CFLAGS			= -Wall -Wextra -Werror
 
 CPPFLAGS		= -Iincludes
 

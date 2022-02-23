@@ -6,7 +6,7 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:09:43 by imarushe          #+#    #+#             */
-/*   Updated: 2022/02/21 11:39:17 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/02/23 15:18:27 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,48 @@ static int	ft_isempty(char *s)
 	return (1);
 }
 
+/* USED FOR DEBUG
+void	printast(t_node	*ast)
+{
+	int	i;
+
+	if (ast->type == PIPELINE)
+	{
+		printf("┌PIPE\n");
+		printast(((t_pipe *)(ast->node))->left_node);
+		printast(((t_pipe *)(ast->node))->right_node);
+	}
+	else
+	{
+		printf("├─ CMD\n");
+		i = 0;
+		while (((t_cmd *)ast->node)->args[i])
+		{
+			printf("│ └%s\n", ((t_cmd *)(ast->node))->args[i]);
+			i++;
+		}
+		i = 0;
+		if (((t_cmd *)ast->node)->redir)
+		{
+			printf("└── REDIR\n");
+			while (((t_cmd *)ast->node)->redir[i])
+			{
+				printf("    └ %2s - %s\n", ((t_cmd *)ast->node)->redir[i]->type,
+					((t_cmd *)ast->node)->redir[i]->val);
+				i++;
+			}
+		}
+	}
+}
+*/
+
 int	main(int ac, char **av, char **env)
 {
 	char		*input;
-	int			i;
 	t_tok		**tokens;
+	t_node		*ast;
 
+	(void)av;
 	if (!env || ac != 1)
 		return (0);
 	while (1)
@@ -45,13 +81,9 @@ int	main(int ac, char **av, char **env)
 		if (!ft_isempty(input))
 		{
 			tokens = ft_lex(input);
-			if (!tokens)
-				printf("%s: syntax error\n", av[0]);
-			i = -1;
-			while (tokens[++i])
-				printf("%i: [value: %s - type: %i]\n",
-					i, tokens[i]->val, tokens[i]->type);
+			ast = ft_create_ast(tokens);
 			free_toks(tokens);
+			free_ast(ast);
 		}
 		free(input);
 	}
