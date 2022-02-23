@@ -6,9 +6,11 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 16:30:18 by alemarch          #+#    #+#             */
-/*   Updated: 2022/02/23 17:05:39 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/02/23 20:51:43 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include "minishell.h"
 
 int	check_quotes(char *input)
 {
@@ -20,7 +22,7 @@ int	check_quotes(char *input)
 	{
 		if (input[i] == '\'' || input[i] == '"')
 		{
-			control = input[i];
+			control = input[i++];
 			while (input[i] && input[i] != control)
 				i++;
 			if (!input[i])
@@ -40,19 +42,11 @@ int	check_pipe(char *input)
 		i++;
 	if (input[i] == '|')
 		return (1);
-	while (input[i])
-	{
-		if (input[i] == '|')
-		{
-			i++;
-			while (input[i]
-				&& (input[i] == ' ' || (input[i] >= '\t' && input[i] <= '\r')))
-				i++;
-			if (!input[i])
-				return (1);
-		}
-		i++;
-	}
+	i = ft_strlen(input) - 1;
+	while (input[i] == ' ' || (input[i] >= '\t' && input[i] <= '\r'))
+		i--;
+	if (input[i] == '|')
+		return (1);
 	return (0);
 }
 

@@ -6,13 +6,13 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 16:42:56 by alemarch          #+#    #+#             */
-/*   Updated: 2022/02/23 17:12:38 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/02/23 19:32:11 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char *ft_addchar(char *dest, char c)
+static char	*ft_addchar(char *dest, char c)
 {
 	char	*ret;
 
@@ -22,41 +22,46 @@ static char *ft_addchar(char *dest, char c)
 	return (ret);
 }
 
-static char	*ft_addvar(char *dest, char *src, char **env)
+static char	*ft_getvar(char *src)
 {
 	int		i;
-	char	*var;
+	char	*ret;
 	char	*swp;
 
 	i = -1;
-	var = ft_calloc(1, sizeof(char));
+	ret = ft_calloc(1, sizeof(char));
 	while (ft_isalnum(src[++i]))
 	{
-		swp = var;
-		var = ft_addchar(var, src[i]);
+		swp = ret;
+		ret = ft_addchar(ret, src[i]);
 		free(swp);
-		if (!var)
+		if (!ret)
 			return (NULL);
 	}
-	swp = var;
-	var = ft_strjoin(var, "=\0");
+	swp = ret;
+	ret = ft_addchar(ret, '=');
 	free(swp);
+	return (ret);
+}
+
+static int	ft_addvar(char **dest, char *src, char **env)
+{
+	int		i;
+	int		varlen;
+	char	*var;
+
+	i = -1;
+	var = ft_getvar(src);
 	if (!var)
-		return (NULL);
+		return (0);
 	i = 0;
-	while (env[i] && !ft_strncmp(env[i], var, ft_strlen(var)))
+	while (env[i] && ft_strncmp(env[i], var, ft_strlen(var)) != 0)
 		i++;
 	if (env[i])
-	{
-		swp = dest;
-		dest = ft_strjoin(var, env[i] + ft_strlen(var));
-		free(swp);
-		if (!dest)
-			free(var);
-		if (!dest)
-			return (NULL);
-	}
-	return (dest);
+		*dest = ft_joinfree(*dest, env[i] + ft_strlen(var));
+	varlen = ft_strlen(var) - 1;
+	free(var);
+	return (varlen);
 }
 
 static char	*ft_expandval(char *s, char **env)
@@ -64,27 +69,23 @@ static char	*ft_expandval(char *s, char **env)
 	int		i;
 	char	*ret;
 	char	*swp;
-	
-	i = 0;
+
 	ret = ft_calloc(1, sizeof(char));
 	if (!ret)
 		return (NULL);
+	i = 0;
 	while (s[i])
 	{
-		if (s[i] == '$')
-		{
-			ret = ft_addvar(ret, s + i + 1, env);
-			i = ft_strlen(ret);
-		}
-		else
+		if (s[i] != '$')
 		{
 			swp = ret;
-			ret = ft_addchar(ret, s[i]);
+			ret = ft_addchar(ret, s[i++]);
 			free(swp);
 		}
+		else if (++i)
+			i += ft_addvar(&ret, s + i, env);
 		if (!ret)
 			return (NULL);
-		i++;
 	}
 	return (ret);
 }

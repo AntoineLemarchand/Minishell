@@ -6,7 +6,7 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:09:43 by imarushe          #+#    #+#             */
-/*   Updated: 2022/02/23 16:41:32 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/02/23 20:57:49 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,49 +29,66 @@ static int	ft_isempty(char *s)
 }
 
 /* USED FOR DEBUG
-void	printast(t_node	*ast)
-{
-	int	i;
+   void	printast(t_node	*ast)
+   {
+   int	i;
 
-	if (ast->type == PIPELINE)
+   if (ast->type == PIPELINE)
+   {
+   printf("┌PIPE\n");
+   printast(((t_pipe *)(ast->node))->left_node);
+   printast(((t_pipe *)(ast->node))->right_node);
+   }
+   else
+   {
+   printf("├─ CMD\n");
+   i = 0;
+   while (((t_cmd *)ast->node)->args[i])
+   {
+   printf("│ └%s\n", ((t_cmd *)(ast->node))->args[i]);
+   i++;
+   }
+   i = 0;
+   if (((t_cmd *)ast->node)->redir)
+   {
+   printf("└── REDIR\n");
+   while (((t_cmd *)ast->node)->redir[i])
+   {
+   printf("    └ %2s - %s\n", ((t_cmd *)ast->node)->redir[i]->type,
+   ((t_cmd *)ast->node)->redir[i]->val);
+   i++;
+   }
+   }
+   }
+   }
+   */
+
+t_node	*parse_input(char *input, char **env)
+{
+	t_tok	**tokens;
+	t_node	*ret;
+
+	tokens = ft_lex(input);
+	if (!tokens)
+		return (NULL);
+	if (ft_expand(tokens, env))
 	{
-		printf("┌PIPE\n");
-		printast(((t_pipe *)(ast->node))->left_node);
-		printast(((t_pipe *)(ast->node))->right_node);
+		free_toks(tokens);
+		return (NULL);
 	}
-	else
-	{
-		printf("├─ CMD\n");
-		i = 0;
-		while (((t_cmd *)ast->node)->args[i])
-		{
-			printf("│ └%s\n", ((t_cmd *)(ast->node))->args[i]);
-			i++;
-		}
-		i = 0;
-		if (((t_cmd *)ast->node)->redir)
-		{
-			printf("└── REDIR\n");
-			while (((t_cmd *)ast->node)->redir[i])
-			{
-				printf("    └ %2s - %s\n", ((t_cmd *)ast->node)->redir[i]->type,
-					((t_cmd *)ast->node)->redir[i]->val);
-				i++;
-			}
-		}
-	}
+	ret = ft_create_ast(tokens);
+	free_toks(tokens);
+	if (!ret)
+		return (NULL);
+	return (ret);
 }
-*/
 
 int	main(int ac, char **av, char **env)
 {
 	char		*input;
-	t_tok		**tokens;
 	t_node		*ast;
 
-	if (!env || ac != 1 || !av)
-		return (0);
-	while (1)
+	while (1 && ac == 1)
 	{
 		input = readline("MRDSHLL%> ");
 		if (!input)
@@ -79,11 +96,14 @@ int	main(int ac, char **av, char **env)
 		add_history(input);
 		if (!ft_isempty(input))
 		{
-			tokens = ft_lex(input);
-			ast = ft_create_ast(tokens);
-			exec_simplecmd(ast, 0, 1);
-			free_toks(tokens);
-			free_ast(ast);
+			ast = parse_input(input, env);
+			if (!ast)
+				printf("%s: syntax error\n", av[0]);
+			else
+			{
+				exec_simplecmd(ast, 0, 1);
+				free_ast(ast);
+			}
 		}
 		free(input);
 	}

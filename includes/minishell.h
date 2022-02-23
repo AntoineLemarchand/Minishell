@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/31 11:48:25 by alemarch          #+#    #+#             */
-/*   Updated: 2022/02/23 17:07:12 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/02/23 19:35:24 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,11 +68,11 @@ void	free_toks(t_tok **toks);
 int		toktype(char c);
 t_tok	**ft_tokalloc(t_tok **toks);
 //	lexer.c
-t_tok	**ft_lex(char *input, char **env);
+t_tok	**ft_lex(char *input);
 
 //EXPANDING
 //	expander.c
-int	ft_expand(t_tok **toks, char **env);
+int		ft_expand(t_tok **toks, char **env);
 
 //PARSING
 //	parser_utils.c
