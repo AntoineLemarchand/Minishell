@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 10:12:07 by alemarch          #+#    #+#             */
-/*   Updated: 2022/02/23 15:36:21 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/02/23 16:08:11 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,6 @@ static int	ft_parsecmd(t_node *ast, t_tok **tokens)
 	}
 	ast->type = SIMPLECMD;
 	ast->node = ret;
-	free_toks(tokens);
 	return (0);
 }
 
@@ -71,20 +70,14 @@ static int	ft_parsepipe(t_node	*ast, t_tok	**tokens, int index)
 	t_pipe	*ret;
 
 	tokleft = getleft(tokens, index);
-	if (!tokleft)
-	{
-		free(tokens);
-		return (1);
-	}
 	tokright = getright(tokens, index);
-	if (!tokright)
-	{
-		free(tokens);
+	if (!tokright || !tokleft)
 		return (1);
-	}
 	ret = malloc(sizeof(t_pipe));
 	ret->left_node = ft_create_ast(tokleft);
+	free_toks(tokleft);
 	ret->right_node = ft_create_ast(tokright);
+	free_toks(tokright);
 	if (!ret->left_node || !ret->right_node)
 		return (1);
 	ast->type = PIPELINE;

@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/31 11:48:25 by alemarch          #+#    #+#             */
-/*   Updated: 2022/02/23 15:06:03 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/02/23 16:40:40 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,9 +48,9 @@ typedef struct s_redir {
 typedef struct s_cmd {
 	char	**args;
 	t_redir	**redir;
-} t_cmd;
+}	t_cmd;
 
-typedef	struct s_pipe {
+typedef struct s_pipe {
 	struct s_node	*left_node;
 	struct s_node	*right_node;
 }	t_pipe;
@@ -60,25 +60,30 @@ typedef struct s_node {
 	void	*node;
 }	t_node;
 
-// lexer_utils.c
+//LEXING
+//	check.c
+int		check_input(char *input);
+//	lexer_utils.c
 void	free_toks(t_tok **toks);
 int		toktype(char c);
 t_tok	**ft_tokalloc(t_tok **toks);
-
-// lexer.c
+//	lexer.c
 t_tok	**ft_lex(char *input);
 
-// parser_utils.c
+//PARSING
+//	parser_utils.c
 t_tok	**getleft(t_tok **tokens, int index);
 t_tok	**getright(t_tok **tokens, int index);
 void	free_cmd(t_cmd	*cmd);
 void	free_ast(t_node *ast);
-
-// parser_cmd_utils.c
+//	parser_cmd_utils.c
 t_redir	**ft_addredir(t_redir **redir, t_tok **tokens);
 char	**ft_addargs(char	**args, t_tok	*tok);
-
-// parser.c
+//	parser.c
 void	ft_freesplit(char **split);
 t_node	*ft_create_ast(t_tok **tokens);
+
+//EXECUTION
+//	exec_simplecmd.c
+int		exec_simplecmd(t_node	*ast, int fdin, int fdout);
 #endif

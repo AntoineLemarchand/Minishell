@@ -24,13 +24,26 @@ define removing
 	@$(RM) $1 > /dev/null
 endef
 
-SRCS			= $(addprefix srcs/, \
+LEX				= $(addprefix lexing/, \
+					check.c \
 					lexer_utils.c \
 					lexer.c \
+					)
+
+PARSE			= $(addprefix parsing/, \
 					parser_cmd_utils.c \
 					parser_utils.c \
 					parser.c \
+				  	)
+
+EXEC			= $(addprefix execution/, \
 					exec_simplecmd.c \
+					)
+
+SRCS			= $(addprefix srcs/, \
+				  	$(LEX) \
+					$(PARSE) \
+					$(EXEC) \
 					main.c \
 					)
 
@@ -42,7 +55,7 @@ RM				= rm -f
 
 CC				= gcc
 
-CFLAGS			= -Wall -Wextra -Werror -g #-fsanitize=address
+CFLAGS			= -Wall -Wextra -Werror -g -fsanitize=address
 
 CPPFLAGS		= -Iincludes
 
