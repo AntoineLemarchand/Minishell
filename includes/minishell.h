@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/31 11:48:25 by alemarch          #+#    #+#             */
-/*   Updated: 2022/02/23 19:35:24 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/02/24 12:00:55 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,5 +89,5 @@ t_node	*ft_create_ast(t_tok **tokens);
 
 //EXECUTION
 //	exec_simplecmd.c
-int		exec_simplecmd(t_node	*ast, int fdin, int fdout);
+int		exec_simplecmd(t_node	*ast, char **env);
 #endif

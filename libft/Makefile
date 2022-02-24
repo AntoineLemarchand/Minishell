@@ -34,6 +34,7 @@ STR			= $(addprefix str/, \
 			  	ft_strchr.c \
 			  	ft_strrchr.c \
 			  	ft_strncmp.c \
+				get_next_line.c \
 				)
 
 NBR			= $(addprefix nbr/, \

@@ -6,7 +6,7 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:09:43 by imarushe          #+#    #+#             */
-/*   Updated: 2022/02/24 10:15:11 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/02/24 15:56:51 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static int	ft_isempty(char *s)
 	}
 	return (1);
 }
-
+/*
 void	printast(t_node	*ast)
 {
 	int	i;
@@ -60,7 +60,7 @@ void	printast(t_node	*ast)
 		}
 	}
 }
-
+*/
 t_node	*parse_input(char *input, char **env)
 {
 	t_tok	**tokens;
@@ -86,7 +86,8 @@ int	main(int ac, char **av, char **env)
 	char		*input;
 	t_node		*ast;
 
-	while (1 && ac == 1)
+	(void)ac;
+	while (1)
 	{
 		input = readline("MRDSHLL%> ");
 		if (!input)
@@ -96,10 +97,10 @@ int	main(int ac, char **av, char **env)
 		{
 			ast = parse_input(input, env);
 			if (!ast)
-				printf("%s: syntax error\n", av[0]);
+				printf("%s: \"%s\": syntax error\n", av[0], input);
 			else
 			{
-				printast(ast);
+				exec_simplecmd(ast, env);
 				free_ast(ast);
 			}
 		}
