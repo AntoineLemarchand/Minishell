@@ -6,7 +6,7 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:09:43 by imarushe          #+#    #+#             */
-/*   Updated: 2022/02/23 20:57:49 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/02/24 10:15:11 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,40 +28,38 @@ static int	ft_isempty(char *s)
 	return (1);
 }
 
-/* USED FOR DEBUG
-   void	printast(t_node	*ast)
-   {
-   int	i;
+void	printast(t_node	*ast)
+{
+	int	i;
 
-   if (ast->type == PIPELINE)
-   {
-   printf("┌PIPE\n");
-   printast(((t_pipe *)(ast->node))->left_node);
-   printast(((t_pipe *)(ast->node))->right_node);
-   }
-   else
-   {
-   printf("├─ CMD\n");
-   i = 0;
-   while (((t_cmd *)ast->node)->args[i])
-   {
-   printf("│ └%s\n", ((t_cmd *)(ast->node))->args[i]);
-   i++;
-   }
-   i = 0;
-   if (((t_cmd *)ast->node)->redir)
-   {
-   printf("└── REDIR\n");
-   while (((t_cmd *)ast->node)->redir[i])
-   {
-   printf("    └ %2s - %s\n", ((t_cmd *)ast->node)->redir[i]->type,
-   ((t_cmd *)ast->node)->redir[i]->val);
-   i++;
-   }
-   }
-   }
-   }
-   */
+	if (ast->type == PIPELINE)
+	{
+		printf("┌PIPE\n");
+		printast(((t_pipe *)(ast->node))->left_node);
+		printast(((t_pipe *)(ast->node))->right_node);
+	}
+	else
+	{
+		printf("├─ CMD\n");
+		i = 0;
+		while (((t_cmd *)ast->node)->args[i])
+		{
+			printf("│ └%s\n", ((t_cmd *)(ast->node))->args[i]);
+			i++;
+		}
+		i = 0;
+		if (((t_cmd *)ast->node)->redir)
+		{
+			printf("└── REDIR\n");
+			while (((t_cmd *)ast->node)->redir[i])
+			{
+				printf("    └ %2s - %s\n", ((t_cmd *)ast->node)->redir[i]->type,
+						((t_cmd *)ast->node)->redir[i]->val);
+				i++;
+			}
+		}
+	}
+}
 
 t_node	*parse_input(char *input, char **env)
 {
@@ -101,7 +99,7 @@ int	main(int ac, char **av, char **env)
 				printf("%s: syntax error\n", av[0]);
 			else
 			{
-				exec_simplecmd(ast, 0, 1);
+				printast(ast);
 				free_ast(ast);
 			}
 		}

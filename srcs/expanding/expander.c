@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 16:42:56 by alemarch          #+#    #+#             */
-/*   Updated: 2022/02/23 19:32:11 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/02/24 10:18:27 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ static char	*ft_expandval(char *s, char **env)
 	i = 0;
 	while (s[i])
 	{
-		if (s[i] != '$')
+		if (s[i] != '$' || (s[i] == '$' && s[i + 1] == '?'))
 		{
 			swp = ret;
 			ret = ft_addchar(ret, s[i++]);

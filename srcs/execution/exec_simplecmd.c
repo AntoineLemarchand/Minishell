@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 15:20:03 by alemarch          #+#    #+#             */
-/*   Updated: 2022/02/23 16:01:11 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/02/24 10:14:25 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,21 +14,9 @@
 
 int	exec_cmd(t_cmd	*cmd, int fdin, int fdout)
 {
-	int	i;
-
+	(void)cmd;
 	(void)fdin;
 	(void)fdout;
-	printf("command: ");
-	i = 0;
-	while (cmd->args[i])
-		printf("%s ", cmd->args[i++]);
-	i = 0;
-	while (cmd->redir && cmd->redir[i])
-	{
-		printf("%s %s ", cmd->redir[i]->type, cmd->redir[i]->val);
-		i++;
-	}
-	printf("\nexecuted !\n");
 	return (0);
 }
 
