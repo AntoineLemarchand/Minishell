@@ -6,7 +6,7 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:09:43 by imarushe          #+#    #+#             */
-/*   Updated: 2022/02/28 16:54:54 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/02/28 23:53:03 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ static int	ft_isempty(char *s)
 	}
 	return (1);
 }
-
 /*
 void	printast(t_node	*ast)
 {
@@ -62,18 +61,29 @@ void	printast(t_node	*ast)
 	}
 }
 */
+static int	count_exec(t_node *ast, int count)
+{
+	if (ast->type == PIPELINE)
+	{
+		count += count_exec(((t_pipe *)ast->node)->left_node, 0);
+		count += count_exec(((t_pipe *)ast->node)->right_node, 0);
+	}
+	else
+		count++;
+	return (count);
+}
 
 int	exec_line(t_node *ast, char **env)
 {
 	int	fdin;
-	int	fdout;
+	int	count;
 
 	fdin = dup(0);
-	fdout = dup(1);
-	if (fdin == -1 || fdout == -1)
+	if (fdin == -1)
 		return (1);
-	exec_simplecmd(ast, env);
-	if (dup2(fdin, 0) == -1 || dup2(fdout, 1) == -1)
+	count = count_exec(ast, 0);
+	exec_simplecmd(ast, env, count, 1);
+	if (dup2(fdin, 0) == -1)
 		return (1);
 	return (0);
 }

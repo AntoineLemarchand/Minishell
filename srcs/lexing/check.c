@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 16:30:18 by alemarch          #+#    #+#             */
-/*   Updated: 2022/02/24 11:17:13 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/02/25 10:16:22 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,8 @@ int	check_quotes(char *input)
 	{
 		if (input[i] == '\'' || input[i] == '"')
 		{
-			control = input[i++];
+			control = input[i];
+			i++;
 			while (input[i] && input[i] != control)
 				i++;
 			if (!input[i])

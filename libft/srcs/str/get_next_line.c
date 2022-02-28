@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 21:40:15 by alemarch          #+#    #+#             */
-/*   Updated: 2022/02/24 12:07:56 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/02/25 12:44:09 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ static int	ft_loadstatic(int fd, char **remain)
 	return (0);
 }
 
-static int ft_update_remain(int fd, char **remain, int newline_index)
+static int	ft_update_remain(int fd, char **remain, int newline_index)
 {
 	char	*newremain;
 

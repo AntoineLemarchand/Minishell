@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 15:20:03 by alemarch          #+#    #+#             */
-/*   Updated: 2022/02/28 16:53:18 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/02/28 23:52:30 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,15 +69,15 @@ int	fork_cmd(t_cmd	*cmd, char **env)
 	}
 }
 
-int	exec_simplecmd(t_node	*ast, char **env)
+int	exec_simplecmd(t_node	*ast, char **env, int count, int num)
 {
 	if (ast->type == PIPELINE)
 	{
-		if (exec_simplecmd(((t_pipe *)ast->node)->left_node, env)
-			|| exec_simplecmd(((t_pipe *)ast->node)->right_node, env))
+		if (exec_simplecmd(((t_pipe *)ast->node)->left_node, env, count, num++)
+			|| exec_simplecmd(((t_pipe *)ast->node)->right_node, env, count, num))
 			return (1);
 	}
-	else
+	else if (num < count)
 	{
 		if (fork_cmd(((t_cmd *)ast->node), env))
 			return (1);
