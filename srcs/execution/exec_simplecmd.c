@@ -6,13 +6,13 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 15:20:03 by alemarch          #+#    #+#             */
-/*   Updated: 2022/02/24 16:56:09 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/02/28 16:53:18 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int ft_ioerror(char *file, int isinput)
+int	ft_ioerror(char *file, int isinput)
 {
 	ft_putstr_fd("minishell: ", 2);
 	ft_putstr_fd(file, 2);
@@ -43,8 +43,8 @@ int	exec_cmd(char **args, char **env)
 
 int	fork_cmd(t_cmd	*cmd, char **env)
 {
-	int		link[2];
 	pid_t	process;
+	int		link[2];
 
 	process = fork();
 	pipe(link);
@@ -52,16 +52,21 @@ int	fork_cmd(t_cmd	*cmd, char **env)
 	{
 		close(link[0]);
 		dup2(link[1], 1);
+		close(link[1]);
+		ft_putstr_fd("child: ", 2);
+		ft_putendl_fd(*cmd->args, 2);
 		exec_cmd(cmd->args, env);
 		exit(127);
 	}
 	else
 	{
-		waitpid(process, NULL, 0);
-		dup2(link[0], 0);
 		close(link[1]);
+		dup2(link[0], 0);
+		close(link[0]);
+		waitpid(process, NULL, WNOHANG);
+		printf("parent received !\n");
+		return (0);
 	}
-	return (0);
 }
 
 int	exec_simplecmd(t_node	*ast, char **env)
@@ -69,7 +74,7 @@ int	exec_simplecmd(t_node	*ast, char **env)
 	if (ast->type == PIPELINE)
 	{
 		if (exec_simplecmd(((t_pipe *)ast->node)->left_node, env)
-			|| exec_simplecmd(((t_pipe *)ast->node)->left_node, env))
+			|| exec_simplecmd(((t_pipe *)ast->node)->right_node, env))
 			return (1);
 	}
 	else
@@ -79,3 +84,4 @@ int	exec_simplecmd(t_node	*ast, char **env)
 	}
 	return (0);
 }
+

@@ -6,7 +6,7 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:09:43 by imarushe          #+#    #+#             */
-/*   Updated: 2022/02/24 15:56:51 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/02/28 16:54:54 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ static int	ft_isempty(char *s)
 	}
 	return (1);
 }
+
 /*
 void	printast(t_node	*ast)
 {
@@ -61,6 +62,22 @@ void	printast(t_node	*ast)
 	}
 }
 */
+
+int	exec_line(t_node *ast, char **env)
+{
+	int	fdin;
+	int	fdout;
+
+	fdin = dup(0);
+	fdout = dup(1);
+	if (fdin == -1 || fdout == -1)
+		return (1);
+	exec_simplecmd(ast, env);
+	if (dup2(fdin, 0) == -1 || dup2(fdout, 1) == -1)
+		return (1);
+	return (0);
+}
+
 t_node	*parse_input(char *input, char **env)
 {
 	t_tok	**tokens;
@@ -100,7 +117,7 @@ int	main(int ac, char **av, char **env)
 				printf("%s: \"%s\": syntax error\n", av[0], input);
 			else
 			{
-				exec_simplecmd(ast, env);
+				exec_line(ast, env);
 				free_ast(ast);
 			}
 		}
