@@ -26,7 +26,7 @@ STR			= $(addprefix str/, \
 			  	ft_strdup.c \
 			  	ft_substr.c \
 			  	ft_strjoin.c \
-			  	ft_strjoinfree.c \
+			  	ft_joinfree.c \
 			  	ft_strtrim.c \
 			  	ft_strnstr.c \
 			  	ft_split.c \
@@ -34,6 +34,7 @@ STR			= $(addprefix str/, \
 			  	ft_strchr.c \
 			  	ft_strrchr.c \
 			  	ft_strncmp.c \
+				get_next_line.c \
 				)
 
 NBR			= $(addprefix nbr/, \

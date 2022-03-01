@@ -24,13 +24,31 @@ define removing
 	@$(RM) $1 > /dev/null
 endef
 
-SRCS			= $(addprefix srcs/, \
-				  	executils.c \
-				  	parsing.c \
-					pipe.c \
-					lex_io.c \
-					lex_cmd.c \
+LEX				= $(addprefix lexing/, \
+					check.c \
+					lexer_utils.c \
 					lexer.c \
+					)
+
+EXPAND			= $(addprefix expanding/, \
+					expander.c \
+					)
+
+PARSE			= $(addprefix parsing/, \
+					parser_cmd_utils.c \
+					parser_utils.c \
+					parser.c \
+				  	)
+
+EXEC			= $(addprefix execution/, \
+					exec_simplecmd.c \
+					)
+
+SRCS			= $(addprefix srcs/, \
+				  	$(LEX) \
+					$(EXPAND) \
+					$(PARSE) \
+					$(EXEC) \
 					main.c \
 					)
 
@@ -40,7 +58,7 @@ NAME			= minishell
 
 RM				= rm -f
 
-CC				= cc
+CC				= gcc
 
 CFLAGS			= -Wall -Wextra -Werror -g
 

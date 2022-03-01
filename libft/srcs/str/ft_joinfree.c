@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_joinfree.c                                      :+:      :+:    :+:   */
+/*   ft_strjoinfree.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/24 21:41:49 by alemarch          #+#    #+#             */
-/*   Updated: 2021/12/02 15:56:54 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/02/21 16:49:57 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include"libft.h"
 
-char	*ft_strjoinfree(char *s1, char *s2)
+char	*ft_joinfree(char *s1, char *s2)
 {
 	char	*ret;
 	int		i;

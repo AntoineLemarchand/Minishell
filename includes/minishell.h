@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/31 11:48:25 by alemarch          #+#    #+#             */
-/*   Updated: 2022/02/04 12:24:01 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/02/28 21:26:12 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,27 +20,74 @@
 # include <sys/wait.h>
 # include "libft.h"
 
-typedef struct s_command {
-	char	*cmd;
-	char	*infile;
-	char	*outfile;
-	int		appendmode;
-}	t_command;
+// token states
+# define PIPE			0
+# define INREDIR		1
+# define OUTREDIR		2
+# define LITERAL		3
+# define BLANK			4
+# define SIMPLEQUOTE	5
+# define DOUBLEQUOTE	6
 
-// executils.c
-char		*ft_joincommand(char *s1, char *s2);
-void		ft_freesplit(char **split);
-// lex_io.c
-int			load_io(char *line, t_command *cmd);
-// lex_cmd.c
-int			load_cmd(char *line, t_command *cmd);
-// lexer.c
-void		free_cmd(t_command *cmd);
-t_command	**ft_lexer(char *inputline);
-// pipe.c
-int			ft_exec(char *action, char **env);
-int			ft_fork(int fd, char *action, char **env);
-char		*ft_getpath(char *command, char **env);
-// echo.c
-void		ft_echo(int ac, char **av);
+// ast state
+# define PIPELINE		7
+# define SIMPLECMD		8
+
+// token struct
+typedef struct s_tok {
+	char	*val;
+	int		type;
+}	t_tok;
+
+// ast structs
+typedef struct s_redir {
+	char	*type;
+	char	*val;
+}	t_redir;
+
+typedef struct s_cmd {
+	char	**args;
+	t_redir	**redir;
+}	t_cmd;
+
+typedef struct s_pipe {
+	struct s_node	*left_node;
+	struct s_node	*right_node;
+}	t_pipe;
+
+typedef struct s_node {
+	int		type;
+	void	*node;
+}	t_node;
+
+//LEXING
+//	check.c
+int		check_input(char *input);
+//	lexer_utils.c
+void	free_toks(t_tok **toks);
+int		toktype(char c);
+t_tok	**ft_tokalloc(t_tok **toks);
+//	lexer.c
+t_tok	**ft_lex(char *input);
+
+//EXPANDING
+//	expander.c
+int		ft_expand(t_tok **toks, char **env);
+
+//PARSING
+//	parser_utils.c
+t_tok	**getleft(t_tok **tokens, int index);
+t_tok	**getright(t_tok **tokens, int index);
+void	free_cmd(t_cmd	*cmd);
+void	free_ast(t_node *ast);
+//	parser_cmd_utils.c
+t_redir	**ft_addredir(t_redir **redir, t_tok **tokens);
+char	**ft_addargs(char	**args, t_tok	*tok);
+//	parser.c
+void	ft_freesplit(char **split);
+t_node	*ft_create_ast(t_tok **tokens);
+
+//EXECUTION
+//	exec_simplecmd.c
+int		exec_simplecmd(t_node *ast, char **env, int count, int num);
 #endif
