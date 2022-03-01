@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 15:20:03 by alemarch          #+#    #+#             */
-/*   Updated: 2022/02/28 23:52:30 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/01 10:50:30 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,12 +33,11 @@ int	manage_io(int *link, t_redir **redir)
 	return (0);
 }
 
-int	exec_cmd(char **args, char **env)
+void	exec_cmd(char **args, char **env)
 {
 	execve(*args, args, env);
 	ft_putstr_fd(*args, 2);
 	ft_putstr_fd(": Command not found\n", 2);
-	return (0);
 }
 
 int	fork_cmd(t_cmd	*cmd, char **env)
@@ -51,22 +50,21 @@ int	fork_cmd(t_cmd	*cmd, char **env)
 	if (!process)
 	{
 		close(link[0]);
-		dup2(link[1], 1);
+		if (dup2(link[1], 1) == -1)
+			return (1);
 		close(link[1]);
-		ft_putstr_fd("child: ", 2);
-		ft_putendl_fd(*cmd->args, 2);
 		exec_cmd(cmd->args, env);
-		exit(127);
+		exit(0);
 	}
 	else
 	{
+		waitpid(process, NULL, 0);
 		close(link[1]);
-		dup2(link[0], 0);
+		if (dup2(link[0], 0) == -1)
+			return (1);
 		close(link[0]);
-		waitpid(process, NULL, WNOHANG);
-		printf("parent received !\n");
-		return (0);
 	}
+	return (0);
 }
 
 int	exec_simplecmd(t_node	*ast, char **env, int count, int num)

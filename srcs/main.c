@@ -6,7 +6,7 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:09:43 by imarushe          #+#    #+#             */
-/*   Updated: 2022/02/28 23:53:03 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/01 10:45:47 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,39 +28,40 @@ static int	ft_isempty(char *s)
 	return (1);
 }
 /*
-void	printast(t_node	*ast)
-{
-	int	i;
+   void	printast(t_node	*ast)
+   {
+   int	i;
 
-	if (ast->type == PIPELINE)
-	{
-		printf("┌PIPE\n");
-		printast(((t_pipe *)(ast->node))->left_node);
-		printast(((t_pipe *)(ast->node))->right_node);
-	}
-	else
-	{
-		printf("├─ CMD\n");
-		i = 0;
-		while (((t_cmd *)ast->node)->args[i])
-		{
-			printf("│ └%s\n", ((t_cmd *)(ast->node))->args[i]);
-			i++;
-		}
-		i = 0;
-		if (((t_cmd *)ast->node)->redir)
-		{
-			printf("└── REDIR\n");
-			while (((t_cmd *)ast->node)->redir[i])
-			{
-				printf("    └ %2s - %s\n", ((t_cmd *)ast->node)->redir[i]->type,
-						((t_cmd *)ast->node)->redir[i]->val);
-				i++;
-			}
-		}
-	}
-}
-*/
+   if (ast->type == PIPELINE)
+   {
+   printf("┌PIPE\n");
+   printast(((t_pipe *)(ast->node))->left_node);
+   printast(((t_pipe *)(ast->node))->right_node);
+   }
+   else
+   {
+   printf("├─ CMD\n");
+   i = 0;
+   while (((t_cmd *)ast->node)->args[i])
+   {
+   printf("│ └%s\n", ((t_cmd *)(ast->node))->args[i]);
+   i++;
+   }
+   i = 0;
+   if (((t_cmd *)ast->node)->redir)
+   {
+   printf("└── REDIR\n");
+   while (((t_cmd *)ast->node)->redir[i])
+   {
+   printf("    └ %2s - %s\n", ((t_cmd *)ast->node)->redir[i]->type,
+   ((t_cmd *)ast->node)->redir[i]->val);
+   i++;
+   }
+   }
+   }
+   }
+   */
+
 static int	count_exec(t_node *ast, int count)
 {
 	if (ast->type == PIPELINE)
@@ -73,6 +74,29 @@ static int	count_exec(t_node *ast, int count)
 	return (count);
 }
 
+t_cmd	*get_lastcmd(t_node *ast)
+{
+	if (ast->type == PIPELINE)
+		return (get_lastcmd(((t_pipe *)ast->node)->right_node));
+	return (((t_cmd *)ast->node));
+}
+
+int	exec_lastcmd(t_cmd *cmd, char **env)
+{
+	pid_t	process;
+
+	process = fork();
+	if (!process)
+	{
+		execve(*cmd->args, cmd->args, env);
+		ft_putstr_fd("minishell: Command not found", 2);
+		exit (127);
+	}
+	else
+		waitpid(process, NULL, 0);
+	return (0);
+}
+
 int	exec_line(t_node *ast, char **env)
 {
 	int	fdin;
@@ -83,8 +107,10 @@ int	exec_line(t_node *ast, char **env)
 		return (1);
 	count = count_exec(ast, 0);
 	exec_simplecmd(ast, env, count, 1);
+	exec_lastcmd(get_lastcmd(ast), env);
 	if (dup2(fdin, 0) == -1)
 		return (1);
+	close(fdin);
 	return (0);
 }
 
@@ -133,6 +159,7 @@ int	main(int ac, char **av, char **env)
 		}
 		free(input);
 	}
+	close(0);
 	rl_clear_history();
 	printf("\nexit\n");
 	return (0);
