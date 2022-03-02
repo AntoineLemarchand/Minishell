@@ -25,7 +25,6 @@ define removing
 endef
 
 SETUP			= $(addprefix setup/, \
-				  	inner.c \
 				  	loop_utils.c \
 					setup_utils.c \
 					env.c \
@@ -48,6 +47,7 @@ PARSE			= $(addprefix parsing/, \
 				  	)
 
 EXEC			= $(addprefix execution/, \
+				  	inner.c \
 					exec_utils.c \
 					exec_simplecmd.c \
 					)

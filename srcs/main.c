@@ -6,7 +6,7 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:09:43 by imarushe          #+#    #+#             */
-/*   Updated: 2022/03/02 13:32:48 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/02 15:15:01 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,10 +48,10 @@ void	ft_initialize_readline(void)
 	signal(SIGINT, ft_handler);
 	signal(SIGQUIT, ft_handler);
 	if (tcgetattr(0, &tp) == -1)
-		printf("Mrd! Terminal!");
+		ft_putstr_fd("minishell: could not load term", 2);
 	tp.c_lflag &= ~ECHOCTL;
 	if (tcsetattr(0, 0, &tp) == -1)
-		printf("Mrd! Terminal!");
+		ft_putstr_fd("minishell: could not load term", 2);
 	g_start->exit = -1;
 	g_start->status = 0;
 	rl_bind_key ('\t', rl_insert);

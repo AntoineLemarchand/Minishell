@@ -6,7 +6,7 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:09:43 by imarushe          #+#    #+#             */
-/*   Updated: 2022/03/02 13:22:13 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/02 15:15:34 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	ft_add_env(char *var)
 	new_node = (t_env *)malloc(sizeof(t_env));
 	if (!new_node)
 	{
-		printf("Mrd! Malloc fail!\n");
+		ft_putstr_fd("minishell: malloc failed\n", 2);
 		return ;
 	}
 	new_node->var = var;

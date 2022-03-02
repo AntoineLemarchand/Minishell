@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/02 12:45:21 by alemarch          #+#    #+#             */
-/*   Updated: 2022/03/02 13:40:34 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/02 15:18:22 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	ft_run_cmd(char **cmd, char **env)
 
 	pid = fork();
 	if (pid == -1)
-		printf("Mrd! Fork!\n");
+		ft_putstr_fd("minishell: fork failed\n", 2);
 	else if (pid > 0)
 	{
 		waitpid(pid, &g_start->status, 0);
@@ -45,7 +45,7 @@ void	ft_run_cmd(char **cmd, char **env)
 	else
 	{
 		if (execve(cmd[0], cmd, env) == -1)
-			printf("Mrd! Shell!\n");
+			ft_putstr_fd("minishell: command not found\n", 2);
 		return ;
 	}
 }
@@ -77,7 +77,7 @@ void	ft_runout_cmd(char **cmd)
 	else
 	{
 		g_start->status = 127;
-		printf("Mrd! Command not found!\n");
+		ft_putstr_fd("minishell: command not found\n", 2);
 	}
 	free(env);
 	env = NULL;

@@ -6,7 +6,7 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 16:30:14 by imarushe          #+#    #+#             */
-/*   Updated: 2022/03/02 13:20:53 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/02 15:15:57 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	ft_end(void)
 {
 	ft_free_env();
 	rl_clear_history();
-	printf("A tout!\n");
+	printf("exit\n");
 }
 
 void	ft_free_array(char **array)
