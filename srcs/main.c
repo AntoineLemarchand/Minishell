@@ -6,7 +6,7 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:09:43 by imarushe          #+#    #+#             */
-/*   Updated: 2022/03/01 10:45:47 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/02 11:10:57 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,43 +74,24 @@ static int	count_exec(t_node *ast, int count)
 	return (count);
 }
 
-t_cmd	*get_lastcmd(t_node *ast)
+int	exec_line(t_node *ast, char **env)
 {
-	if (ast->type == PIPELINE)
-		return (get_lastcmd(((t_pipe *)ast->node)->right_node));
-	return (((t_cmd *)ast->node));
-}
-
-int	exec_lastcmd(t_cmd *cmd, char **env)
-{
+	int		count;
 	pid_t	process;
 
 	process = fork();
-	if (!process)
+	if (process == -1)
 	{
-		execve(*cmd->args, cmd->args, env);
-		ft_putstr_fd("minishell: Command not found", 2);
-		exit (127);
+		ft_putstr_fd("minishell: unable to fork", 2);
+		return (1);
 	}
-	else
-		waitpid(process, NULL, 0);
-	return (0);
-}
-
-int	exec_line(t_node *ast, char **env)
-{
-	int	fdin;
-	int	count;
-
-	fdin = dup(0);
-	if (fdin == -1)
-		return (1);
-	count = count_exec(ast, 0);
-	exec_simplecmd(ast, env, count, 1);
-	exec_lastcmd(get_lastcmd(ast), env);
-	if (dup2(fdin, 0) == -1)
-		return (1);
-	close(fdin);
+	else if (!process)
+	{
+		count = count_exec(ast, 0);
+		exec_simplecmd(ast, env, count, 1);
+		exit (0);
+	}
+	waitpid(process, NULL, 0);
 	return (0);
 }
 
