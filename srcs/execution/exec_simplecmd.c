@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 15:20:03 by alemarch          #+#    #+#             */
-/*   Updated: 2022/03/02 12:28:58 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/02 13:41:27 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,18 +33,12 @@ int	manage_io(int *link, t_redir **redir)
 	return (0);
 }
 
-void	exec_cmd(char **args, char **env)
-{
-	execve(*args, args, env);
-	ft_putstr_fd(*args, 2);
-	ft_putstr_fd(": Command not found\n", 2);
-}
-
 int	fork_cmd(t_cmd	*cmd, char **env, int num, int count)
 {
 	pid_t	process;
 	int		link[2];
 
+	(void)env;
 	pipe(link);
 	process = fork();
 	if (process == 0)
@@ -56,7 +50,7 @@ int	fork_cmd(t_cmd	*cmd, char **env, int num, int count)
 				return (1);
 			close(link[1]);
 		}
-		exec_cmd(cmd->args, env);
+		ft_run(cmd->args);
 		exit(127);
 	}
 	close(link[1]);

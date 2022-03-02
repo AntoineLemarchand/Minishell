@@ -6,61 +6,15 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:09:43 by imarushe          #+#    #+#             */
-/*   Updated: 2022/03/02 11:10:57 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/02 13:32:48 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+t_env	*g_start;
+
 char	*readline(const char *prompt);
-
-static int	ft_isempty(char *s)
-{
-	int	i;
-
-	i = 0;
-	while (s[i])
-	{
-		if (s[i] != ' ' && (s[i] < '\t' || s[i] > '\r'))
-			return (0);
-		i++;
-	}
-	return (1);
-}
-/*
-   void	printast(t_node	*ast)
-   {
-   int	i;
-
-   if (ast->type == PIPELINE)
-   {
-   printf("┌PIPE\n");
-   printast(((t_pipe *)(ast->node))->left_node);
-   printast(((t_pipe *)(ast->node))->right_node);
-   }
-   else
-   {
-   printf("├─ CMD\n");
-   i = 0;
-   while (((t_cmd *)ast->node)->args[i])
-   {
-   printf("│ └%s\n", ((t_cmd *)(ast->node))->args[i]);
-   i++;
-   }
-   i = 0;
-   if (((t_cmd *)ast->node)->redir)
-   {
-   printf("└── REDIR\n");
-   while (((t_cmd *)ast->node)->redir[i])
-   {
-   printf("    └ %2s - %s\n", ((t_cmd *)ast->node)->redir[i]->type,
-   ((t_cmd *)ast->node)->redir[i]->val);
-   i++;
-   }
-   }
-   }
-   }
-   */
 
 static int	count_exec(t_node *ast, int count)
 {
@@ -72,6 +26,55 @@ static int	count_exec(t_node *ast, int count)
 	else
 		count++;
 	return (count);
+}
+
+void	ft_handler(int status)
+{
+	if (status == 2)
+	{
+		rl_replace_line("", 0);
+		printf("\n");
+		rl_on_new_line();
+		rl_redisplay();
+	}
+	else
+		return ;
+}
+
+void	ft_initialize_readline(void)
+{
+	struct termios	tp;
+
+	signal(SIGINT, ft_handler);
+	signal(SIGQUIT, ft_handler);
+	if (tcgetattr(0, &tp) == -1)
+		printf("Mrd! Terminal!");
+	tp.c_lflag &= ~ECHOCTL;
+	if (tcsetattr(0, 0, &tp) == -1)
+		printf("Mrd! Terminal!");
+	g_start->exit = -1;
+	g_start->status = 0;
+	rl_bind_key ('\t', rl_insert);
+}
+
+t_node	*parse_input(char *input, char **env)
+{
+	t_tok	**tokens;
+	t_node	*ret;
+
+	tokens = ft_lex(input);
+	if (!tokens)
+		return (NULL);
+	if (ft_expand(tokens, env))
+	{
+		free_toks(tokens);
+		return (NULL);
+	}
+	ret = ft_create_ast(tokens);
+	free_toks(tokens);
+	if (!ret)
+		return (NULL);
+	return (ret);
 }
 
 int	exec_line(t_node *ast, char **env)
@@ -95,53 +98,38 @@ int	exec_line(t_node *ast, char **env)
 	return (0);
 }
 
-t_node	*parse_input(char *input, char **env)
-{
-	t_tok	**tokens;
-	t_node	*ret;
-
-	tokens = ft_lex(input);
-	if (!tokens)
-		return (NULL);
-	if (ft_expand(tokens, env))
-	{
-		free_toks(tokens);
-		return (NULL);
-	}
-	ret = ft_create_ast(tokens);
-	free_toks(tokens);
-	if (!ret)
-		return (NULL);
-	return (ret);
-}
-
 int	main(int ac, char **av, char **env)
 {
-	char		*input;
-	t_node		*ast;
+	char	*input;
+	int		exit;
+	t_node	*ast;
 
 	(void)ac;
-	while (1)
+	input = (char *) NULL;
+	ft_make_env(env);
+	ft_initialize_readline();
+	while (g_start->exit < 0)
 	{
-		input = readline("MRDSHLL%> ");
-		if (!input)
-			break ;
-		add_history(input);
-		if (!ft_isempty(input))
+		input = readline("\033[32;1mMrdShll> \033[0m");
+		if (input && *input)
+			add_history(input);
+		else
 		{
-			ast = parse_input(input, env);
-			if (!ast)
-				printf("%s: \"%s\": syntax error\n", av[0], input);
-			else
-			{
-				exec_line(ast, env);
-				free_ast(ast);
-			}
+			printf("\n");
+			g_start->exit = 0;
+			break ;
 		}
-		free(input);
+		ast = parse_input(input, env);
+		if (!ast)
+			printf("%s: \"%s\": syntax error\n", av[0], input);
+		else
+		{
+			exec_line(ast, env);
+			free_ast(ast);
+		}
+		input = (char *) NULL;
 	}
-	close(0);
-	rl_clear_history();
-	printf("\nexit\n");
-	return (0);
+	exit = g_start->exit;
+	ft_end();
+	return (exit);
 }

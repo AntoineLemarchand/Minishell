@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/31 11:48:25 by alemarch          #+#    #+#             */
-/*   Updated: 2022/02/28 21:26:12 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/02 13:40:54 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,10 @@
 # include <readline/history.h>
 # include <fcntl.h>
 # include <sys/wait.h>
+# include <signal.h>
+# include <stdbool.h>
+# include <linux/limits.h>
+# include <termios.h>
 # include "libft.h"
 
 // token states
@@ -32,6 +36,15 @@
 // ast state
 # define PIPELINE		7
 # define SIMPLECMD		8
+
+// env struct
+typedef struct s_env
+{
+	char			*var;
+	struct s_env	*next;
+	int				status;
+	int				exit;
+}					t_env;
 
 // token struct
 typedef struct s_tok {
@@ -59,6 +72,34 @@ typedef struct s_node {
 	int		type;
 	void	*node;
 }	t_node;
+
+// global var
+extern t_env	*g_start;
+
+//SETUP
+//	env.c
+char	*get_env_var(char *var);
+void	ft_add_env(char *var);
+void	ft_add_var(char *var);
+void	ft_make_env(char **envp);
+void	ft_add_var_list(char **var_list);
+// setup_utils.c
+void	ft_export(char **cmd);
+void	ft_unset(char **cmd);
+char	**ft_to_array(void);
+void	ft_free_env(void);
+
+// loop_utils.c
+void	ft_end(void);
+void	ft_free_array(char **array);
+void	ft_add_path(char **cmd, char **path_split);
+void	ft_abs_path(char **cmd);
+// inner.c
+char	*built_in_pwd(void);
+void	ft_inn_cd(char *path);
+void	ft_inn_env(void);
+void	ft_inn_exit(char **cmd);
+void	ft_inn_echo(char **cmd);
 
 //LEXING
 //	check.c
@@ -88,6 +129,8 @@ void	ft_freesplit(char **split);
 t_node	*ft_create_ast(t_tok **tokens);
 
 //EXECUTION
+//	exec_utils.c
+void	ft_run(char **cmd);
 //	exec_simplecmd.c
 int		exec_simplecmd(t_node *ast, char **env, int count, int num);
 #endif

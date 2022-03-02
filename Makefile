@@ -24,6 +24,13 @@ define removing
 	@$(RM) $1 > /dev/null
 endef
 
+SETUP			= $(addprefix setup/, \
+				  	inner.c \
+				  	loop_utils.c \
+					setup_utils.c \
+					env.c \
+					)
+
 LEX				= $(addprefix lexing/, \
 					check.c \
 					lexer_utils.c \
@@ -41,10 +48,12 @@ PARSE			= $(addprefix parsing/, \
 				  	)
 
 EXEC			= $(addprefix execution/, \
+					exec_utils.c \
 					exec_simplecmd.c \
 					)
 
 SRCS			= $(addprefix srcs/, \
+				  	$(SETUP) \
 				  	$(LEX) \
 					$(EXPAND) \
 					$(PARSE) \
