@@ -6,7 +6,7 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 18:11:42 by imarushe          #+#    #+#             */
-/*   Updated: 2022/03/02 13:39:05 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/02 15:33:10 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,4 +105,23 @@ void	ft_free_env(void)
 		temp = NULL;
 	}
 	free(i);
+}
+
+void	ft_change_status(char **cmd)
+{
+	int		i;
+	char	*temp;
+
+	i = 1;
+	while (cmd[i])
+	{
+		if (!ft_strncmp(cmd[i], "$?", 2))
+		{
+			free(cmd[i]);
+			temp = ft_itoa(g_start->status);
+			cmd[i] = ft_strdup(temp);
+			free(temp);
+		}
+		i++;
+	}
 }

@@ -34,11 +34,10 @@ STR			= $(addprefix str/, \
 			  	ft_strchr.c \
 			  	ft_strrchr.c \
 			  	ft_strncmp.c \
-				get_next_line.c \
 				)
 
 NBR			= $(addprefix nbr/, \
-			ft_atoi.c \
+				ft_atoi.c \
 			  	ft_itoa.c \
 				)
 

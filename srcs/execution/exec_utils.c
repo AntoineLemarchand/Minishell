@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/02 12:45:21 by alemarch          #+#    #+#             */
-/*   Updated: 2022/03/02 15:18:22 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/02 15:32:43 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,25 +81,6 @@ void	ft_runout_cmd(char **cmd)
 	}
 	free(env);
 	env = NULL;
-}
-
-void	ft_change_status(char **cmd)
-{
-	int		i;
-	char	*temp;
-
-	i = 1;
-	while (cmd[i])
-	{
-		if (!ft_strncmp(cmd[i], "$?", 2))
-		{
-			free(cmd[i]);
-			temp = ft_itoa(g_start->status);
-			cmd[i] = ft_strdup(temp);
-			free(temp);
-		}
-		i++;
-	}
 }
 
 void	ft_run(char	**cmd)

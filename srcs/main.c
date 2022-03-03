@@ -6,15 +6,13 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:09:43 by imarushe          #+#    #+#             */
-/*   Updated: 2022/03/02 15:15:01 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/03 10:29:38 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 t_env	*g_start;
-
-char	*readline(const char *prompt);
 
 static int	count_exec(t_node *ast, int count)
 {
@@ -57,27 +55,7 @@ void	ft_initialize_readline(void)
 	rl_bind_key ('\t', rl_insert);
 }
 
-t_node	*parse_input(char *input, char **env)
-{
-	t_tok	**tokens;
-	t_node	*ret;
-
-	tokens = ft_lex(input);
-	if (!tokens)
-		return (NULL);
-	if (ft_expand(tokens, env))
-	{
-		free_toks(tokens);
-		return (NULL);
-	}
-	ret = ft_create_ast(tokens);
-	free_toks(tokens);
-	if (!ret)
-		return (NULL);
-	return (ret);
-}
-
-int	exec_line(t_node *ast, char **env)
+int	exec_line(t_node *ast)
 {
 	int		count;
 	pid_t	process;
@@ -91,10 +69,11 @@ int	exec_line(t_node *ast, char **env)
 	else if (!process)
 	{
 		count = count_exec(ast, 0);
-		exec_simplecmd(ast, env, count, 1);
+		exec_simplecmd(ast, count, 1);
 		exit (0);
 	}
 	waitpid(process, NULL, 0);
+	free_ast(ast);
 	return (0);
 }
 
@@ -105,28 +84,25 @@ int	main(int ac, char **av, char **env)
 	t_node	*ast;
 
 	(void)ac;
+	(void)av;
 	input = (char *) NULL;
 	ft_make_env(env);
 	ft_initialize_readline();
 	while (g_start->exit < 0)
 	{
 		input = readline("\033[32;1mMrdShll> \033[0m");
-		if (input && *input)
-			add_history(input);
-		else
+		if (!input || !*input)
 		{
 			printf("\n");
 			g_start->exit = 0;
 			break ;
 		}
+		add_history(input);
 		ast = parse_input(input, env);
 		if (!ast)
-			printf("%s: \"%s\": syntax error\n", av[0], input);
+			ft_putstr_fd("minishell: syntax error\n", 2);
 		else
-		{
-			exec_line(ast, env);
-			free_ast(ast);
-		}
+			exec_line(ast);
 		input = (char *) NULL;
 	}
 	exit = g_start->exit;

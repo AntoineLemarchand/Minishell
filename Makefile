@@ -44,6 +44,7 @@ PARSE			= $(addprefix parsing/, \
 					parser_cmd_utils.c \
 					parser_utils.c \
 					parser.c \
+					heredoc.c \
 				  	)
 
 EXEC			= $(addprefix execution/, \

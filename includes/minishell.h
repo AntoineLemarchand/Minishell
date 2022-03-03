@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/31 11:48:25 by alemarch          #+#    #+#             */
-/*   Updated: 2022/03/02 13:40:54 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/03 10:28:46 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,7 @@ void	ft_export(char **cmd);
 void	ft_unset(char **cmd);
 char	**ft_to_array(void);
 void	ft_free_env(void);
+void	ft_change_status(char **cmd);
 
 // loop_utils.c
 void	ft_end(void);
@@ -121,16 +122,19 @@ t_tok	**getleft(t_tok **tokens, int index);
 t_tok	**getright(t_tok **tokens, int index);
 void	free_cmd(t_cmd	*cmd);
 void	free_ast(t_node *ast);
+t_node	*parse_input(char *input, char **env);
 //	parser_cmd_utils.c
 t_redir	**ft_addredir(t_redir **redir, t_tok **tokens);
 char	**ft_addargs(char	**args, t_tok	*tok);
 //	parser.c
 void	ft_freesplit(char **split);
 t_node	*ft_create_ast(t_tok **tokens);
+//	heredoc.c
+int		ft_heredoc(char *delim);
 
 //EXECUTION
 //	exec_utils.c
 void	ft_run(char **cmd);
 //	exec_simplecmd.c
-int		exec_simplecmd(t_node *ast, char **env, int count, int num);
+int		exec_simplecmd(t_node *ast, int count, int num);
 #endif
