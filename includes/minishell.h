@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/31 11:48:25 by alemarch          #+#    #+#             */
-/*   Updated: 2022/03/03 14:14:22 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/03 14:51:51 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,6 +109,7 @@ t_tok	**ft_lex(char *input);
 
 //EXPANDING
 //	expander.c
+char	*ft_expandval(char *s, char **env);
 int		ft_expand(t_tok **toks, char **env);
 
 //PARSING
@@ -125,7 +126,7 @@ char	**ft_addargs(char	**args, t_tok	*tok);
 void	ft_freesplit(char **split);
 t_node	*ft_create_ast(t_tok **tokens);
 //	heredoc.c
-int		ft_heredoc(char *delim);
+int		ft_heredoc(char *delim, char **env);
 
 //EXECUTION
 // inner_utils.c
@@ -137,9 +138,9 @@ void	ft_inn_env(void);
 void	ft_inn_exit(char **cmd);
 void	ft_inn_echo(char **cmd);
 //	ioctl.c
-int	manage_io(int *link, t_redir **redir, int num, int count);
+int	manage_io(int *link, t_redir **redir, int isnotlast, char **env);
 //	exec_utils.c
 void	ft_run(char **cmd);
 //	exec_simplecmd.c
-int		exec_simplecmd(t_node *ast, int count, int num);
+int		exec_simplecmd(t_node *ast, int count, int num, char **env);
 #endif

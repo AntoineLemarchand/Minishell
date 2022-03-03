@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 16:42:56 by alemarch          #+#    #+#             */
-/*   Updated: 2022/02/24 10:18:27 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/03 14:45:47 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ static int	ft_addvar(char **dest, char *src, char **env)
 	return (varlen);
 }
 
-static char	*ft_expandval(char *s, char **env)
+char	*ft_expandval(char *s, char **env)
 {
 	int		i;
 	char	*ret;

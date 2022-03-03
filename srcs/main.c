@@ -6,7 +6,7 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:09:43 by imarushe          #+#    #+#             */
-/*   Updated: 2022/03/03 11:22:54 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/03 14:43:53 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ void	ft_initialize_readline(void)
 	rl_bind_key ('\t', rl_insert);
 }
 
-int	exec_line(t_node *ast)
+int	exec_line(t_node *ast, char **env)
 {
 	int		count;
 	pid_t	process;
@@ -69,7 +69,7 @@ int	exec_line(t_node *ast)
 	else if (!process)
 	{
 		count = count_exec(ast, 0);
-		exec_simplecmd(ast, count, 1);
+		exec_simplecmd(ast, count, 1, env);
 		exit (0);
 	}
 	waitpid(process, NULL, 0);
@@ -83,27 +83,28 @@ int	main(int ac, char **av, char **env)
 	int		exit;
 	t_node	*ast;
 
-	(void)ac;
-	(void)av;
 	input = (char *) NULL;
 	ft_make_env(env);
 	ft_initialize_readline();
-	while (g_start->exit < 0)
+	while (g_start->exit < 0 && ac && *av)
 	{
 		input = readline("\033[32;1mMrdShll> \033[0m");
-		if (!input || !*input)
+		if (!input)
 		{
 			printf("\n");
 			g_start->exit = 0;
 			break ;
 		}
-		add_history(input);
-		ast = parse_input(input, env);
-		if (!ast)
-			ft_putstr_fd("minishell: syntax error\n", 2);
-		else
-			exec_line(ast);
-		input = (char *) NULL;
+		if (*input)
+		{
+			add_history(input);
+			ast = parse_input(input, env);
+			if (!ast)
+				ft_putstr_fd("minishell: syntax error\n", 2);
+			else
+				exec_line(ast, env);
+			input = (char *) NULL;
+		}
 	}
 	exit = g_start->exit;
 	ft_end();

@@ -6,13 +6,13 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/02 16:09:32 by imarushe          #+#    #+#             */
-/*   Updated: 2022/03/03 14:12:51 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/03 14:47:43 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-int	fill_heredoc(char *delim, int fd)
+int	fill_heredoc(char *delim, int fd, char **env)
 {
 	char	*input;
 	char	*temp;
@@ -26,7 +26,7 @@ int	fill_heredoc(char *delim, int fd)
 			end = 1;
 		else
 		{
-			input = ft_strjoin(temp, "\n");
+			input = ft_expandval(ft_strjoin(temp, "\n"), env);
 			if (!input)
 				return (1);
 			write(fd, input, ft_strlen(input));
@@ -37,15 +37,24 @@ int	fill_heredoc(char *delim, int fd)
 	return (0);
 }
 
-int	ft_heredoc(char *delim)
+int	ft_heredoc(char *delim, char **env)
 {
 	int		fd;
+	pid_t	process;
 
-	fd = open("/tmp/tmpfile.txt", O_RDWR | O_CREAT | O_TRUNC, 0644);
-	if (!fd)
-		return (-1);
-	unlink("/tmp/tmpfile.txt");
-	if (fill_heredoc(delim, fd))
-		return (-1);
+	process = fork();
+	if (!process)
+	{
+		fd = open("tmpfile.txt", O_RDWR | O_CREAT | O_TRUNC, 0644);
+		if (!fd)
+			return (-1);
+		if (fill_heredoc(delim, fd, env))
+			return (-1);
+		close(fd);
+		exit(0);
+	}
+	waitpid(process, NULL, 0);
+	fd = open("tmpfile.txt", O_RDONLY, 0644);
+	unlink("tmpfile.txt");
 	return (fd);
 }
