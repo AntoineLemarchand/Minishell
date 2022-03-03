@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/02 12:45:21 by alemarch          #+#    #+#             */
-/*   Updated: 2022/03/02 15:32:43 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/03 14:58:03 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	ft_runinn_cmd(char **cmd)
 		ft_unset(cmd);
 }
 
-void	ft_run_cmd(char **cmd, char **env)
+static void	ft_run_cmd(char **cmd, char **env)
 {
 	pid_t	pid;
 

@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/31 11:48:25 by alemarch          #+#    #+#             */
-/*   Updated: 2022/03/03 14:51:51 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/03 15:07:19 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,6 +131,7 @@ int		ft_heredoc(char *delim, char **env);
 //EXECUTION
 // inner_utils.c
 void	ft_print_echo(char **cmd, int i);
+int		exec_singlebuiltin(t_cmd *cmd, char **env);
 // inner.c
 char	*built_in_pwd(void);
 void	ft_inn_cd(char *path);
@@ -140,6 +141,8 @@ void	ft_inn_echo(char **cmd);
 //	ioctl.c
 int	manage_io(int *link, t_redir **redir, int isnotlast, char **env);
 //	exec_utils.c
+void	ft_runinn_cmd(char **cmd);
+bool	ft_isinn_cmd(char *cmd);
 void	ft_run(char **cmd);
 //	exec_simplecmd.c
 int		exec_simplecmd(t_node *ast, int count, int num, char **env);

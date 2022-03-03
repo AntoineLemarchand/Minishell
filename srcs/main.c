@@ -6,7 +6,7 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:09:43 by imarushe          #+#    #+#             */
-/*   Updated: 2022/03/03 14:43:53 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/03 15:06:41 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,20 +60,25 @@ int	exec_line(t_node *ast, char **env)
 	int		count;
 	pid_t	process;
 
-	process = fork();
-	if (process == -1)
+	if (ast->type == SIMPLECMD && ft_isinn_cmd(*((t_cmd *)ast->node)->args))
+		exec_singlebuiltin((t_cmd *)ast->node, env);
+	else
 	{
-		ft_putstr_fd("minishell: unable to fork", 2);
-		return (1);
+		process = fork();
+		if (process == -1)
+		{
+			ft_putstr_fd("minishell: unable to fork", 2);
+			return (1);
+		}
+		else if (!process)
+		{
+			count = count_exec(ast, 0);
+			exec_simplecmd(ast, count, 1, env);
+			exit (0);
+		}
+		waitpid(process, NULL, 0);
+		free_ast(ast);
 	}
-	else if (!process)
-	{
-		count = count_exec(ast, 0);
-		exec_simplecmd(ast, count, 1, env);
-		exit (0);
-	}
-	waitpid(process, NULL, 0);
-	free_ast(ast);
 	return (0);
 }
 
