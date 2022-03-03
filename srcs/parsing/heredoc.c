@@ -6,13 +6,13 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/02 16:09:32 by imarushe          #+#    #+#             */
-/*   Updated: 2022/03/03 14:47:43 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/03 16:23:28 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-int	fill_heredoc(char *delim, int fd, char **env)
+static int	fill_heredoc(char *delim, int fd, char **env)
 {
 	char	*input;
 	char	*temp;
@@ -26,7 +26,8 @@ int	fill_heredoc(char *delim, int fd, char **env)
 			end = 1;
 		else
 		{
-			input = ft_expandval(ft_strjoin(temp, "\n"), env);
+			temp = ft_joinfree(temp, "\n");
+			input = ft_expandval(temp, env);
 			if (!input)
 				return (1);
 			write(fd, input, ft_strlen(input));

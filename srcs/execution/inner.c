@@ -6,7 +6,7 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:09:43 by imarushe          #+#    #+#             */
-/*   Updated: 2022/03/03 14:13:44 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/03 16:28:09 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ char	*built_in_pwd(void)
 	return (cwd);
 }
 
-void	ft_inn_cd(char *path)
+void	ft_inn_cd(char *path, t_env *g_start)
 {
 	char	*oldpwd;
 	char	*pwd;
@@ -35,8 +35,8 @@ void	ft_inn_cd(char *path)
 		return ;
 	if (!chdir(path))
 	{
-		pwd = ft_strrchr(get_env_var("PWD="), '=') + 1;
-		oldpwd = ft_strrchr(get_env_var("OLDPWD="), '=') + 1;
+		pwd = ft_strrchr(get_env_var("PWD=", g_start), '=') + 1;
+		oldpwd = ft_strrchr(get_env_var("OLDPWD=", g_start), '=') + 1;
 		if (oldpwd && pwd)
 			ft_strlcpy(oldpwd, pwd, ft_strlen(pwd) + 1);
 		if (pwd)
@@ -52,7 +52,7 @@ void	ft_inn_cd(char *path)
 		printf("Mrd! Chdir!\n");
 }
 
-void	ft_inn_env(void)
+void	ft_inn_env(t_env *g_start)
 {
 	t_env	*temp;
 
@@ -64,23 +64,27 @@ void	ft_inn_env(void)
 	}
 }
 
-void	ft_inn_exit(char **cmd)
+void	ft_inn_exit(char **cmd, t_env *g_start)
 {
 	int	i;
 
 	i = 0;
-	if (!ft_strncmp(cmd[0], "exit\0", 5) && cmd[1] && cmd[2])
-		printf("Mrd! No more that one!\n");
-	else if (!ft_strncmp(cmd[0], "exit", 4) && cmd[1])
+	if (!ft_strncmp(cmd[0], "exit", 4) && cmd[1])
 	{
 		while (cmd[1][i])
 		{
 			if (!ft_isdigit(cmd[1][i]))
 			{
 				printf("Mrd! No more words, just digits!\n");
+				g_start->exit = 2;
 				return ;
 			}
 			i++;
+		}
+		if (cmd[2])
+		{
+			printf("Mrd! No more that one!\n");
+			return ;
 		}
 		g_start->exit = ft_atoi(cmd[1]);
 	}
@@ -88,13 +92,13 @@ void	ft_inn_exit(char **cmd)
 		g_start->exit = 0;
 }
 
-void	ft_inn_echo(char **cmd)
+void	ft_inn_echo(char **cmd, t_env *g_start)
 {
 	if (!ft_strncmp(cmd[0], "echo", 4) && cmd[1] && cmd[1][0] == '$')
 	{
-		if (!ft_strncmp(&cmd[1][1], get_env_var(&cmd[1][1]), 4)
-				&& get_env_var(&cmd[1][1])[ft_strlen(cmd[1]) - 1] == '=')
-			printf("%s\n", &get_env_var(&cmd[1][1])[ft_strlen(cmd[1])]);
+		if (!ft_strncmp(&cmd[1][1], get_env_var(&cmd[1][1], g_start), 4)
+				&& get_env_var(&cmd[1][1], g_start)[ft_strlen(cmd[1]) - 1] == '=')
+			printf("%s\n", &get_env_var(&cmd[1][1], g_start)[ft_strlen(cmd[1])]);
 		else
 			printf("Mrd! Are you sure with this name?!\n");
 	}

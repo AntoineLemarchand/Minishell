@@ -6,17 +6,18 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 16:30:14 by imarushe          #+#    #+#             */
-/*   Updated: 2022/03/02 15:15:57 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/03 16:23:52 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_end(void)
+
+void	ft_end(t_env *envcpy)
 {
-	ft_free_env();
+	ft_free_env(envcpy);
 	rl_clear_history();
-	printf("exit\n");
+	printf("A tout!\n");
 }
 
 void	ft_free_array(char **array)
@@ -62,13 +63,13 @@ void	ft_add_path(char **cmd, char **path_split)
 	}
 }
 
-void	ft_abs_path(char **cmd)
+void	ft_abs_path(char **cmd, t_env *g_start)
 {
 	char	*path;
 	char	**path_split;
 
-	if (get_env_var("PATH="))
-		path = ft_strdup(&get_env_var("PATH=")[5]);
+	if (get_env_var("PATH=", g_start))
+		path = ft_strdup(&get_env_var("PATH=", g_start)[5]);
 	else
 		return ;
 	if (cmd[0][0] != '/' && ft_strncmp(cmd[0], "./", 2) != 0)

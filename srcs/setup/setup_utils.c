@@ -6,13 +6,13 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 18:11:42 by imarushe          #+#    #+#             */
-/*   Updated: 2022/03/02 15:33:10 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/03 16:22:55 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_export(char **cmd)
+void	ft_export(char **cmd, t_env *g_start)
 {
 	int		i;
 	char	*str;
@@ -26,18 +26,17 @@ void	ft_export(char **cmd)
 	if (!name)
 		return ;
 	ft_strlcpy(name, cmd[1], i + 2);
-	if (get_env_var(name))
+	if (get_env_var(name, g_start))
 	{
-		str = ft_strrchr(get_env_var(name), '=') + 1;
+		str = ft_strrchr(get_env_var(name, g_start), '=') + 1;
 		str = &str[-ft_strlen(name)];
 		ft_strlcpy(str, cmd[1], ft_strlen(cmd[1]) + 1);
 	}
 	else
-		ft_add_env(ft_strdup(cmd[1]));
+		ft_add_env(ft_strdup(cmd[1]), g_start);
 	free(name);
 }
-
-void	ft_unset(char **cmd)
+void	ft_unset(char **cmd, t_env *g_start)
 {
 	t_env	*temp;
 	size_t	size;
@@ -62,7 +61,7 @@ void	ft_unset(char **cmd)
 	return ;
 }
 
-char	**ft_to_array(void)
+char	**ft_to_array(t_env *g_start)
 {
 	char	**result;
 	t_env	*temp;
@@ -89,12 +88,12 @@ char	**ft_to_array(void)
 	return (result);
 }
 
-void	ft_free_env(void)
+void	ft_free_env(t_env *envcpy)
 {
 	t_env	*i;
 	t_env	*temp;
 
-	i = g_start;
+	i = envcpy;
 	while (i)
 	{
 		temp = i;
@@ -107,7 +106,7 @@ void	ft_free_env(void)
 	free(i);
 }
 
-void	ft_change_status(char **cmd)
+void	ft_change_status(char **cmd, t_env *g_start)
 {
 	int		i;
 	char	*temp;

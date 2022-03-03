@@ -6,13 +6,11 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:09:43 by imarushe          #+#    #+#             */
-/*   Updated: 2022/03/03 15:06:41 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/03 16:15:31 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-t_env	*g_start;
 
 static int	count_exec(t_node *ast, int count)
 {
@@ -39,20 +37,19 @@ void	ft_handler(int status)
 		return ;
 }
 
-void	ft_initialize_readline(void)
+t_env	*ft_initialize_readline(t_env *g_start)
 {
 	struct termios	tp;
 
 	signal(SIGINT, ft_handler);
 	signal(SIGQUIT, ft_handler);
 	if (tcgetattr(0, &tp) == -1)
-		ft_putstr_fd("minishell: could not load term", 2);
+		printf("Mrd! Terminal!");
 	tp.c_lflag &= ~ECHOCTL;
 	if (tcsetattr(0, 0, &tp) == -1)
-		ft_putstr_fd("minishell: could not load term", 2);
-	g_start->exit = -1;
-	g_start->status = 0;
+		printf("Mrd! Terminal!");
 	rl_bind_key ('\t', rl_insert);
+	return (g_start);
 }
 
 int	exec_line(t_node *ast, char **env)
@@ -87,17 +84,22 @@ int	main(int ac, char **av, char **env)
 	char	*input;
 	int		exit;
 	t_node	*ast;
+	t_env	*envcpy;
 
 	input = (char *) NULL;
-	ft_make_env(env);
-	ft_initialize_readline();
+	envcpy = (t_env *)malloc(sizeof(t_env));
+	envcpy->next = NULL;
+	envcpy->var = malloc(sizeof(char));
+	envcpy->var = "\0";
+	envcpy = ft_make_env(env, envcpy);
+	envcpy = ft_initialize_readline(envcpy);
 	while (g_start->exit < 0 && ac && *av)
 	{
 		input = readline("\033[32;1mMrdShll> \033[0m");
 		if (!input)
 		{
 			printf("\n");
-			g_start->exit = 0;
+			envcpy->exit = 0;
 			break ;
 		}
 		if (*input)
@@ -111,7 +113,7 @@ int	main(int ac, char **av, char **env)
 			input = (char *) NULL;
 		}
 	}
-	exit = g_start->exit;
-	ft_end();
+	exit = envcpy->exit;
+	ft_end(envcpy);
 	return (exit);
 }

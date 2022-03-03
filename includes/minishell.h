@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/31 11:48:25 by alemarch          #+#    #+#             */
-/*   Updated: 2022/03/03 15:07:19 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/03 16:30:11 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,23 +78,23 @@ extern t_env	*g_start;
 
 //SETUP
 //	env.c
-char	*get_env_var(char *var);
-void	ft_add_env(char *var);
-void	ft_add_var(char *var);
-void	ft_make_env(char **envp);
-void	ft_add_var_list(char **var_list);
+char	*get_env_var(char *var, t_env *g_start);
+void	ft_add_env(char *var, t_env *envcpy);
+void	ft_add_var(char *var, t_env *envcpy);
+t_env	*ft_make_env(char **envp, t_env *envcpy);
+void	ft_add_var_list(char **var_list, t_env *envcpy);
 // setup_utils.c
-void	ft_export(char **cmd);
-void	ft_unset(char **cmd);
-char	**ft_to_array(void);
-void	ft_free_env(void);
-void	ft_change_status(char **cmd);
+void	ft_export(char **cmd, t_env *g_start);
+void	ft_unset(char **cmd, t_env *g_start);
+char	**ft_to_array(t_env *g_start);
+void	ft_free_env(t_env *encpy);
+void	ft_change_status(char **cmd, t_env *g_start);
 
 // loop_utils.c
-void	ft_end(void);
+void	ft_end(t_env *envcpy);
 void	ft_free_array(char **array);
 void	ft_add_path(char **cmd, char **path_split);
-void	ft_abs_path(char **cmd);
+void	ft_abs_path(char **cmd, t_env *g_start);
 
 //LEXING
 //	check.c
@@ -134,16 +134,16 @@ void	ft_print_echo(char **cmd, int i);
 int		exec_singlebuiltin(t_cmd *cmd, char **env);
 // inner.c
 char	*built_in_pwd(void);
-void	ft_inn_cd(char *path);
-void	ft_inn_env(void);
-void	ft_inn_exit(char **cmd);
-void	ft_inn_echo(char **cmd);
+void	ft_inn_cd(char *path, t_env *g_start);
+void	ft_inn_env(t_env *g_start);
+void	ft_inn_exit(char **cmd, t_env *g_start);
+void	ft_inn_echo(char **cmd, t_env *g_start);
 //	ioctl.c
 int	manage_io(int *link, t_redir **redir, int isnotlast, char **env);
 //	exec_utils.c
-void	ft_runinn_cmd(char **cmd);
+void	ft_runinn_cmd(char **cmd, t_env *g_start);
 bool	ft_isinn_cmd(char *cmd);
-void	ft_run(char **cmd);
+void	ft_run(char	*input, t_env *g_start);
 //	exec_simplecmd.c
 int		exec_simplecmd(t_node *ast, int count, int num, char **env);
 #endif
