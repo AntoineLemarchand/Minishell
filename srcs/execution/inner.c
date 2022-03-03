@@ -6,7 +6,7 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:09:43 by imarushe          #+#    #+#             */
-/*   Updated: 2022/03/03 09:51:33 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/03 14:13:44 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,16 +86,6 @@ void	ft_inn_exit(char **cmd)
 	}
 	else if (!ft_strncmp(cmd[0], "exit", 4))
 		g_start->exit = 0;
-}
-
-void	ft_print_echo(char **cmd, int i)
-{
-	while (cmd[i])
-	{
-		printf("%s", cmd[i++]);
-		if (cmd[i])
-			printf(" ");
-	}
 }
 
 void	ft_inn_echo(char **cmd)

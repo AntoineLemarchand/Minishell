@@ -6,13 +6,13 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 16:30:18 by alemarch          #+#    #+#             */
-/*   Updated: 2022/03/02 14:03:16 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/03 14:05:38 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	check_quotes(char *input)
+static int	check_quotes(char *input)
 {
 	int		i;
 	char	control;
@@ -34,7 +34,7 @@ int	check_quotes(char *input)
 	return (0);
 }
 
-int	check_pipe(char *input)
+static int	check_pipe(char *input)
 {
 	int		i;
 
@@ -54,4 +54,19 @@ int	check_pipe(char *input)
 int	check_input(char *input)
 {
 	return (check_quotes(input) || check_pipe(input));
+}
+
+int	check_toks(t_tok **toks)
+{
+	int	i;
+
+	i = 0;
+	while (toks[i])
+	{
+		if ((toks[i]->type == INREDIR || toks[i]->type == OUTREDIR)
+			&& ft_strlen(toks[i]->val) > 2)
+			return (1);
+		i++;
+	}
+	return (0);
 }

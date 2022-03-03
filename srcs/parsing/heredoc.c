@@ -6,22 +6,19 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/02 16:09:32 by imarushe          #+#    #+#             */
-/*   Updated: 2022/03/03 09:55:59 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/03 14:12:51 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-int	ft_heredoc(char *delim)
+int	fill_heredoc(char *delim, int fd)
 {
 	char	*input;
 	char	*temp;
 	int		end;
-	int		fd;
 
 	end = 0;
-	fd = open("tmpfile.txt", O_WRONLY | O_CREAT | O_TRUNC, 0777);
-	unlink("tmpfile.txt");
 	while (!end)
 	{
 		temp = readline("\033[32;1m>\033[0m");
@@ -30,10 +27,25 @@ int	ft_heredoc(char *delim)
 		else
 		{
 			input = ft_strjoin(temp, "\n");
+			if (!input)
+				return (1);
 			write(fd, input, ft_strlen(input));
 			free(input);
 		}
 		free(temp);
 	}
+	return (0);
+}
+
+int	ft_heredoc(char *delim)
+{
+	int		fd;
+
+	fd = open("/tmp/tmpfile.txt", O_RDWR | O_CREAT | O_TRUNC, 0644);
+	if (!fd)
+		return (-1);
+	unlink("/tmp/tmpfile.txt");
+	if (fill_heredoc(delim, fd))
+		return (-1);
 	return (fd);
 }

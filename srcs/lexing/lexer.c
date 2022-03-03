@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 10:23:31 by alemarch          #+#    #+#             */
-/*   Updated: 2022/02/23 20:52:53 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/03 14:09:32 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,7 @@ static t_tok	**ft_grouptok(t_tok **toks)
 				break ;
 		}
 	}
+	free_toks(toks);
 	return (ret);
 }
 
@@ -131,10 +132,10 @@ t_tok	**ft_lex(char *input)
 		if (!toks)
 			return (NULL);
 	}
-	swp = toks;
 	toks = ft_grouptok(toks);
-	free_toks(swp);
-	if (!toks)
+	if (check_toks(toks))
+		free_toks(toks);
+	if (!toks || check_toks(toks))
 		return (NULL);
 	swp = toks;
 	toks = ft_cleantok(toks, -1, -1, NULL);

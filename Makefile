@@ -48,6 +48,8 @@ PARSE			= $(addprefix parsing/, \
 				  	)
 
 EXEC			= $(addprefix execution/, \
+				  	ioctl.c \
+				  	inner_utils.c \
 				  	inner.c \
 					exec_utils.c \
 					exec_simplecmd.c \
@@ -70,7 +72,7 @@ RM				= rm -f
 
 CC				= gcc
 
-CFLAGS			= -Wall -Wextra -Werror -g
+CFLAGS			= -Wall -Wextra -Werror -g#-fsanitize=address
 
 CPPFLAGS		= -Iincludes
 

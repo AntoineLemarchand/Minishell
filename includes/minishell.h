@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/31 11:48:25 by alemarch          #+#    #+#             */
-/*   Updated: 2022/03/03 10:28:46 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/03 14:14:22 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,8 @@ typedef struct s_env
 
 // token struct
 typedef struct s_tok {
-	char	*val;
 	int		type;
+	char	*val;
 }	t_tok;
 
 // ast structs
@@ -95,16 +95,11 @@ void	ft_end(void);
 void	ft_free_array(char **array);
 void	ft_add_path(char **cmd, char **path_split);
 void	ft_abs_path(char **cmd);
-// inner.c
-char	*built_in_pwd(void);
-void	ft_inn_cd(char *path);
-void	ft_inn_env(void);
-void	ft_inn_exit(char **cmd);
-void	ft_inn_echo(char **cmd);
 
 //LEXING
 //	check.c
 int		check_input(char *input);
+int		check_toks(t_tok **toks);
 //	lexer_utils.c
 void	free_toks(t_tok **toks);
 int		toktype(char c);
@@ -133,6 +128,16 @@ t_node	*ft_create_ast(t_tok **tokens);
 int		ft_heredoc(char *delim);
 
 //EXECUTION
+// inner_utils.c
+void	ft_print_echo(char **cmd, int i);
+// inner.c
+char	*built_in_pwd(void);
+void	ft_inn_cd(char *path);
+void	ft_inn_env(void);
+void	ft_inn_exit(char **cmd);
+void	ft_inn_echo(char **cmd);
+//	ioctl.c
+int	manage_io(int *link, t_redir **redir, int num, int count);
 //	exec_utils.c
 void	ft_run(char **cmd);
 //	exec_simplecmd.c
