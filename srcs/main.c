@@ -6,7 +6,7 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:09:43 by imarushe          #+#    #+#             */
-/*   Updated: 2022/03/03 22:17:38 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/03 23:03:29 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,8 +74,8 @@ int	exec_line(t_node *ast, t_env *env)
 			exit (0);
 		}
 		waitpid(process, NULL, 0);
-		free_ast(ast);
 	}
+	free_ast(ast);
 	return (0);
 }
 
@@ -109,7 +109,6 @@ int	main(int ac, char **av, char **env)
 				ft_putstr_fd("minishell: syntax error\n", 2);
 			else
 				exec_line(ast, envcpy);
-			input = (char *) NULL;
 		}
 	}
 	exit = envcpy->exit;
