@@ -6,13 +6,37 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 15:20:03 by alemarch          #+#    #+#             */
-/*   Updated: 2022/03/03 16:30:39 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/03 22:02:58 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	fork_cmd(t_cmd	*cmd, int num, int count, char **env)
+char	**convert_env(t_env *env)
+{
+	int		i;
+	int		size;
+	char	**ret;
+	t_env	*begin;
+
+	size = 1;
+	while (env)
+	{
+		size++;
+		env = env->next;
+	}
+	ret = ft_calloc(size, sizeof(char *));
+	i = 0;
+	while (begin)
+	{
+		ret[i] = begin->var;
+		begin = begin->next;
+		i++;
+	}
+	return (ret);
+}
+
+int	fork_cmd(t_cmd	*cmd, int isnotlast, t_env *env)
 {
 	pid_t	process;
 	int		link[2];
@@ -22,9 +46,9 @@ int	fork_cmd(t_cmd	*cmd, int num, int count, char **env)
 	if (process == 0)
 	{
 		close(link[0]);
-		manage_io(link, cmd->redir, num % count, env);
+		manage_io(link, cmd->redir, isnotlast, env);
 		close(link[1]);
-		ft_run(cmd->args);
+		ft_run(cmd->args, env);
 		exit(127);
 	}
 	close(link[1]);
@@ -35,7 +59,7 @@ int	fork_cmd(t_cmd	*cmd, int num, int count, char **env)
 	return (0);
 }
 
-int	exec_simplecmd(t_node	*ast, int count, int num, char **env)
+int	exec_simplecmd(t_node	*ast, int count, int num, t_env *env)
 {
 	if (ast->type == PIPELINE)
 	{
@@ -46,7 +70,7 @@ int	exec_simplecmd(t_node	*ast, int count, int num, char **env)
 	}
 	else
 	{
-		if (fork_cmd(((t_cmd *)ast->node), num, count, env))
+		if (fork_cmd(((t_cmd *)ast->node), num % count, env))
 			return (1);
 	}
 	return (0);

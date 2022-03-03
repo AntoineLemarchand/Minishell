@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/02 12:45:21 by alemarch          #+#    #+#             */
-/*   Updated: 2022/03/03 16:30:06 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/03 21:41:34 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,19 +83,14 @@ void	ft_runout_cmd(char **cmd, t_env *g_start)
 	env = NULL;
 }
 
-void	ft_run(char	*input, t_env *g_start)
+void	ft_run(char	**cmd, t_env *envcpy)
 {
-	char	**cmd;
-
-	cmd = ft_split(input, ' ');
-	free(input);
-	input = (char *) NULL;
-	ft_change_status(cmd, g_start);
+	ft_change_status(cmd, envcpy);
 	if (cmd[0] == NULL)
 		return ;
 	if (ft_isinn_cmd(cmd[0]))
-		ft_runinn_cmd(cmd, g_start);
+		ft_runinn_cmd(cmd, envcpy);
 	else
-		ft_runout_cmd(cmd, g_start);
+		ft_runout_cmd(cmd, envcpy);
 	ft_free_array(cmd);
 }

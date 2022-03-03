@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/03 14:13:50 by alemarch          #+#    #+#             */
-/*   Updated: 2022/03/03 15:06:47 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/03 21:59:40 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	ft_print_echo(char **cmd, int i)
 	}
 }
 
-int	exec_singlebuiltin(t_cmd *cmd, char **env)
+int	exec_singlebuiltin(t_cmd *cmd, t_env *env)
 {
 	int	link[2];
 
@@ -36,7 +36,7 @@ int	exec_singlebuiltin(t_cmd *cmd, char **env)
 		return (1);
 	}
 	manage_io(link, cmd->redir, 0, env);
-	ft_runinn_cmd(cmd->args);
+	ft_runinn_cmd(cmd->args, env);
 	dup2(link[0], 0);
 	dup2(link[1], 1);
 	close(link[0]);

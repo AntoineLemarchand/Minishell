@@ -6,7 +6,7 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:09:43 by imarushe          #+#    #+#             */
-/*   Updated: 2022/03/03 16:15:31 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/03 22:17:38 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	ft_handler(int status)
 		return ;
 }
 
-t_env	*ft_initialize_readline(t_env *g_start)
+t_env	*ft_initialize_readline(t_env *envcpy)
 {
 	struct termios	tp;
 
@@ -49,10 +49,10 @@ t_env	*ft_initialize_readline(t_env *g_start)
 	if (tcsetattr(0, 0, &tp) == -1)
 		printf("Mrd! Terminal!");
 	rl_bind_key ('\t', rl_insert);
-	return (g_start);
+	return (envcpy);
 }
 
-int	exec_line(t_node *ast, char **env)
+int	exec_line(t_node *ast, t_env *env)
 {
 	int		count;
 	pid_t	process;
@@ -90,10 +90,9 @@ int	main(int ac, char **av, char **env)
 	envcpy = (t_env *)malloc(sizeof(t_env));
 	envcpy->next = NULL;
 	envcpy->var = malloc(sizeof(char));
-	envcpy->var = "\0";
 	envcpy = ft_make_env(env, envcpy);
 	envcpy = ft_initialize_readline(envcpy);
-	while (g_start->exit < 0 && ac && *av)
+	while (envcpy->exit < 0 && ac && *av)
 	{
 		input = readline("\033[32;1mMrdShll> \033[0m");
 		if (!input)
@@ -105,11 +104,11 @@ int	main(int ac, char **av, char **env)
 		if (*input)
 		{
 			add_history(input);
-			ast = parse_input(input, env);
+			ast = parse_input(input, envcpy);
 			if (!ast)
 				ft_putstr_fd("minishell: syntax error\n", 2);
 			else
-				exec_line(ast, env);
+				exec_line(ast, envcpy);
 			input = (char *) NULL;
 		}
 	}

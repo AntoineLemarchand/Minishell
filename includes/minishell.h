@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/31 11:48:25 by alemarch          #+#    #+#             */
-/*   Updated: 2022/03/03 16:30:11 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/03 22:09:49 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,9 +73,6 @@ typedef struct s_node {
 	void	*node;
 }	t_node;
 
-// global var
-extern t_env	*g_start;
-
 //SETUP
 //	env.c
 char	*get_env_var(char *var, t_env *g_start);
@@ -118,7 +115,7 @@ t_tok	**getleft(t_tok **tokens, int index);
 t_tok	**getright(t_tok **tokens, int index);
 void	free_cmd(t_cmd	*cmd);
 void	free_ast(t_node *ast);
-t_node	*parse_input(char *input, char **env);
+t_node	*parse_input(char *input, t_env *env);
 //	parser_cmd_utils.c
 t_redir	**ft_addredir(t_redir **redir, t_tok **tokens);
 char	**ft_addargs(char	**args, t_tok	*tok);
@@ -131,7 +128,7 @@ int		ft_heredoc(char *delim, char **env);
 //EXECUTION
 // inner_utils.c
 void	ft_print_echo(char **cmd, int i);
-int		exec_singlebuiltin(t_cmd *cmd, char **env);
+int		exec_singlebuiltin(t_cmd *cmd, t_env *env);
 // inner.c
 char	*built_in_pwd(void);
 void	ft_inn_cd(char *path, t_env *g_start);
@@ -139,11 +136,12 @@ void	ft_inn_env(t_env *g_start);
 void	ft_inn_exit(char **cmd, t_env *g_start);
 void	ft_inn_echo(char **cmd, t_env *g_start);
 //	ioctl.c
-int	manage_io(int *link, t_redir **redir, int isnotlast, char **env);
+int	manage_io(int *link, t_redir **redir, int isnotlast, t_env *env);
 //	exec_utils.c
 void	ft_runinn_cmd(char **cmd, t_env *g_start);
 bool	ft_isinn_cmd(char *cmd);
-void	ft_run(char	*input, t_env *g_start);
+void	ft_run(char	**cmd, t_env *envcpy);
 //	exec_simplecmd.c
-int		exec_simplecmd(t_node *ast, int count, int num, char **env);
+char	**convert_env(t_env *env);
+int		exec_simplecmd(t_node *ast, int count, int num, t_env *env);
 #endif

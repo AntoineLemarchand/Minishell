@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 12:42:28 by alemarch          #+#    #+#             */
-/*   Updated: 2022/03/02 15:36:44 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/03 22:08:26 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,19 +92,24 @@ void	free_ast(t_node *ast)
 	free(ast);
 }
 
-t_node	*parse_input(char *input, char **env)
+t_node	*parse_input(char *input, t_env *env)
 {
 	t_tok	**tokens;
 	t_node	*ret;
+	char	**envcpy;
 
+	envcpy = convert_env(env);
+	if (!envcpy)
+		return (NULL);
 	tokens = ft_lex(input);
 	if (!tokens)
 		return (NULL);
-	if (ft_expand(tokens, env))
+	if (ft_expand(tokens, envcpy))
 	{
 		free_toks(tokens);
 		return (NULL);
 	}
+	free(envcpy);
 	ret = ft_create_ast(tokens);
 	free_toks(tokens);
 	if (!ret)

@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/03 13:26:21 by alemarch          #+#    #+#             */
-/*   Updated: 2022/03/03 14:51:28 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/03 22:02:27 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,16 @@ static void	clean_io(int *fds, int *link, t_redir *redir)
 		close(fds[0]);
 }
 
-static void	io_helper(t_redir *redir, int *fds, char **env)
+static void	io_helper(t_redir *redir, int *fds, t_env *env)
 {
+	char	**envcpy;
+
+	envcpy = convert_env(env);
+	if (!envcpy)
+	{
+		fds[0] = -1;
+		return ;
+	}
 	if (!strncmp(redir->type, ">\0", 2))
 		fds[1] = open(redir->val, O_CREAT | O_TRUNC | O_WRONLY, 0644);
 	else if (!strncmp(redir->type, ">>\0", 3))
@@ -45,10 +53,10 @@ static void	io_helper(t_redir *redir, int *fds, char **env)
 	else if (!strncmp(redir->type, "<\0", 2))
 		fds[0] = open(redir->val, O_RDONLY);
 	else
-		fds[0] = ft_heredoc(redir->val, env);
+		fds[0] = ft_heredoc(redir->val, envcpy);
 }
 
-int	manage_io(int *link, t_redir **redir, int isnotlast, char **env)
+int	manage_io(int *link, t_redir **redir, int isnotlast, t_env *env)
 {
 	int	i;
 	int	fds[2];
