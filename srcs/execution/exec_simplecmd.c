@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 15:20:03 by alemarch          #+#    #+#             */
-/*   Updated: 2022/03/04 12:24:04 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/04 15:56:08 by imarushe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ int	exec_simplecmd(t_node	*ast, int count, int num, t_env *env)
 {
 	if (ast->type == PIPELINE)
 	{
-		env->status = exec_simplecmd(((t_pipe *)ast->node)->left_node,
+		exec_simplecmd(((t_pipe *)ast->node)->left_node,
 			count, num++, env);
 		env->status = exec_simplecmd(((t_pipe *)ast->node)->right_node,
 			count, num, env);

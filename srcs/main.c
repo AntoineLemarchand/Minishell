@@ -6,7 +6,7 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:09:43 by imarushe          #+#    #+#             */
-/*   Updated: 2022/03/04 12:38:04 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/04 16:00:02 by imarushe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,15 +67,17 @@ int	exec_line(t_node *ast, t_env *env)
 			ft_putstr_fd("minishell: unable to fork", 2);
 			return (1);
 		}
-		else if (!process)
+		else if (process == 0)
 		{
 			count = count_exec(ast, 0);
 			env->status = exec_simplecmd(ast, count, 1, env);
 			printf("exec_line_child-> %i\n", WEXITSTATUS(env->status));
-			exit (env->status);
+			exit(WEXITSTATUS(env->status));
 		}
 		waitpid(process, &env->status, 0);
+//		waitpid(process, &env->status, 0);
 		printf("exec_line -> %i\n", WEXITSTATUS(env->status));
+//		printf("exec_line -> %i\n", WEXITSTATUS(env->status));
 	}
 	free_ast(ast);
 	return (0);
