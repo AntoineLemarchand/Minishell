@@ -24,6 +24,12 @@ define removing
 	@$(RM) $1 > /dev/null
 endef
 
+SETUP			= $(addprefix setup/, \
+				  	loop_utils.c \
+					setup_utils.c \
+					env.c \
+					)
+
 LEX				= $(addprefix lexing/, \
 					check.c \
 					lexer_utils.c \
@@ -38,13 +44,19 @@ PARSE			= $(addprefix parsing/, \
 					parser_cmd_utils.c \
 					parser_utils.c \
 					parser.c \
+					heredoc.c \
 				  	)
 
 EXEC			= $(addprefix execution/, \
+				  	ioctl.c \
+				  	inner_utils.c \
+				  	inner.c \
+					exec_utils.c \
 					exec_simplecmd.c \
 					)
 
 SRCS			= $(addprefix srcs/, \
+				  	$(SETUP) \
 				  	$(LEX) \
 					$(EXPAND) \
 					$(PARSE) \
@@ -60,7 +72,7 @@ RM				= rm -f
 
 CC				= gcc
 
-CFLAGS			= -Wall -Wextra -Werror -g
+CFLAGS			= -Wall -Wextra -Werror -g#-fsanitize=address
 
 CPPFLAGS		= -Iincludes
 

@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 16:42:56 by alemarch          #+#    #+#             */
-/*   Updated: 2022/02/24 10:18:27 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/04 10:53:54 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static char	*ft_getvar(char *src)
 
 	i = -1;
 	ret = ft_calloc(1, sizeof(char));
-	while (ft_isalnum(src[++i]))
+	while (ft_isalnum(src[++i]) || src[i] == '_')
 	{
 		swp = ret;
 		ret = ft_addchar(ret, src[i]);
@@ -64,7 +64,7 @@ static int	ft_addvar(char **dest, char *src, char **env)
 	return (varlen);
 }
 
-static char	*ft_expandval(char *s, char **env)
+char	*ft_expandval(char *s, char **env)
 {
 	int		i;
 	char	*ret;

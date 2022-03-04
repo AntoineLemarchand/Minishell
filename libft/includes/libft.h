@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/16 23:23:47 by alemarch          #+#    #+#             */
-/*   Updated: 2022/02/24 12:05:39 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/03 09:58:01 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 # define LIBFT_H
 # include <stdlib.h>
 # include <unistd.h>
-# include "get_next_line.h"
 
 typedef struct s_list
 {
@@ -71,7 +70,5 @@ void	ft_lstdelone(t_list *lst, void (*del)(void*));
 void	ft_lstclear(t_list **lst, void (*del)(void*));
 void	ft_lstiter(t_list *lst, void (*f)(void *));
 t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
-// gnl
-char	*get_next_line(int fd);
 
 #endif
