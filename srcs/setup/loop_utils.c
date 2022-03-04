@@ -6,12 +6,11 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 16:30:14 by imarushe          #+#    #+#             */
-/*   Updated: 2022/03/03 16:23:52 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/04 16:24:41 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
 
 void	ft_end(t_env *envcpy)
 {

@@ -6,7 +6,7 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 18:11:42 by imarushe          #+#    #+#             */
-/*   Updated: 2022/03/03 16:22:55 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/04 16:24:58 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ void	ft_export(char **cmd, t_env *g_start)
 		ft_add_env(ft_strdup(cmd[1]), g_start);
 	free(name);
 }
+
 void	ft_unset(char **cmd, t_env *g_start)
 {
 	t_env	*temp;

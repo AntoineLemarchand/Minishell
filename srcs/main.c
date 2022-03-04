@@ -6,7 +6,7 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:09:43 by imarushe          #+#    #+#             */
-/*   Updated: 2022/03/04 16:00:02 by imarushe         ###   ########.fr       */
+/*   Updated: 2022/03/04 16:37:55 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,18 @@ t_env	*ft_initialize_readline(t_env *envcpy)
 	return (envcpy);
 }
 
+void	test(int i)
+{
+	(void)i;
+	exit(130);
+}
+
+void	none(int i)
+{
+	(void)i;
+	printf("\n");
+}
+
 int	exec_line(t_node *ast, t_env *env)
 {
 	int		count;
@@ -69,17 +81,17 @@ int	exec_line(t_node *ast, t_env *env)
 		}
 		else if (process == 0)
 		{
+			signal(SIGINT, test);
 			count = count_exec(ast, 0);
 			env->status = exec_simplecmd(ast, count, 1, env);
-			printf("exec_line_child-> %i\n", WEXITSTATUS(env->status));
 			exit(WEXITSTATUS(env->status));
 		}
+		signal(SIGINT, none);
 		waitpid(process, &env->status, 0);
-//		waitpid(process, &env->status, 0);
-		printf("exec_line -> %i\n", WEXITSTATUS(env->status));
-//		printf("exec_line -> %i\n", WEXITSTATUS(env->status));
+		signal(SIGINT, ft_handler);
 	}
 	free_ast(ast);
+	env->status = WEXITSTATUS(env->status);
 	return (0);
 }
 

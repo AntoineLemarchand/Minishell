@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/02 12:45:21 by alemarch          #+#    #+#             */
-/*   Updated: 2022/03/04 12:35:34 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/04 16:24:27 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static void	ft_run_cmd(char **cmd, char **env, t_env *envcpy)
 
 	pid = fork();
 	if (pid == -1)
-			ft_putendl_fd("minishell: fork failed", 2);
+		ft_putendl_fd("minishell: fork failed", 2);
 	else if (pid > 0)
 	{
 		waitpid(pid, &envcpy->status, 0);
@@ -93,7 +93,6 @@ void	ft_run(char	**cmd, t_env *envcpy)
 		ft_runinn_cmd(cmd, envcpy);
 	else
 		ft_runout_cmd(cmd, envcpy);
-	printf("run_out_cmd -> %i\n", envcpy->status);
 	ft_free_array(cmd);
 	exit(envcpy->status);
 }

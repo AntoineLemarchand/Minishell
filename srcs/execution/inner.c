@@ -6,7 +6,7 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:09:43 by imarushe          #+#    #+#             */
-/*   Updated: 2022/03/04 10:49:17 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/04 16:25:16 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,8 @@ void	ft_inn_echo(char **cmd, t_env *envcpy)
 	if (!ft_strncmp(cmd[0], "echo", 4) && cmd[1] && cmd[1][0] == '$')
 	{
 		if (!ft_strncmp(&cmd[1][1], get_env_var(&cmd[1][1], envcpy), 4)
-				&& get_env_var(&cmd[1][1], envcpy)[ft_strlen(cmd[1]) - 1] == '=')
+				&& get_env_var(&cmd[1][1],
+				envcpy)[ft_strlen(cmd[1]) - 1] == '=')
 			printf("%s\n", &get_env_var(&cmd[1][1], envcpy)[ft_strlen(cmd[1])]);
 		else
 			printf("Mrd! Are you sure with this name?!\n");
