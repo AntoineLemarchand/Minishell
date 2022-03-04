@@ -6,7 +6,7 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:09:43 by imarushe          #+#    #+#             */
-/*   Updated: 2022/03/03 16:28:09 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/04 10:49:17 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,13 +92,13 @@ void	ft_inn_exit(char **cmd, t_env *g_start)
 		g_start->exit = 0;
 }
 
-void	ft_inn_echo(char **cmd, t_env *g_start)
+void	ft_inn_echo(char **cmd, t_env *envcpy)
 {
 	if (!ft_strncmp(cmd[0], "echo", 4) && cmd[1] && cmd[1][0] == '$')
 	{
-		if (!ft_strncmp(&cmd[1][1], get_env_var(&cmd[1][1], g_start), 4)
-				&& get_env_var(&cmd[1][1], g_start)[ft_strlen(cmd[1]) - 1] == '=')
-			printf("%s\n", &get_env_var(&cmd[1][1], g_start)[ft_strlen(cmd[1])]);
+		if (!ft_strncmp(&cmd[1][1], get_env_var(&cmd[1][1], envcpy), 4)
+				&& get_env_var(&cmd[1][1], envcpy)[ft_strlen(cmd[1]) - 1] == '=')
+			printf("%s\n", &get_env_var(&cmd[1][1], envcpy)[ft_strlen(cmd[1])]);
 		else
 			printf("Mrd! Are you sure with this name?!\n");
 	}

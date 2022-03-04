@@ -6,46 +6,47 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/02 12:45:21 by alemarch          #+#    #+#             */
-/*   Updated: 2022/03/03 21:41:34 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/04 12:35:34 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_runinn_cmd(char **cmd, t_env *g_start)
+void	ft_runinn_cmd(char **cmd, t_env *envcpy)
 {
 	if (!ft_strncmp(cmd[0], "pwd", 3))
-		printf("%s\n", get_env_var("PWD=", g_start));
+		printf("%s\n", get_env_var("PWD=", envcpy) + 4);
 	else if (!ft_strncmp(cmd[0], "cd", 2))
-		ft_inn_cd(cmd[1], g_start);
+		ft_inn_cd(cmd[1], envcpy);
 	else if (!ft_strncmp(cmd[0], "env", 3))
-		ft_inn_env(g_start);
+		ft_inn_env(envcpy);
 	else if (!ft_strncmp(cmd[0], "echo", 4))
-		ft_inn_echo(cmd, g_start);
+		ft_inn_echo(cmd, envcpy);
 	else if (!ft_strncmp(cmd[0], "exit", 4))
-		ft_inn_exit(cmd, g_start);
+		ft_inn_exit(cmd, envcpy);
 	else if (!ft_strncmp(cmd[0], "export", 6))
-		ft_export(cmd, g_start);
+		ft_export(cmd, envcpy);
 	else if (!ft_strncmp(cmd[0], "unset", 5))
-		ft_unset(cmd, g_start);
+		ft_unset(cmd, envcpy);
 }
 
-static void	ft_run_cmd(char **cmd, char **env, t_env *g_start)
+static void	ft_run_cmd(char **cmd, char **env, t_env *envcpy)
 {
 	pid_t	pid;
 
 	pid = fork();
 	if (pid == -1)
-		printf("Mrd! Fork!\n");
+			ft_putendl_fd("minishell: fork failed", 2);
 	else if (pid > 0)
 	{
-		waitpid(pid, &g_start->status, 0);
+		waitpid(pid, &envcpy->status, 0);
+		envcpy->status = WEXITSTATUS(envcpy->status);
 		kill(pid, SIGTERM);
 	}
 	else
 	{
 		if (execve(cmd[0], cmd, env) == -1)
-			printf("Mrd! Shell!\n");
+			ft_putendl_fd("minishell: execution failed", 2);
 		return ;
 	}
 }
@@ -66,18 +67,18 @@ bool	ft_isinn_cmd(char *cmd)
 	return (false);
 }
 
-void	ft_runout_cmd(char **cmd, t_env *g_start)
+void	ft_runout_cmd(char **cmd, t_env *envcpy)
 {
 	char	**env;
 
-	env = ft_to_array(g_start);
-	ft_abs_path(cmd, g_start);
+	env = ft_to_array(envcpy);
+	ft_abs_path(cmd, envcpy);
 	if (access(cmd[0], F_OK) == 0)
-		ft_run_cmd(cmd, env, g_start);
+		ft_run_cmd(cmd, env, envcpy);
 	else
 	{
-		g_start->status = 127;
-		printf("Mrd! Command not found!\n");
+		envcpy->status = 127;
+		ft_putendl_fd("minishell: command not found", 2);
 	}
 	free(env);
 	env = NULL;
@@ -92,5 +93,7 @@ void	ft_run(char	**cmd, t_env *envcpy)
 		ft_runinn_cmd(cmd, envcpy);
 	else
 		ft_runout_cmd(cmd, envcpy);
+	printf("run_out_cmd -> %i\n", envcpy->status);
 	ft_free_array(cmd);
+	exit(envcpy->status);
 }

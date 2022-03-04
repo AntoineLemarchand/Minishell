@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/31 11:48:25 by alemarch          #+#    #+#             */
-/*   Updated: 2022/03/03 22:09:49 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/04 10:58:28 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,9 @@
 // ast state
 # define PIPELINE		7
 # define SIMPLECMD		8
+
+// global errno
+extern int	g_errno;
 
 // env struct
 typedef struct s_env
@@ -136,7 +139,7 @@ void	ft_inn_env(t_env *g_start);
 void	ft_inn_exit(char **cmd, t_env *g_start);
 void	ft_inn_echo(char **cmd, t_env *g_start);
 //	ioctl.c
-int	manage_io(int *link, t_redir **redir, int isnotlast, t_env *env);
+int		manage_io(int *link, t_redir **redir, int isnotlast, t_env *env);
 //	exec_utils.c
 void	ft_runinn_cmd(char **cmd, t_env *g_start);
 bool	ft_isinn_cmd(char *cmd);

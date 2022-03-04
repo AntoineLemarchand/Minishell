@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/03 14:13:50 by alemarch          #+#    #+#             */
-/*   Updated: 2022/03/03 21:59:40 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/04 11:02:56 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ int	exec_singlebuiltin(t_cmd *cmd, t_env *env)
 {
 	int	link[2];
 
+	ft_change_status(cmd->args, env);
 	link[0] = dup(0);
 	if (link[0] == -1)
 		return (1);

@@ -6,7 +6,7 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:09:43 by imarushe          #+#    #+#             */
-/*   Updated: 2022/03/03 23:03:29 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/04 12:38:04 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,10 +70,12 @@ int	exec_line(t_node *ast, t_env *env)
 		else if (!process)
 		{
 			count = count_exec(ast, 0);
-			exec_simplecmd(ast, count, 1, env);
-			exit (0);
+			env->status = exec_simplecmd(ast, count, 1, env);
+			printf("exec_line_child-> %i\n", WEXITSTATUS(env->status));
+			exit (env->status);
 		}
-		waitpid(process, NULL, 0);
+		waitpid(process, &env->status, 0);
+		printf("exec_line -> %i\n", WEXITSTATUS(env->status));
 	}
 	free_ast(ast);
 	return (0);

@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 15:20:03 by alemarch          #+#    #+#             */
-/*   Updated: 2022/03/03 22:02:58 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/04 12:24:04 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ char	**convert_env(t_env *env)
 	char	**ret;
 	t_env	*begin;
 
+	begin = env;
 	size = 1;
 	while (env)
 	{
@@ -55,23 +56,21 @@ int	fork_cmd(t_cmd	*cmd, int isnotlast, t_env *env)
 	if (dup2(link[0], 0) == -1)
 		return (1);
 	close(link[0]);
-	waitpid(process, NULL, 0);
-	return (0);
+	waitpid(process, &env->status, 0);
+	return (env->status);
 }
 
 int	exec_simplecmd(t_node	*ast, int count, int num, t_env *env)
 {
 	if (ast->type == PIPELINE)
 	{
-		if (exec_simplecmd(((t_pipe *)ast->node)->left_node, count, num++, env))
-			return (1);
-		if (exec_simplecmd(((t_pipe *)ast->node)->right_node, count, num, env))
-			return (1);
+		env->status = exec_simplecmd(((t_pipe *)ast->node)->left_node,
+			count, num++, env);
+		env->status = exec_simplecmd(((t_pipe *)ast->node)->right_node,
+			count, num, env);
 	}
 	else
-	{
-		if (fork_cmd(((t_cmd *)ast->node), num % count, env))
-			return (1);
-	}
-	return (0);
+		env->status = fork_cmd(((t_cmd *)ast->node), num % count, env);
+	printf("exec_simplecmd -> %i\n", WEXITSTATUS(env->status));
+	return (env->status);
 }

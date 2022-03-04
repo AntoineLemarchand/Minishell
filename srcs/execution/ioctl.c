@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/03 13:26:21 by alemarch          #+#    #+#             */
-/*   Updated: 2022/03/03 22:02:27 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/04 10:16:10 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ static void	io_helper(t_redir *redir, int *fds, t_env *env)
 		fds[0] = open(redir->val, O_RDONLY);
 	else
 		fds[0] = ft_heredoc(redir->val, envcpy);
+	free(envcpy);
 }
 
 int	manage_io(int *link, t_redir **redir, int isnotlast, t_env *env)
