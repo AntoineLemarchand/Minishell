@@ -6,7 +6,7 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:09:43 by imarushe          #+#    #+#             */
-/*   Updated: 2022/03/05 10:13:54 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/05 10:19:20 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,19 +24,6 @@ static int	count_exec(t_node *ast, int count)
 	return (count);
 }
 
-void	ft_handler(int status)
-{
-	if (status == 2)
-	{
-		rl_replace_line("", 0);
-		printf("\n");
-		rl_on_new_line();
-		rl_redisplay();
-	}
-	else
-		return ;
-}
-
 t_env	*ft_initialize_readline(t_env *envcpy)
 {
 	struct termios	tp;
@@ -50,18 +37,6 @@ t_env	*ft_initialize_readline(t_env *envcpy)
 		printf("Mrd! Terminal!");
 	rl_bind_key ('\t', rl_insert);
 	return (envcpy);
-}
-
-void	childprocess(int i)
-{
-	(void)i;
-	exit(130);
-}
-
-void	none(int i)
-{
-	(void)i;
-	printf("\n");
 }
 
 int	exec_line(t_node *ast, t_env *env)

@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/31 11:48:25 by alemarch          #+#    #+#             */
-/*   Updated: 2022/03/04 10:58:28 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/05 10:22:48 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,18 +83,21 @@ void	ft_add_env(char *var, t_env *envcpy);
 void	ft_add_var(char *var, t_env *envcpy);
 t_env	*ft_make_env(char **envp, t_env *envcpy);
 void	ft_add_var_list(char **var_list, t_env *envcpy);
-// setup_utils.c
+//	setup_utils.c
 void	ft_export(char **cmd, t_env *g_start);
 void	ft_unset(char **cmd, t_env *g_start);
 char	**ft_to_array(t_env *g_start);
 void	ft_free_env(t_env *encpy);
 void	ft_change_status(char **cmd, t_env *g_start);
-
-// loop_utils.c
+//	loop_utils.c
 void	ft_end(t_env *envcpy);
 void	ft_free_array(char **array);
 void	ft_add_path(char **cmd, char **path_split);
 void	ft_abs_path(char **cmd, t_env *g_start);
+//	signal.c
+void	ft_handler(int status);
+void	childprocess(int i);
+void	none(int i);
 
 //LEXING
 //	check.c
