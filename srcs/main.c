@@ -6,7 +6,7 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:09:43 by imarushe          #+#    #+#             */
-/*   Updated: 2022/03/04 16:37:55 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/05 10:13:54 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ t_env	*ft_initialize_readline(t_env *envcpy)
 	return (envcpy);
 }
 
-void	test(int i)
+void	childprocess(int i)
 {
 	(void)i;
 	exit(130);
@@ -69,7 +69,8 @@ int	exec_line(t_node *ast, t_env *env)
 	int		count;
 	pid_t	process;
 
-	if (ast->type == SIMPLECMD && ft_isinn_cmd(*((t_cmd *)ast->node)->args))
+	if (ast->type == SIMPLECMD && ((t_cmd *)ast->node)->args
+		&& ft_isinn_cmd(*((t_cmd *)ast->node)->args))
 		exec_singlebuiltin((t_cmd *)ast->node, env);
 	else
 	{
@@ -81,7 +82,7 @@ int	exec_line(t_node *ast, t_env *env)
 		}
 		else if (process == 0)
 		{
-			signal(SIGINT, test);
+			signal(SIGINT, childprocess);
 			count = count_exec(ast, 0);
 			env->status = exec_simplecmd(ast, count, 1, env);
 			exit(WEXITSTATUS(env->status));
