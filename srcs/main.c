@@ -6,7 +6,7 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:09:43 by imarushe          #+#    #+#             */
-/*   Updated: 2022/03/05 10:19:20 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/05 10:37:55 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,25 +71,30 @@ int	exec_line(t_node *ast, t_env *env)
 	return (0);
 }
 
-int	main(int ac, char **av, char **env)
+t_env	*init_env(char **env)
 {
-	char	*input;
-	int		exit;
-	t_node	*ast;
 	t_env	*envcpy;
 
-	input = (char *) NULL;
 	envcpy = (t_env *)malloc(sizeof(t_env));
 	envcpy->next = NULL;
 	envcpy->var = malloc(sizeof(char));
 	envcpy = ft_make_env(env, envcpy);
 	envcpy = ft_initialize_readline(envcpy);
+	return (envcpy);
+}
+
+int	main(int ac, char **av, char **env)
+{
+	char	*input;
+	t_node	*ast;
+	t_env	*envcpy;
+
+	envcpy = init_env(env);
 	while (envcpy->exit < 0 && ac && *av)
 	{
 		input = readline("\033[32;1mMrdShll> \033[0m");
 		if (!input)
 		{
-			printf("\n");
 			envcpy->exit = 0;
 			break ;
 		}
@@ -103,7 +108,6 @@ int	main(int ac, char **av, char **env)
 				exec_line(ast, envcpy);
 		}
 	}
-	exit = envcpy->exit;
 	ft_end(envcpy);
-	return (exit);
+	return (envcpy->exit);
 }
