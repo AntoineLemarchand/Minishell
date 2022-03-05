@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 15:20:03 by alemarch          #+#    #+#             */
-/*   Updated: 2022/03/04 16:24:17 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/05 10:00:23 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,6 @@ int	fork_cmd(t_cmd	*cmd, int isnotlast, t_env *env)
 	if (dup2(link[0], 0) == -1)
 		return (1);
 	close(link[0]);
-	waitpid(process, &env->status, 0);
 	return (env->status);
 }
 
@@ -71,5 +70,8 @@ int	exec_simplecmd(t_node	*ast, int count, int num, t_env *env)
 	}
 	else
 		env->status = fork_cmd(((t_cmd *)ast->node), num % count, env);
+	if (num == count)
+		while (wait(&env->status) > 0)
+			;
 	return (env->status);
 }
