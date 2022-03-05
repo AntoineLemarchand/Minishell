@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/31 11:48:25 by alemarch          #+#    #+#             */
-/*   Updated: 2022/03/05 10:22:48 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/05 10:54:23 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,4 +150,5 @@ void	ft_run(char	**cmd, t_env *envcpy);
 //	exec_simplecmd.c
 char	**convert_env(t_env *env);
 int		exec_simplecmd(t_node *ast, int count, int num, t_env *env);
+int		exec_cmdline(t_node *ast, t_env *env);
 #endif

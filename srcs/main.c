@@ -6,23 +6,11 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:09:43 by imarushe          #+#    #+#             */
-/*   Updated: 2022/03/05 10:37:55 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/05 10:52:02 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static int	count_exec(t_node *ast, int count)
-{
-	if (ast->type == PIPELINE)
-	{
-		count += count_exec(((t_pipe *)ast->node)->left_node, 0);
-		count += count_exec(((t_pipe *)ast->node)->right_node, 0);
-	}
-	else
-		count++;
-	return (count);
-}
 
 t_env	*ft_initialize_readline(t_env *envcpy)
 {
@@ -41,31 +29,11 @@ t_env	*ft_initialize_readline(t_env *envcpy)
 
 int	exec_line(t_node *ast, t_env *env)
 {
-	int		count;
-	pid_t	process;
-
 	if (ast->type == SIMPLECMD && ((t_cmd *)ast->node)->args
 		&& ft_isinn_cmd(*((t_cmd *)ast->node)->args))
 		exec_singlebuiltin((t_cmd *)ast->node, env);
 	else
-	{
-		process = fork();
-		if (process == -1)
-		{
-			ft_putstr_fd("minishell: unable to fork", 2);
-			return (1);
-		}
-		else if (process == 0)
-		{
-			signal(SIGINT, childprocess);
-			count = count_exec(ast, 0);
-			env->status = exec_simplecmd(ast, count, 1, env);
-			exit(WEXITSTATUS(env->status));
-		}
-		signal(SIGINT, none);
-		waitpid(process, &env->status, 0);
-		signal(SIGINT, ft_handler);
-	}
+		exec_cmdline(ast, env);
 	free_ast(ast);
 	env->status = WEXITSTATUS(env->status);
 	return (0);
