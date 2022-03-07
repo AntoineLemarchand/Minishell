@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/02 12:45:21 by alemarch          #+#    #+#             */
-/*   Updated: 2022/03/06 18:44:13 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/07 19:17:21 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	ft_runinn_cmd(char **cmd, t_env *envcpy)
 {
 	if (!ft_strncmp(cmd[0], "pwd", 3))
-		printf("%s\n", get_env_var("PWD=", envcpy) + 4);
+		printf("%s\n", get_env_var("PWD=\0", envcpy) + 4);
 	else if (!ft_strncmp(cmd[0], "cd", 2))
 		ft_inn_cd(cmd[1], envcpy);
 	else if (!ft_strncmp(cmd[0], "env", 3))

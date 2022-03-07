@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/03 14:13:50 by alemarch          #+#    #+#             */
-/*   Updated: 2022/03/04 11:02:56 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/07 19:08:23 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	ft_print_echo(char **cmd, int i)
 {
-	while (cmd[i])
+	while (cmd && cmd[i])
 	{
 		printf("%s", cmd[i++]);
 		if (cmd[i])

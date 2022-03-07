@@ -6,7 +6,7 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:09:43 by imarushe          #+#    #+#             */
-/*   Updated: 2022/03/04 16:25:16 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/07 19:14:28 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	ft_inn_cd(char *path, t_env *g_start)
 		}
 	}
 	else
-		printf("Mrd! Chdir!\n");
+		ft_putendl_fd("minishell: invalid path", 2);
 }
 
 void	ft_inn_env(t_env *g_start)
