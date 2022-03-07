@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 15:20:03 by alemarch          #+#    #+#             */
-/*   Updated: 2022/03/05 11:04:51 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/06 18:47:08 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,10 +37,11 @@ char	**convert_env(t_env *env)
 	return (ret);
 }
 
-int	fork_cmd(t_cmd	*cmd, int isnotlast, t_env *env)
+int	fork_cmd(t_cmd	*cmd, int isnotlast, t_env *env, t_node *ast)
 {
 	pid_t	process;
 	int		link[2];
+	int		status;
 
 	pipe(link);
 	process = fork();
@@ -50,7 +51,11 @@ int	fork_cmd(t_cmd	*cmd, int isnotlast, t_env *env)
 		manage_io(link, cmd->redir, isnotlast, env);
 		close(link[1]);
 		ft_run(cmd->args, env);
-		exit(127);
+		free_ast(ast);
+		status = env->status;
+		ft_free_env(env);
+		close(1);
+		exit(status);
 	}
 	close(link[1]);
 	if (dup2(link[0], 0) == -1)
@@ -69,7 +74,7 @@ int	exec_simplecmd(t_node	*ast, int count, int num, t_env *env)
 				count, num, env);
 	}
 	else
-		env->status = fork_cmd(((t_cmd *)ast->node), num % count, env);
+		env->status = fork_cmd(((t_cmd *)ast->node), num % count, env, ast);
 	if (num == count)
 		while (wait(&env->status) > 0)
 			;
@@ -92,6 +97,7 @@ int	exec_cmdline(t_node *ast, t_env *env)
 {
 	int		count;
 	pid_t	process;
+	int		status;
 
 	process = fork();
 	if (process == -1)
@@ -104,7 +110,11 @@ int	exec_cmdline(t_node *ast, t_env *env)
 		signal(SIGINT, childprocess);
 		count = count_exec(ast, 0);
 		env->status = exec_simplecmd(ast, count, 1, env);
-		exit(WEXITSTATUS(env->status));
+		free_ast(ast);
+		status = env->status;
+		ft_free_env(env);
+		close(0);
+		exit(WEXITSTATUS(status));
 	}
 	signal(SIGINT, none);
 	waitpid(process, &env->status, 0);

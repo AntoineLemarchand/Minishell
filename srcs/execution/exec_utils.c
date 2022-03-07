@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/02 12:45:21 by alemarch          #+#    #+#             */
-/*   Updated: 2022/03/04 16:24:27 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/06 18:44:13 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,11 +41,10 @@ static void	ft_run_cmd(char **cmd, char **env, t_env *envcpy)
 	{
 		waitpid(pid, &envcpy->status, 0);
 		envcpy->status = WEXITSTATUS(envcpy->status);
-		kill(pid, SIGTERM);
 	}
-	else
+	else if (cmd)
 	{
-		if (execve(cmd[0], cmd, env) == -1)
+		if (execve(*cmd, cmd, env) == -1)
 			ft_putendl_fd("minishell: execution failed", 2);
 		return ;
 	}
@@ -73,9 +72,9 @@ void	ft_runout_cmd(char **cmd, t_env *envcpy)
 
 	env = ft_to_array(envcpy);
 	ft_abs_path(cmd, envcpy);
-	if (access(cmd[0], F_OK) == 0)
+	if (cmd && access(cmd[0], F_OK) == 0)
 		ft_run_cmd(cmd, env, envcpy);
-	else
+	else if (cmd)
 	{
 		envcpy->status = 127;
 		ft_putendl_fd("minishell: command not found", 2);
@@ -87,12 +86,10 @@ void	ft_runout_cmd(char **cmd, t_env *envcpy)
 void	ft_run(char	**cmd, t_env *envcpy)
 {
 	ft_change_status(cmd, envcpy);
-	if (cmd[0] == NULL)
+	if (cmd && cmd[0] == NULL)
 		return ;
-	if (ft_isinn_cmd(cmd[0]))
+	if (cmd && ft_isinn_cmd(cmd[0]))
 		ft_runinn_cmd(cmd, envcpy);
 	else
 		ft_runout_cmd(cmd, envcpy);
-	ft_free_array(cmd);
-	exit(envcpy->status);
 }

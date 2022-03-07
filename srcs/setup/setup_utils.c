@@ -6,7 +6,7 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 18:11:42 by imarushe          #+#    #+#             */
-/*   Updated: 2022/03/04 16:24:58 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/06 18:34:10 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,7 @@ void	ft_change_status(char **cmd, t_env *g_start)
 	char	*temp;
 
 	i = 1;
-	while (cmd[i])
+	while (cmd && cmd[i])
 	{
 		if (!ft_strncmp(cmd[i], "$?", 2))
 		{
