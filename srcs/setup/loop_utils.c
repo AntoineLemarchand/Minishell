@@ -6,7 +6,7 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 16:30:14 by imarushe          #+#    #+#             */
-/*   Updated: 2022/03/06 18:37:32 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/07 18:50:22 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,15 @@
 
 void	ft_end(t_env *envcpy)
 {
+	int	ret;
+
+	ret = envcpy->exit;
 	ft_free_env(envcpy);
 	close(0);
 	close(1);
 	rl_clear_history();
 	ft_putendl_fd("exit", 2);
+	exit(ret);
 }
 
 void	ft_free_array(char **array)
