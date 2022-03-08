@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 15:20:03 by alemarch          #+#    #+#             */
-/*   Updated: 2022/03/05 11:04:51 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/05 10:00:23 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,40 +74,4 @@ int	exec_simplecmd(t_node	*ast, int count, int num, t_env *env)
 		while (wait(&env->status) > 0)
 			;
 	return (env->status);
-}
-
-static int	count_exec(t_node *ast, int count)
-{
-	if (ast->type == PIPELINE)
-	{
-		count += count_exec(((t_pipe *)ast->node)->left_node, 0);
-		count += count_exec(((t_pipe *)ast->node)->right_node, 0);
-	}
-	else
-		count++;
-	return (count);
-}
-
-int	exec_cmdline(t_node *ast, t_env *env)
-{
-	int		count;
-	pid_t	process;
-
-	process = fork();
-	if (process == -1)
-	{
-		ft_putstr_fd("minishell: unable to fork", 2);
-		return (1);
-	}
-	else if (process == 0)
-	{
-		signal(SIGINT, childprocess);
-		count = count_exec(ast, 0);
-		env->status = exec_simplecmd(ast, count, 1, env);
-		exit(WEXITSTATUS(env->status));
-	}
-	signal(SIGINT, none);
-	waitpid(process, &env->status, 0);
-	signal(SIGINT, ft_handler);
-	return (0);
 }

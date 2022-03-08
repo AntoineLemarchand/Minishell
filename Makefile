@@ -28,7 +28,6 @@ SETUP			= $(addprefix setup/, \
 				  	loop_utils.c \
 					setup_utils.c \
 					env.c \
-					signal.c \
 					)
 
 LEX				= $(addprefix lexing/, \
