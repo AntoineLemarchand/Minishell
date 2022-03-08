@@ -6,7 +6,7 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:09:43 by imarushe          #+#    #+#             */
-/*   Updated: 2022/03/06 15:29:17 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/08 13:23:52 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	ft_add_env(char *var, t_env *envcpy)
 		ft_putendl_fd("Mrd! Malloc fail!", 2);
 		return ;
 	}
-	new_node->var = var;
+	new_node->var = ft_strdup(var);
 	new_node->next = NULL;
 	if (!ptr)
 		envcpy = new_node;

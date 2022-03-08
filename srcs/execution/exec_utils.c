@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/02 12:45:21 by alemarch          #+#    #+#             */
-/*   Updated: 2022/03/08 11:56:46 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/08 13:08:55 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ bool	ft_isinn_cmd(char *cmd)
 	i = 0;
 	while (inn_cmd[i])
 	{
-		if (!ft_strncmp(inn_cmd[i], cmd, ft_strlen(cmd)))
+		if (!ft_strncmp(inn_cmd[i], cmd, ft_strlen(cmd) + 1))
 			return (true);
 		i++;
 	}

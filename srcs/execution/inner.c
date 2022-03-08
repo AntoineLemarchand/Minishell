@@ -6,7 +6,7 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:09:43 by imarushe          #+#    #+#             */
-/*   Updated: 2022/03/08 12:17:01 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/08 13:25:32 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ char	*built_in_pwd(void)
 {
 	char	*cwd;
 
-	cwd = ft_calloc(sizeof(char), PATH_MAX + ft_strlen("PWD=") + 1);
+	cwd = ft_calloc(sizeof(char), PATH_MAX + ft_strlen("PWD=\0") + 1);
 	if (!cwd)
 		return (NULL);
 	strcat(cwd, "PWD=");
@@ -49,7 +49,7 @@ void	ft_inn_cd(char *path, t_env *g_start)
 		}
 	}
 	else
-		ft_putendl_fd("minishell: no such file or directory", 2);
+		printf("Mrd! Chdir!\n");
 }
 
 void	ft_inn_env(t_env *g_start)
