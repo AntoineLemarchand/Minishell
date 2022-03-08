@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/02 12:45:21 by alemarch          #+#    #+#             */
-/*   Updated: 2022/03/07 19:17:21 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/08 11:56:46 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,19 @@
 
 void	ft_runinn_cmd(char **cmd, t_env *envcpy)
 {
-	if (!ft_strncmp(cmd[0], "pwd", 3))
-		printf("%s\n", get_env_var("PWD=\0", envcpy) + 4);
-	else if (!ft_strncmp(cmd[0], "cd", 2))
+	if (!ft_strncmp(cmd[0], "pwd\0", 4))
+		printf("%s\n", get_env_var("PWD=", envcpy) + 4);
+	else if (!ft_strncmp(cmd[0], "cd\0", 3))
 		ft_inn_cd(cmd[1], envcpy);
-	else if (!ft_strncmp(cmd[0], "env", 3))
+	else if (!ft_strncmp(cmd[0], "env\0", 4))
 		ft_inn_env(envcpy);
-	else if (!ft_strncmp(cmd[0], "echo", 4))
+	else if (!ft_strncmp(cmd[0], "echo\0", 5))
 		ft_inn_echo(cmd, envcpy);
-	else if (!ft_strncmp(cmd[0], "exit", 4))
+	else if (!ft_strncmp(cmd[0], "exit\0", 5))
 		ft_inn_exit(cmd, envcpy);
-	else if (!ft_strncmp(cmd[0], "export", 6))
+	else if (!ft_strncmp(cmd[0], "export\0", 7))
 		ft_export(cmd, envcpy);
-	else if (!ft_strncmp(cmd[0], "unset", 5))
+	else if (!ft_strncmp(cmd[0], "unset\0", 6))
 		ft_unset(cmd, envcpy);
 }
 
@@ -54,7 +54,8 @@ bool	ft_isinn_cmd(char *cmd)
 {
 	int			i;
 	const char	*inn_cmd[]
-		= {"pwd", "cd", "env", "echo", "exit", "export", "unset", NULL};
+		= {"pwd\0", "cd\0", "env\0", "echo\0",
+		"exit\0", "export\0", "unset\0", NULL};
 
 	i = 0;
 	while (inn_cmd[i])

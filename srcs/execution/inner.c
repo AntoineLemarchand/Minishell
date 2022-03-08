@@ -6,7 +6,7 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:09:43 by imarushe          #+#    #+#             */
-/*   Updated: 2022/03/07 19:14:28 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/08 12:17:01 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ char	*built_in_pwd(void)
 		return (NULL);
 	strcat(cwd, "PWD=");
 	if (!getcwd(&cwd[4], PATH_MAX))
-		printf("Mrd! Current WD!");
+		ft_putendl_fd("Mrd! Current WD!", 2);
 	return (cwd);
 }
 
@@ -49,7 +49,7 @@ void	ft_inn_cd(char *path, t_env *g_start)
 		}
 	}
 	else
-		ft_putendl_fd("minishell: invalid path", 2);
+		ft_putendl_fd("minishell: no such file or directory", 2);
 }
 
 void	ft_inn_env(t_env *g_start)
@@ -75,7 +75,7 @@ void	ft_inn_exit(char **cmd, t_env *g_start)
 		{
 			if (!ft_isdigit(cmd[1][i]))
 			{
-				printf("Mrd! No more words, just digits!\n");
+				ft_putendl_fd("minishell: numeric argument required", 2);
 				g_start->exit = 2;
 				return ;
 			}
@@ -83,7 +83,8 @@ void	ft_inn_exit(char **cmd, t_env *g_start)
 		}
 		if (cmd[2])
 		{
-			printf("Mrd! No more that one!\n");
+			ft_putendl_fd("minishell: too many arguments", 2);
+				g_start->exit = 2;
 			return ;
 		}
 		g_start->exit = ft_atoi(cmd[1]);

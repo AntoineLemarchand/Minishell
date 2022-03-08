@@ -6,7 +6,7 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 16:30:14 by imarushe          #+#    #+#             */
-/*   Updated: 2022/03/07 18:50:22 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/08 09:45:16 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	ft_end(t_env *envcpy)
 	close(0);
 	close(1);
 	rl_clear_history();
-	ft_putendl_fd("exit", 2);
+	ft_putendl_fd("\nexit", 2);
 	exit(ret);
 }
 
