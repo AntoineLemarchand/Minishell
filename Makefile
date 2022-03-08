@@ -73,7 +73,7 @@ RM				= rm -f
 
 CC				= gcc
 
-CFLAGS			= -Wall -Wextra -Werror -g#-fsanitize=address
+CFLAGS			= -Wall -Wextra -Werror
 
 CPPFLAGS		= -Iincludes
 
