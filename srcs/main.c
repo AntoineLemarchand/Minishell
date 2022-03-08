@@ -6,7 +6,7 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:09:43 by imarushe          #+#    #+#             */
-/*   Updated: 2022/03/05 10:52:02 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/07 18:54:45 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,10 @@ t_env	*init_env(char **env)
 {
 	t_env	*envcpy;
 
-	envcpy = (t_env *)malloc(sizeof(t_env));
+	envcpy = ft_calloc(1, sizeof(t_env));
 	envcpy->next = NULL;
-	envcpy->var = malloc(sizeof(char));
+	envcpy->var = ft_calloc(1, sizeof(char));
+	envcpy->status = 0;
 	envcpy = ft_make_env(env, envcpy);
 	envcpy = ft_initialize_readline(envcpy);
 	return (envcpy);
@@ -77,5 +78,5 @@ int	main(int ac, char **av, char **env)
 		}
 	}
 	ft_end(envcpy);
-	return (envcpy->exit);
+	return (0);
 }

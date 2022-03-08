@@ -6,7 +6,7 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 18:11:42 by imarushe          #+#    #+#             */
-/*   Updated: 2022/03/04 16:24:58 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/07 19:04:34 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,10 @@ void	ft_export(char **cmd, t_env *g_start)
 
 	i = 0;
 	name = NULL;
-	while (cmd[1] && cmd[1][i] != '=')
+	while (cmd[1] && cmd[1][i] && cmd[1][i] != '=')
 		i++;
+	if (!cmd[1][i])
+		return ;
 	name = ft_calloc(sizeof(char), i + 2);
 	if (!name)
 		return ;
@@ -113,7 +115,7 @@ void	ft_change_status(char **cmd, t_env *g_start)
 	char	*temp;
 
 	i = 1;
-	while (cmd[i])
+	while (cmd && cmd[i])
 	{
 		if (!ft_strncmp(cmd[i], "$?", 2))
 		{

@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/03 13:26:21 by alemarch          #+#    #+#             */
-/*   Updated: 2022/03/04 10:16:10 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/06 18:58:58 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static void	clean_io(int *fds, int *link, t_redir *redir)
 		close(fds[0]);
 }
 
-static void	io_helper(t_redir *redir, int *fds, t_env *env)
+static void	io_helper(int *link, t_redir *redir, int *fds, t_env *env)
 {
 	char	**envcpy;
 
@@ -46,6 +46,12 @@ static void	io_helper(t_redir *redir, int *fds, t_env *env)
 		fds[0] = -1;
 		return ;
 	}
+	if ((!strncmp(redir->type, ">>\0", 3) || !strncmp(redir->type, ">\0", 2))
+		&& fds[1] != link[1])
+		close(fds[1]);
+	if ((!strncmp(redir->type, "<<\0", 3) || !strncmp(redir->type, "<\0", 2))
+		&& fds[0])
+		close(fds[0]);
 	if (!strncmp(redir->type, ">\0", 2))
 		fds[1] = open(redir->val, O_CREAT | O_TRUNC | O_WRONLY, 0644);
 	else if (!strncmp(redir->type, ">>\0", 3))
@@ -68,15 +74,17 @@ int	manage_io(int *link, t_redir **redir, int isnotlast, t_env *env)
 	while (redir && redir[i])
 	{
 		clean_io(fds, link, redir[i]);
-		io_helper(redir[i], fds, env);
+		io_helper(link, redir[i], fds, env);
 		if (fds[0] == -1)
 			return (ft_ioerror(redir[i]->val, 1));
 		else if (fds[1] == -1)
 			return (ft_ioerror(redir[i]->val, 0));
 		i++;
 	}
-	if (dup2(fds[0], 0) == -1)
+	if (fds[0] != 0 && dup2(fds[0], 0) == -1)
 		return (1);
+	if (fds[0] != 0)
+		close(fds[0]);
 	if ((fds[1] != link[1] || isnotlast) && dup2(fds[1], 1) == -1)
 		return (1);
 	return (0);

@@ -6,7 +6,7 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 16:30:14 by imarushe          #+#    #+#             */
-/*   Updated: 2022/03/04 16:24:41 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/08 09:45:16 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,15 @@
 
 void	ft_end(t_env *envcpy)
 {
+	int	ret;
+
+	ret = envcpy->exit;
 	ft_free_env(envcpy);
+	close(0);
+	close(1);
 	rl_clear_history();
-	printf("A tout!\n");
+	ft_putendl_fd("\nexit", 2);
+	exit(ret);
 }
 
 void	ft_free_array(char **array)
@@ -71,7 +77,7 @@ void	ft_abs_path(char **cmd, t_env *g_start)
 		path = ft_strdup(&get_env_var("PATH=", g_start)[5]);
 	else
 		return ;
-	if (cmd[0][0] != '/' && ft_strncmp(cmd[0], "./", 2) != 0)
+	if (cmd && cmd[0][0] != '/' && ft_strncmp(cmd[0], "./", 2) != 0)
 	{
 		path_split = ft_split(path, ':');
 		free(path);
