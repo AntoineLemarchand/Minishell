@@ -6,7 +6,7 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:09:43 by imarushe          #+#    #+#             */
-/*   Updated: 2022/03/08 13:25:32 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/08 14:49:29 by imarushe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,15 +38,17 @@ void	ft_inn_cd(char *path, t_env *g_start)
 		pwd = ft_strrchr(get_env_var("PWD=", g_start), '=') + 1;
 		oldpwd = ft_strrchr(get_env_var("OLDPWD=", g_start), '=') + 1;
 		if (oldpwd && pwd)
-			ft_strlcpy(oldpwd, pwd, ft_strlen(pwd) + 1);
+			oldpwd = ft_strdup(pwd);
 		if (pwd)
 		{
 			pwd = &pwd[-ft_strlen("PWD=")];
 			pwd_ptr = built_in_pwd();
-			ft_strlcpy(pwd, pwd_ptr, ft_strlen(pwd_ptr) + 1);
+			pwd = ft_strdup(pwd_ptr);
 			free(pwd_ptr);
 			pwd_ptr = NULL;
 		}
+		free(oldpwd);
+		free(pwd);
 	}
 	else
 		printf("Mrd! Chdir!\n");

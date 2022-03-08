@@ -6,7 +6,7 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:09:43 by imarushe          #+#    #+#             */
-/*   Updated: 2022/03/08 13:23:52 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/08 14:34:48 by imarushe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ t_env	*ft_make_env(char **envp, t_env *envcpy)
 	var_list[3] = NULL;
 	while (envp[i] != NULL)
 	{
-		ft_add_env(ft_strdup(envp[i]), envcpy);
+		ft_add_env((envp[i]), envcpy);
 		if (!ft_strncmp(envp[i], "PATH", 4))
 			var_list[0] = NULL;
 		else if (!ft_strncmp(envp[i], "OLDPWD", 6))
