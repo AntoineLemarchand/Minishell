@@ -6,10 +6,9 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/10 14:52:55 by imarushe          #+#    #+#             */
-/*   Updated: 2022/03/15 11:20:01 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/15 15:27:09 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 #include "minishell.h"
 
 char	*ft_export_name(char **cmd)
@@ -21,7 +20,7 @@ char	*ft_export_name(char **cmd)
 	name = NULL;
 	while (cmd[1] && cmd[1][i] && cmd[1][i] != '=')
 		i++;
-	if (!cmd[1][i])
+	if (!cmd[1][i] || ft_strlen(cmd[1]) == 1)
 		return (NULL);
 	if (cmd[1][i - 1] == 43)
 	{
@@ -114,6 +113,8 @@ void	ft_export(char **cmd, t_env *g_start)
 	while (cmd[1] && cmd[1][i] && cmd[1][i] != '=')
 		i++;
 	name = ft_export_name(cmd);
+	if (!name)
+		return ;
 	if (!ft_check_name(name))
 		return ;
 	if (get_env_var(name, g_start))

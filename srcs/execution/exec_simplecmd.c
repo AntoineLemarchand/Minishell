@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 15:20:03 by alemarch          #+#    #+#             */
-/*   Updated: 2022/03/10 11:59:27 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/15 15:57:30 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ int	fork_cmd(t_cmd	*cmd, int isnotlast, t_data	*data)
 	process = fork();
 	if (process == 0)
 	{
+		signal(SIGINT, childprocess);
 		close(link[0]);
 		if (manage_io(link, cmd->redir, isnotlast, data) != 2
 			&& data->env->status != 130)
@@ -79,6 +80,8 @@ int	fork_cmd(t_cmd	*cmd, int isnotlast, t_data	*data)
 
 int	exec_simplecmd(t_node	*ast, t_node *ast_init, int num, t_env *env)
 {
+	if (env->status == 130)
+		env->status = 0;
 	if (ast->type == PIPELINE)
 	{
 		env->status = exec_simplecmd(((t_pipe *)ast->node)->left_node, ast_init,
@@ -101,6 +104,7 @@ int	exec_cmdline(t_node *ast, t_env *env)
 	pid_t	process;
 	int		status;
 
+	signal(SIGINT, SIG_IGN);
 	process = fork();
 	if (process == -1)
 	{
@@ -109,8 +113,9 @@ int	exec_cmdline(t_node *ast, t_env *env)
 	}
 	else if (process == 0)
 	{
-		signal(SIGINT, SIG_IGN);
 		env->status = exec_simplecmd(ast, ast, 1, env);
+		if (env->status == 130)
+			exit(env->status);
 		free_ast(ast);
 		status = env->status;
 		ft_free_env(env);
@@ -118,7 +123,6 @@ int	exec_cmdline(t_node *ast, t_env *env)
 		close(0);
 		exit(WEXITSTATUS(status));
 	}
-	signal(SIGINT, SIG_IGN);
 	waitpid(process, &env->status, 0);
 	signal(SIGINT, ft_handler);
 	return (0);
