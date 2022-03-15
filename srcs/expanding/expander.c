@@ -6,77 +6,43 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 16:42:56 by alemarch          #+#    #+#             */
-/*   Updated: 2022/03/07 19:28:21 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/15 10:28:29 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char	*ft_addchar(char *dest, char c)
+int	shouldexpand(char *s, int i)
 {
-	char	*ret;
+	int	j;
+	int	ret;
 
-	ret = ft_calloc(ft_strlen(dest) + 2, sizeof(char));
-	ft_strlcpy(ret, dest, ft_strlen(dest) + 1);
-	ret[ft_strlen(dest)] = c;
-	return (ret);
-}
-
-static char	*ft_getvar(char *src)
-{
-	int		i;
-	char	*ret;
-	char	*swp;
-
-	i = -1;
-	ret = ft_calloc(1, sizeof(char));
-	while (ft_isalnum(src[++i]) || src[i] == '_')
+	j = i;
+	ret = 0;
+	while (j >= 0)
 	{
-		swp = ret;
-		ret = ft_addchar(ret, src[i]);
-		free(swp);
-		if (!ret)
-			return (NULL);
+		if (s[j] == '"')
+			ret = 0;
+		else if (s[j] == '\'')
+			ret = 1;
+		j--;
 	}
-	swp = ret;
-	ret = ft_addchar(ret, '=');
-	free(swp);
 	return (ret);
 }
 
-static int	ft_addvar(char **dest, char *src, char **env)
+char	*ft_expandval(char *s, char **env, int i)
 {
-	int		i;
-	int		varlen;
-	char	*var;
-
-	i = -1;
-	var = ft_getvar(src);
-	if (!var)
-		return (0);
-	i = 0;
-	while (env[i] && ft_strncmp(env[i], var, ft_strlen(var)) != 0)
-		i++;
-	if (env[i])
-		*dest = ft_joinfree(*dest, env[i] + ft_strlen(var));
-	varlen = ft_strlen(var) - 1;
-	free(var);
-	return (varlen);
-}
-
-char	*ft_expandval(char *s, char **env)
-{
-	int		i;
 	char	*ret;
 	char	*swp;
 
 	ret = ft_calloc(1, sizeof(char));
 	if (!ret)
 		return (NULL);
-	i = 0;
 	while (s[i])
 	{
-		if (s[i] != '$' || (s[i] == '$' && s[i + 1] == '?'))
+		if (shouldexpand(s, i) || s[i] != '$' || (s[i] == '$'
+				&& (!s[i + 1] || (ft_isspace(s[i + 1]) && !ft_isalnum(s[i + 1])
+						&& s[i + 1] != '_' && s[i + 1] != '?'))))
 		{
 			swp = ret;
 			ret = ft_addchar(ret, s[i++]);
@@ -90,6 +56,53 @@ char	*ft_expandval(char *s, char **env)
 	return (ret);
 }
 
+int	process_char(char *val, char **ret, int i)
+{
+	char	*swp;
+	char	control;
+
+	if (val[i] == '\'' || val[i] == '"')
+	{
+		control = val[i++];
+		while (val[i] && val[i] != control)
+		{
+			swp = *ret;
+			*ret = ft_addchar(*ret, val[i++]);
+			free(swp);
+			if (!*ret)
+				return (0);
+		}
+	}
+	else
+	{
+		swp = *ret;
+		*ret = ft_addchar(*ret, val[i]);
+		free(swp);
+		if (!*ret)
+			return (0);
+	}
+	return (i);
+}
+
+char	*ft_cleanquotes(char *val)
+{
+	char	*ret;
+	int		i;
+
+	i = 0;
+	ret = ft_calloc(1, sizeof(char));
+	if (!ret)
+		return (NULL);
+	while (val && val[i])
+	{
+		i = process_char(val, &ret, i);
+		if (!ret)
+			return (NULL);
+		i++;
+	}
+	return (ret);
+}
+
 int	ft_expand(t_tok **toks, char **env)
 {
 	int		i;
@@ -98,14 +111,20 @@ int	ft_expand(t_tok **toks, char **env)
 	i = 0;
 	while (toks[i])
 	{
-		if (toks[i]->type == DOUBLEQUOTE || toks[i]->type == LITERAL)
+		if (!i
+			|| !(toks[i - 1]->type == INREDIR && ft_strlen(toks[i]->val) == 2))
 		{
 			swp = toks[i]->val;
-			toks[i]->val = ft_expandval(toks[i]->val, env);
+			toks[i]->val = ft_expandval(toks[i]->val, env, 0);
 			free(swp);
 			if (!toks[i]->val)
 				return (1);
 		}
+		swp = toks[i]->val;
+		toks[i]->val = ft_cleanquotes(toks[i]->val);
+		free(swp);
+		if (!toks[i]->val)
+			return (1);
 		i++;
 	}
 	return (0);

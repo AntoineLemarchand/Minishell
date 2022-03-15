@@ -6,11 +6,23 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 15:20:03 by alemarch          #+#    #+#             */
-/*   Updated: 2022/03/06 18:47:08 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/10 11:59:27 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static int	count_exec(t_node *ast, int count)
+{
+	if (ast->type == PIPELINE)
+	{
+		count += count_exec(((t_pipe *)ast->node)->left_node, 0);
+		count += count_exec(((t_pipe *)ast->node)->right_node, 0);
+	}
+	else
+		count++;
+	return (count);
+}
 
 char	**convert_env(t_env *env)
 {
@@ -37,7 +49,7 @@ char	**convert_env(t_env *env)
 	return (ret);
 }
 
-int	fork_cmd(t_cmd	*cmd, int isnotlast, t_env *env, t_node *ast)
+int	fork_cmd(t_cmd	*cmd, int isnotlast, t_data	*data)
 {
 	pid_t	process;
 	int		link[2];
@@ -48,75 +60,65 @@ int	fork_cmd(t_cmd	*cmd, int isnotlast, t_env *env, t_node *ast)
 	if (process == 0)
 	{
 		close(link[0]);
-		manage_io(link, cmd->redir, isnotlast, env);
-		close(link[1]);
-		ft_run(cmd->args, env);
-		free_ast(ast);
-		status = env->status;
-		ft_free_env(env);
+		if (manage_io(link, cmd->redir, isnotlast, data) != 2
+			&& data->env->status != 130)
+			ft_run(cmd->args, data->env);
+		else if (data->env->status != 130)
+			data->env->status = 2;
 		close(1);
+		status = data->env->status;
+		free_data(data);
 		exit(status);
 	}
 	close(link[1]);
 	if (dup2(link[0], 0) == -1)
 		return (1);
 	close(link[0]);
-	return (env->status);
+	return (data->env->status);
 }
 
-int	exec_simplecmd(t_node	*ast, int count, int num, t_env *env)
+int	exec_simplecmd(t_node	*ast, t_node *ast_init, int num, t_env *env)
 {
 	if (ast->type == PIPELINE)
 	{
-		exec_simplecmd(((t_pipe *)ast->node)->left_node,
-			count, num++, env);
+		env->status = exec_simplecmd(((t_pipe *)ast->node)->left_node, ast_init,
+				num % count_exec(ast_init, 0), env);
+		num++;
 		env->status = exec_simplecmd(((t_pipe *)ast->node)->right_node,
-				count, num, env);
+				ast_init, num % count_exec(ast_init, 0), env);
 	}
 	else
-		env->status = fork_cmd(((t_cmd *)ast->node), num % count, env, ast);
-	if (num == count)
+		env->status = fork_cmd(((t_cmd *)ast->node),
+				num % count_exec(ast_init, 0), g_data);
+	if (num == count_exec(ast_init, 0))
 		while (wait(&env->status) > 0)
 			;
 	return (env->status);
 }
 
-static int	count_exec(t_node *ast, int count)
-{
-	if (ast->type == PIPELINE)
-	{
-		count += count_exec(((t_pipe *)ast->node)->left_node, 0);
-		count += count_exec(((t_pipe *)ast->node)->right_node, 0);
-	}
-	else
-		count++;
-	return (count);
-}
-
 int	exec_cmdline(t_node *ast, t_env *env)
 {
-	int		count;
 	pid_t	process;
 	int		status;
 
 	process = fork();
 	if (process == -1)
 	{
-		ft_putstr_fd("minishell: unable to fork", 2);
+		ft_putendl_fd("minishell: unable to fork", 2);
 		return (1);
 	}
 	else if (process == 0)
 	{
-		signal(SIGINT, childprocess);
-		count = count_exec(ast, 0);
-		env->status = exec_simplecmd(ast, count, 1, env);
+		signal(SIGINT, SIG_IGN);
+		env->status = exec_simplecmd(ast, ast, 1, env);
 		free_ast(ast);
 		status = env->status;
 		ft_free_env(env);
+		free(g_data);
 		close(0);
 		exit(WEXITSTATUS(status));
 	}
-	signal(SIGINT, none);
+	signal(SIGINT, SIG_IGN);
 	waitpid(process, &env->status, 0);
 	signal(SIGINT, ft_handler);
 	return (0);

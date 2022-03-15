@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 16:30:18 by alemarch          #+#    #+#             */
-/*   Updated: 2022/03/03 14:05:38 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/10 09:56:58 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ static int	check_quotes(char *input)
 	i = 0;
 	while (input[i])
 	{
+		if (input[i] == '\\' || input[i] == ';')
+			return (1);
 		if (input[i] == '\'' || input[i] == '"')
 		{
 			control = input[i];
@@ -39,14 +41,16 @@ static int	check_pipe(char *input)
 	int		i;
 
 	i = 0;
-	while (input[i] == ' ' || (input[i] >= '\t' && input[i] <= '\r'))
+	while (input[i]
+		&& (input[i] == ' ' || (input[i] >= '\t' && input[i] <= '\r')))
 		i++;
-	if (input[i] == '|')
+	if (input[i] == '|' || !input[i])
 		return (1);
 	i = ft_strlen(input) - 1;
-	while (input[i] == ' ' || (input[i] >= '\t' && input[i] <= '\r'))
+	while (input[i]
+		&& (input[i] == ' ' || (input[i] >= '\t' && input[i] <= '\r')))
 		i--;
-	if (input[i] == '|' || input[i] == '>' || input[i] == '<')
+	if (input[i] && (input[i] == '|' || input[i] == '>' || input[i] == '<'))
 		return (1);
 	return (0);
 }

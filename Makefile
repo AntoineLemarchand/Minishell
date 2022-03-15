@@ -26,8 +26,10 @@ endef
 
 SETUP			= $(addprefix setup/, \
 				  	loop_utils.c \
+					export.c \
 					setup_utils.c \
 					env.c \
+					env_utils.c \
 					signal.c \
 					)
 
@@ -38,6 +40,7 @@ LEX				= $(addprefix lexing/, \
 					)
 
 EXPAND			= $(addprefix expanding/, \
+					expander_utils.c \
 					expander.c \
 					)
 
@@ -73,7 +76,7 @@ RM				= rm -f
 
 CC				= gcc
 
-CFLAGS			= -Wall -Wextra -Werror
+CFLAGS			= -Wall -Wextra -Werror -g
 
 CPPFLAGS		= -Iincludes
 

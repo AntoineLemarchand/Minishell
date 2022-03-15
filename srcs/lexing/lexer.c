@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 10:23:31 by alemarch          #+#    #+#             */
-/*   Updated: 2022/03/03 14:09:32 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/15 11:02:48 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,18 +60,18 @@ static t_tok	**add_tok(t_tok **toks, char *input, int type)
 	return (toks);
 }
 
-static t_tok	**ft_grouptok(t_tok **toks)
+static t_tok	**ft_grouptok(t_tok **toks, int size)
 {
 	t_tok	**ret;
 	int		i;
-	int		size;
 
 	i = -1;
-	size = -1;
 	ret = NULL;
 	while (toks[++i])
 	{
-		if (ret && toks[i]->type == ret[size]->type)
+		if (ret && toks[i]->type == ret[size]->type
+			&& !(toks[i]->type == DOUBLEQUOTE
+				|| toks[i]->type == SIMPLEQUOTE))
 		{
 			ret[size]->val = ft_joinfree(ret[size]->val, toks[i]->val);
 			if (!ret[size]->val)
@@ -90,28 +90,29 @@ static t_tok	**ft_grouptok(t_tok **toks)
 
 t_tok	**ft_cleantok(t_tok **toks, int i, int size, t_tok **ret)
 {
+	int	instr;
+
+	instr = 0;
 	while (toks[++i])
 	{
-		if ((toks[i]->type == DOUBLEQUOTE || toks[i]->type == SIMPLEQUOTE)
-			&& ft_strlen(toks[i]->val) == 1)
+		if (hastojoin(instr, toks, i))
 		{
-			ret = add_tok(ret, ft_strdup("\0"), toks[i]->type);
-			if (size++ && !ret)
-				break ;
-			while (toks[++i] && toks[i]->type != ret[size]->type)
-			{
-				ret[size]->val = ft_joinfree(ret[size]->val, toks[i]->val);
-				if (!ret[size]->val)
-					return (NULL);
-			}
+			ret[size]->val = ft_joinfree(ret[size]->val, toks[i]->val);
+			if (!ret[size]->val)
+				return (NULL);
 		}
-		else if (toks[i]->type != BLANK
-			&& toks[i]->type != DOUBLEQUOTE && toks[i]->type != SIMPLEQUOTE)
+		else if (toks[i]->type != BLANK)
 		{
 			ret = add_tok(ret, ft_strdup(toks[i]->val), toks[i]->type);
 			if (size++ && !ret)
 				break ;
 		}
+		if ((ret && toks[i]->type == ret[size]->type
+				&& (toks[i]->type == SIMPLEQUOTE
+					|| toks[i]->type == DOUBLEQUOTE))
+			|| (!instr && (toks[i]->type == SIMPLEQUOTE
+					|| toks[i]->type == DOUBLEQUOTE)))
+			instr = !instr;
 	}
 	return (ret);
 }
@@ -132,7 +133,7 @@ t_tok	**ft_lex(char *input)
 		if (!toks)
 			return (NULL);
 	}
-	toks = ft_grouptok(toks);
+	toks = ft_grouptok(toks, -1);
 	if (check_toks(toks))
 		free_toks(toks);
 	if (!toks || check_toks(toks))

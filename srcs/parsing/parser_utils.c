@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 12:42:28 by alemarch          #+#    #+#             */
-/*   Updated: 2022/03/06 16:02:13 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/09 10:31:19 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,11 +98,11 @@ t_node	*parse_input(char *input, t_env *env)
 	t_node	*ret;
 	char	**envcpy;
 
-	envcpy = convert_env(env);
-	if (!envcpy)
-		return (NULL);
 	tokens = ft_lex(input);
 	if (!tokens)
+		return (NULL);
+	envcpy = convert_env(env);
+	if (!envcpy)
 		return (NULL);
 	if (ft_expand(tokens, envcpy))
 	{

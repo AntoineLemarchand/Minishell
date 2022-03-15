@@ -6,7 +6,18 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:09:43 by imarushe          #+#    #+#             */
-/*   Updated: 2022/03/08 14:34:48 by imarushe         ###   ########.fr       */
+/*   Updated: 2022/03/10 16:01:38 by alemarch         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   env.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/01/14 14:09:43 by imarushe          #+#    #+#             */
+/*   Updated: 2022/03/09 16:05:40 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +51,8 @@ void	ft_add_env(char *var, t_env *envcpy)
 		ft_putendl_fd("Mrd! Malloc fail!", 2);
 		return ;
 	}
-	new_node->var = ft_strdup(var);
+	new_node->var = malloc(sizeof(char) * 256);
+	ft_strlcpy(new_node->var, var, 256);
 	new_node->next = NULL;
 	if (!ptr)
 		envcpy = new_node;
@@ -65,13 +77,15 @@ void	ft_add_var_list(char **var_list, t_env *envcpy)
 	}
 }
 
+// line74: ft_strdup(var);
+
 void	ft_add_var(char *var, t_env *envcpy)
 {
 	char			*result;
 
 	result = NULL;
 	if (!ft_strncmp(var, "PATH=", 5))
-		result = ft_strdup(var);
+		result = var;
 	else if (!ft_strncmp(var, "OLDPWD=", 7))
 		result = ft_strdup("OLDPWD=");
 	else if (!ft_strncmp(var, "PWD=", 4))
@@ -86,21 +100,20 @@ t_env	*ft_make_env(char **envp, t_env *envcpy)
 	char	*var_list[4];
 	int		i;
 
-	i = 0;
+	i = -1;
 	var_list[0] = "PATH";
 	var_list[1] = "OLDPWD";
 	var_list[2] = "PWD";
 	var_list[3] = NULL;
-	while (envp[i] != NULL)
+	while (envp[++i] != NULL)
 	{
-		ft_add_env((envp[i]), envcpy);
+		ft_add_env(envp[i], envcpy);
 		if (!ft_strncmp(envp[i], "PATH", 4))
 			var_list[0] = NULL;
 		else if (!ft_strncmp(envp[i], "OLDPWD", 6))
 			var_list[1] = NULL;
 		else if (!ft_strncmp(envp[i], "PWD", 3))
 			var_list[2] = NULL;
-		i++;
 	}
 	ft_add_var_list(var_list, envcpy);
 	envcpy->exit = -1;

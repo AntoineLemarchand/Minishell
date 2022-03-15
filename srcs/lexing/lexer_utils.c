@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/18 15:56:55 by alemarch          #+#    #+#             */
-/*   Updated: 2022/02/23 15:32:18 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/15 11:02:10 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,4 +71,12 @@ t_tok	**ft_tokalloc(t_tok **toks)
 	}
 	free(toks);
 	return (ret);
+}
+
+int	hastojoin(int instr, t_tok **toks, int i)
+{
+	return (instr || (i && toks[i]->type != BLANK && toks[i]->type != OUTREDIR
+			&& toks[i]->type != INREDIR && toks[i - 1]->type != BLANK
+			&& toks[i - 1]->type != INREDIR
+			&& toks[i - 1]->type != OUTREDIR));
 }
