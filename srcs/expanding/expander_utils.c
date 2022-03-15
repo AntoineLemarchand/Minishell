@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 19:22:42 by alemarch          #+#    #+#             */
-/*   Updated: 2022/03/13 21:06:51 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/15 14:34:23 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,8 +65,8 @@ int	ft_addvar(char **dest, char *src, char **env)
 	i = 0;
 	if (*var == '?')
 	{
-		swp = *dest;
-		*dest = ft_addchar(swp, g_data->env->status + '0');
+		swp = ft_itoa(g_data->env->status);
+		*dest = ft_joinfree(*dest, swp);
 		free(swp);
 		free(var);
 		return (1);
