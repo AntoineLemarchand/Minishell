@@ -6,7 +6,7 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/10 14:52:55 by imarushe          #+#    #+#             */
-/*   Updated: 2022/03/16 15:04:17 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/16 15:40:04 by imarushe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,6 @@ void	ft_export(char **cmd, t_env *g_start)
 		&& !ft_strncmp(get_env_var(name, g_start), name, ft_strlen(name))
 		&& get_env_var(name, g_start)[i] == 61)
 	{
-		printf("Exist!\n");
 		name = ft_export_exist(i, name, cmd, g_start);
 	}
 	else
