@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 15:20:03 by alemarch          #+#    #+#             */
-/*   Updated: 2022/03/15 15:57:30 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/16 15:16:14 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,10 +116,11 @@ int	exec_cmdline(t_node *ast, t_env *env)
 		env->status = exec_simplecmd(ast, ast, 1, env);
 		if (env->status == 130)
 			exit(env->status);
-		free_ast(ast);
 		status = env->status;
-		ft_free_env(env);
-		free(g_data);
+		free_data(g_data);
+		//free_ast(ast);
+		//ft_free_env(env);
+		//free(g_data);
 		close(0);
 		exit(WEXITSTATUS(status));
 	}

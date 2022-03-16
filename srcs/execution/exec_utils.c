@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/02 12:45:21 by alemarch          #+#    #+#             */
-/*   Updated: 2022/03/15 15:17:34 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/16 15:17:33 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,5 +110,4 @@ void	ft_run(char	**cmd, t_env *envcpy)
 		ft_runinn_cmd(cmd, envcpy, NULL);
 	else
 		ft_runout_cmd(cmd, envcpy);
-	exit(envcpy->status);
 }
