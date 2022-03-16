@@ -6,23 +6,28 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/03 14:13:50 by alemarch          #+#    #+#             */
-/*   Updated: 2022/03/15 10:53:24 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/16 15:06:09 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*gethome(char *path, t_env *env, char **temp)
+void	ft_add_pwd(t_env *env)
+{
+	char	**temp;
+
+	temp = malloc(sizeof(char *) * 2);
+	temp[0] = NULL;
+	temp[1] = built_in_pwd();
+	ft_export(temp, env);
+	free(temp[1]);
+	free(temp);
+}
+
+char	*gethome(char *path, t_env *env)
 {
 	if (!get_env_var("PWD=", env))
-	{
-		temp = malloc(sizeof(char *) * 2);
-		temp[0] = NULL;
-		temp[1] = built_in_pwd();
-		ft_export(temp, env);
-		free(temp[1]);
-		free(temp);
-	}
+		ft_add_pwd(env);
 	if ((!path || !ft_strncmp("~\0", path, 2)) && !get_env_var("HOME=", env))
 	{
 		ft_putendl_fd("minishell: HOME not set", 2);
@@ -35,6 +40,12 @@ char	*gethome(char *path, t_env *env, char **temp)
 		path = NULL;
 	else if (path && !ft_strncmp("-\0", path, 2))
 	{
+		if (!get_env_var("OLDPWD=", env))
+		{
+			ft_putendl_fd("minishell: OLDPWD not set", 2);
+			env->status = 1;
+			return (NULL);
+		}
 		path = ft_strrchr(get_env_var("OLDPWD=", env), '=') + 1;
 		printf("%s\n", &get_env_var("OLDPWD=", env)[7]);
 	}

@@ -6,7 +6,7 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:09:43 by imarushe          #+#    #+#             */
-/*   Updated: 2022/03/15 10:53:34 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/16 15:05:11 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	ft_inn_cd(char **cmd, t_env *env, char *oldpwd, char *pwd)
 	char	*pwd_ptr;
 	char	*path;
 
-	path = gethome(cmd[1], env, NULL);
+	path = gethome(cmd[1], env);
 	if (!path)
 		return ;
 	if (!chdir(path))
@@ -52,67 +52,6 @@ void	ft_inn_cd(char **cmd, t_env *env, char *oldpwd, char *pwd)
 	ft_putendl_fd("minishell: No such file or directory", 2);
 	env->status = 1;
 }
-
-/*
-void	ft_export_pwd(char **cmd, t_env *g_start)
-{
-	int		i;
-	char	*str;
-	char	*name;
-
-	i = 0;
-	name = NULL;
-	while (cmd[1] && cmd[1][i] && cmd[1][i] != '=')
-		i++;
-	if (!cmd[1][i])
-		return ;
-	name = ft_calloc(sizeof(char), i + 2);
-	if (!name)
-		return ;
-	ft_strlcpy(name, cmd[1], i + 2);
-	if (get_env_var(name, g_start))
-	{
-		str = ft_strrchr(get_env_var(name, g_start), '=') + 1;
-		str = &str[-ft_strlen(name)];
-		ft_strlcpy(str, cmd[1], ft_strlen(cmd[1]) + 1);
-	}
-	else
-		ft_add_env(ft_strdup(cmd[1]), g_start);
-	free(name);
-}
-
-void	ft_inn_cd(char *path, t_env *g_start)
-{
-	char	*oldpwd;
-	char	*pwd;
-	char	*pwd_ptr;
-
-	if (!path)
-		return ;
-	if (!chdir(path))
-	{
-		pwd = ft_strrchr(get_env_var("PWD=", g_start), '=') + 1;
-		oldpwd = ft_strrchr(get_env_var("OLDPWD=", g_start), '=') + 1;
-		if (oldpwd && pwd)
-			oldpwd = ft_strdup(pwd);
-		if (pwd)
-		{
-			ft_add_env(built_in_pwd(), g_start);
-			//strcpy(pwd, built_in_pwd() + 4);
-			//printf("pwd: %s\n", pwd);
-			pwd = &pwd[-ft_strlen("PWD=")];
-			pwd_ptr = built_in_pwd();
-			pwd = ft_strdup(pwd_ptr);
-			free(pwd_ptr);
-			pwd_ptr = NULL;
-		}
-		free(oldpwd);
-		free(pwd);
-	}
-	else
-		printf("Mrd! Chdir!\n");
-}
-*/
 
 void	ft_inn_env(t_env *g_start)
 {

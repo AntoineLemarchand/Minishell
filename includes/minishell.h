@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/31 11:48:25 by alemarch          #+#    #+#             */
-/*   Updated: 2022/03/15 10:53:56 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/16 15:05:33 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,7 +154,7 @@ int		ft_heredoc(char *delim, t_data *data);
 // inner_utils.c
 void	ft_print_echo(char **cmd, int i);
 int		exec_singlebuiltin(t_cmd *cmd, t_env *env);
-char	*gethome(char *path, t_env *env, char **temp);
+char	*gethome(char *path, t_env *env);
 // inner.c
 char	*built_in_pwd(void);
 void	ft_inn_cd(char **cmd, t_env *g_start, char *oldpwd, char *pwd);

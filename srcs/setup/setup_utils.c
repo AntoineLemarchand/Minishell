@@ -6,7 +6,7 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 18:11:42 by imarushe          #+#    #+#             */
-/*   Updated: 2022/03/13 21:09:42 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/16 15:04:40 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,16 +35,15 @@ void	ft_unset(char **cmd, t_env *g_start)
 	char	*var;
 	t_env	*swap;
 
-	if (!cmd[1])
-		return ;
-	if (!ft_check_unset(cmd[1]))
+	if (!cmd[1] || !ft_check_unset(cmd[1]))
 		return ;
 	var = ft_strdup(cmd[1]);
 	temp = g_start;
 	size = ft_strlen(var);
 	while (temp && temp->next)
 	{
-		if (!ft_strncmp(var, temp->next->var, size))
+		if (!ft_strncmp(var, temp->next->var, size)
+			&& temp->next->var[size] == 61)
 		{
 			swap = temp->next;
 			temp->next = temp->next->next;
