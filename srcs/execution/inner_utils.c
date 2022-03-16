@@ -6,19 +6,27 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/03 14:13:50 by alemarch          #+#    #+#             */
-/*   Updated: 2022/03/16 15:06:09 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/16 15:35:01 by imarushe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_add_pwd(t_env *env)
+void	ft_add_pwd(t_env *env, int old)
 {
 	char	**temp;
+	char	*swap;
 
 	temp = malloc(sizeof(char *) * 2);
 	temp[0] = NULL;
-	temp[1] = built_in_pwd();
+	if (!old)
+		temp[1] = built_in_pwd();
+	else
+	{
+		swap = built_in_pwd();
+		temp[1] = ft_strjoin("OLD", swap);
+		free(swap);
+	}
 	ft_export(temp, env);
 	free(temp[1]);
 	free(temp);
@@ -27,7 +35,7 @@ void	ft_add_pwd(t_env *env)
 char	*gethome(char *path, t_env *env)
 {
 	if (!get_env_var("PWD=", env))
-		ft_add_pwd(env);
+		ft_add_pwd(env, 0);
 	if ((!path || !ft_strncmp("~\0", path, 2)) && !get_env_var("HOME=", env))
 	{
 		ft_putendl_fd("minishell: HOME not set", 2);
@@ -44,6 +52,7 @@ char	*gethome(char *path, t_env *env)
 		{
 			ft_putendl_fd("minishell: OLDPWD not set", 2);
 			env->status = 1;
+			ft_add_pwd(env, 1);
 			return (NULL);
 		}
 		path = ft_strrchr(get_env_var("OLDPWD=", env), '=') + 1;
