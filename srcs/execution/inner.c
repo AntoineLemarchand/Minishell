@@ -6,7 +6,7 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:09:43 by imarushe          #+#    #+#             */
-/*   Updated: 2022/03/16 15:05:11 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/17 15:24:51 by imarushe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,9 @@ void	ft_inn_echo(char **cmd)
 	int	i;
 
 	i = 2;
-	if (!ft_strncmp(cmd[0], "echo", 4) && cmd[1]
+	if (!cmd[1])
+		printf("\n");
+	else if (!ft_strncmp(cmd[0], "echo", 4) && cmd[1]
 		&& ft_strncmp(cmd[1], "-n", 2))
 	{
 		ft_print_echo(cmd, 1);

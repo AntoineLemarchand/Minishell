@@ -6,7 +6,7 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/10 14:52:55 by imarushe          #+#    #+#             */
-/*   Updated: 2022/03/16 15:40:04 by imarushe         ###   ########.fr       */
+/*   Updated: 2022/03/17 15:20:35 by imarushe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,7 +120,8 @@ void	ft_export(char **cmd, t_env *g_start)
 		return ;
 	if (get_env_var(name, g_start)
 		&& !ft_strncmp(get_env_var(name, g_start), name, ft_strlen(name))
-		&& get_env_var(name, g_start)[i] == 61)
+		&& (get_env_var(name, g_start)[i] == 61
+		|| (get_env_var(name, g_start)[i - 1] == 61 && cmd[1][i - 1] == 43)))
 	{
 		name = ft_export_exist(i, name, cmd, g_start);
 	}
