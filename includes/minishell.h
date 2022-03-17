@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/31 11:48:25 by alemarch          #+#    #+#             */
-/*   Updated: 2022/03/16 15:05:33 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/17 10:13:34 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,6 +121,7 @@ void	free_toks(t_tok **toks);
 int		toktype(char c);
 t_tok	**ft_tokalloc(t_tok **toks);
 int		hastojoin(int instr, t_tok **toks, int i);
+int		is_closing(char *val, char *prev);
 //	lexer.c
 t_tok	**ft_lex(char *input);
 

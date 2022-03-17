@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/18 15:56:55 by alemarch          #+#    #+#             */
-/*   Updated: 2022/03/15 14:50:26 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/17 10:16:41 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,4 +80,15 @@ int	hastojoin(int instr, t_tok **toks, int i)
 			&& toks[i - 1]->type != INREDIR
 			&& toks[i - 1]->type != OUTREDIR
 			&& toks[i]->type != PIPE && toks[i - 1]->type != PIPE));
+}
+
+int	is_closing(char *val, char *prev)
+{
+	int	i;
+
+	i = 0;
+	while (prev && prev[i])
+		if (prev[i++] == *val)
+			return (1);
+	return (0);
 }
