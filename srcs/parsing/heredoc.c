@@ -6,7 +6,7 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/02 16:09:32 by imarushe          #+#    #+#             */
-/*   Updated: 2022/03/15 10:05:09 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/17 10:19:05 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ int	ft_heredoc(char *delim, t_data *data)
 	process = fork();
 	if (process == 0)
 	{
-		signal(SIGINT, childprocess);
+		signal(SIGINT, heredoc_process);
 		fd = open("/tmp/tmpfile.txt", O_RDWR | O_CREAT | O_TRUNC, 0644);
 		if (fd == -1)
 			return (-1);

@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 10:19:48 by alemarch          #+#    #+#             */
-/*   Updated: 2022/03/15 14:35:53 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/17 10:18:50 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,15 @@ void	childprocess(int i)
 {
 	(void)i;
 	printf("\n");
+	free_ast(g_data->ast_init);
+	ft_free_env(g_data->env);
+	free(g_data);
+	exit(130);
+}
+
+void	heredoc_process(int i)
+{
+	(void)i;
 	free_ast(g_data->ast_init);
 	ft_free_env(g_data->env);
 	free(g_data);

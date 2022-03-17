@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/31 11:48:25 by alemarch          #+#    #+#             */
-/*   Updated: 2022/03/17 10:13:34 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/17 10:19:24 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,7 @@ void	free_data(t_data *data);
 //	signal.c
 void	ft_handler(int status);
 void	childprocess(int i);
+void	heredoc_process(int i);
 void	none(int i);
 
 //LEXING
