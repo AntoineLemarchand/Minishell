@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/03 14:13:50 by alemarch          #+#    #+#             */
-/*   Updated: 2022/03/16 15:35:01 by imarushe         ###   ########.fr       */
+/*   Updated: 2022/03/18 10:24:10 by imarushe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,31 +32,38 @@ void	ft_add_pwd(t_env *env, int old)
 	free(temp);
 }
 
+void	ft_add_del(char *path, t_env *env)
+{
+	if (!get_env_var("PWD", env))
+		ft_add_pwd(env, 0);
+	if (path && ft_strncmp("-\0", path, 2) && !get_env_var("OLDPWD", env))
+		ft_add_pwd(env, 1);
+}
+
 char	*gethome(char *path, t_env *env)
 {
-	if (!get_env_var("PWD=", env))
-		ft_add_pwd(env, 0);
-	if ((!path || !ft_strncmp("~\0", path, 2)) && !get_env_var("HOME=", env))
+	ft_add_del(path, env);
+	if ((!path || !ft_strncmp("~\0", path, 2)) && !get_env_var("HOME", env))
 	{
 		ft_putendl_fd("minishell: HOME not set", 2);
 		env->status = 1;
 		return (NULL);
 	}
-	else if ((!path || !ft_strncmp("~\0", path, 2)) && get_env_var("HOME=", env))
-		path = ft_strrchr(get_env_var("HOME=", env), '=') + 1;
+	else if ((!path || !ft_strncmp("~\0", path, 2)) && get_env_var("HOME", env))
+		path = ft_strrchr(get_env_var("HOME", env), '=') + 1;
 	else if (path && !ft_strncmp("~\0", path, 2))
 		path = NULL;
 	else if (path && !ft_strncmp("-\0", path, 2))
 	{
-		if (!get_env_var("OLDPWD=", env))
+		if (!get_env_var("OLDPWD", env))
 		{
 			ft_putendl_fd("minishell: OLDPWD not set", 2);
 			env->status = 1;
 			ft_add_pwd(env, 1);
 			return (NULL);
 		}
-		path = ft_strrchr(get_env_var("OLDPWD=", env), '=') + 1;
-		printf("%s\n", &get_env_var("OLDPWD=", env)[7]);
+		path = ft_strrchr(get_env_var("OLDPWD", env), '=') + 1;
+		printf("%s\n", &get_env_var("OLDPWD", env)[7]);
 	}
 	return (path);
 }

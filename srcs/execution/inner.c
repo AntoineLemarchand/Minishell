@@ -6,7 +6,7 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:09:43 by imarushe          #+#    #+#             */
-/*   Updated: 2022/03/17 15:24:51 by imarushe         ###   ########.fr       */
+/*   Updated: 2022/03/18 09:51:17 by imarushe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,8 @@ void	ft_inn_cd(char **cmd, t_env *env, char *oldpwd, char *pwd)
 		return ;
 	if (!chdir(path))
 	{
-		pwd = ft_strrchr(get_env_var("PWD=", env), '=') + 1;
-		oldpwd = ft_strrchr(get_env_var("OLDPWD=", env), '=') + 1;
+		pwd = ft_strrchr(get_env_var("PWD", env), '=') + 1;
+		oldpwd = ft_strrchr(get_env_var("OLDPWD", env), '=') + 1;
 		if (oldpwd && pwd)
 			ft_strlcpy(oldpwd, pwd, ft_strlen(pwd) + 1);
 		if (pwd)
