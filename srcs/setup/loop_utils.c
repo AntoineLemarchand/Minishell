@@ -6,7 +6,7 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 16:30:14 by imarushe          #+#    #+#             */
-/*   Updated: 2022/03/11 09:15:31 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/18 09:37:09 by imarushe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,8 +74,8 @@ void	ft_abs_path(char **cmd, t_env *g_start)
 	char	*path;
 	char	**path_split;
 
-	if (get_env_var("PATH=", g_start))
-		path = ft_strdup(&get_env_var("PATH=", g_start)[5]);
+	if (get_env_var("PATH", g_start))
+		path = ft_strdup(&get_env_var("PATH", g_start)[5]);
 	else
 		return ;
 	if (cmd && cmd[0][0] != '/' && ft_strncmp(cmd[0], "./", 2) != 0)
