@@ -6,7 +6,7 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:09:43 by imarushe          #+#    #+#             */
-/*   Updated: 2022/03/10 16:01:38 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/18 09:23:50 by imarushe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* ************************************************************************** */
@@ -27,12 +27,14 @@ char	*get_env_var(char *var, t_env *g_start)
 {
 	t_env	*temp;
 	size_t	size;
+//	size_t	i;
 
 	temp = g_start;
 	size = ft_strlen(var);
 	while (temp)
 	{
-		if (!ft_strncmp(var, temp->var, size))
+		if (!ft_strncmp(var, temp->var, size)
+			&& ((ft_strlen(temp->var) > size) && temp->var[size] == '='))
 			return (temp->var);
 		temp = temp->next;
 	}

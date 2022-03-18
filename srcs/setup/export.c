@@ -6,7 +6,7 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/10 14:52:55 by imarushe          #+#    #+#             */
-/*   Updated: 2022/03/17 15:20:35 by imarushe         ###   ########.fr       */
+/*   Updated: 2022/03/18 09:09:04 by imarushe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ bool	ft_check_name(char *name)
 	i = -1;
 	while (name[++i])
 	{
-		if (!ft_isalnum(name[i]) && !(name[i] == '_'))
+		if ((!ft_isalnum(name[i]) && !(name[i] == '_')) || ft_isdigit(name[0]))
 		{
 			ft_putendl_fd("export : not a valid identifier", 2);
 			free(name);
