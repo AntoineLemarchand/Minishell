@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/31 11:48:25 by alemarch          #+#    #+#             */
-/*   Updated: 2022/03/21 11:22:03 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/21 12:16:33 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,7 @@ void	free_data(t_data *data);
 //	signal.c
 void	ft_handler(int status);
 void	childprocess(int i);
+void	cmdprocess(int i);
 void	heredoc_process(int i);
 void	none(int i);
 

@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 15:20:03 by alemarch          #+#    #+#             */
-/*   Updated: 2022/03/16 15:18:46 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/21 12:20:20 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ int	fork_cmd(t_cmd	*cmd, int isnotlast, t_data	*data)
 	process = fork();
 	if (process == 0)
 	{
-		signal(SIGINT, childprocess);
+		signal(SIGINT, cmdprocess);
 		close(link[0]);
 		if (manage_io(link, cmd->redir, isnotlast, data) != 2
 			&& data->env->status != 130)
@@ -104,8 +104,8 @@ int	exec_cmdline(t_node *ast, t_env *env)
 	pid_t	process;
 	int		status;
 
-	signal(SIGINT, SIG_IGN);
 	process = fork();
+	signal(SIGINT, SIG_IGN);
 	if (process == -1)
 	{
 		ft_putendl_fd("minishell: unable to fork", 2);
@@ -113,6 +113,7 @@ int	exec_cmdline(t_node *ast, t_env *env)
 	}
 	else if (process == 0)
 	{
+		signal(SIGINT, childprocess);
 		env->status = exec_simplecmd(ast, ast, 1, env);
 		if (env->status == 130)
 			exit(env->status);

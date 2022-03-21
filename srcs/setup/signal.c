@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 10:19:48 by alemarch          #+#    #+#             */
-/*   Updated: 2022/03/17 10:18:50 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/21 12:19:28 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,15 @@ void	ft_handler(int status)
 void	childprocess(int i)
 {
 	(void)i;
+	free_data(g_data);
 	printf("\n");
-	free_ast(g_data->ast_init);
-	ft_free_env(g_data->env);
-	free(g_data);
+	exit(130);
+}
+
+void	cmdprocess(int i)
+{
+	(void)i;
+	free_data(g_data);
 	exit(130);
 }
 
