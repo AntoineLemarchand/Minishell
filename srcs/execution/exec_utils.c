@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/02 12:45:21 by alemarch          #+#    #+#             */
-/*   Updated: 2022/03/21 12:14:59 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/21 16:02:01 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,11 @@ static void	ft_run_cmd(char **cmd, char **env, t_env *envcpy)
 	{
 		signal(SIGINT, childprocess);
 		if (execve(*cmd, cmd, env) == -1)
-			ft_putendl_fd("minishell: execution failed", 2);
+		{
+			ft_putstr_fd("minishell: ", 2);
+			ft_putstr_fd(*cmd, 2);
+			ft_putendl_fd(": command not found", 2);
+		}
 		free_data(g_data);
 		free(env);
 		exit(127);
@@ -105,6 +109,7 @@ void	ft_runout_cmd(char **cmd, t_env *envcpy)
 
 void	ft_run(char	**cmd, t_env *envcpy)
 {
+	signal(SIGQUIT, cmdprocess);
 	if (cmd && cmd[0] == NULL)
 		return ;
 	if (cmd && ft_isinn_cmd(cmd[0]))
