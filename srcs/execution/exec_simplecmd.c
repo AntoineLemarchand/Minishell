@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 15:20:03 by alemarch          #+#    #+#             */
-/*   Updated: 2022/03/21 12:20:20 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/21 14:53:10 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ int	fork_cmd(t_cmd	*cmd, int isnotlast, t_data	*data)
 	if (process == 0)
 	{
 		signal(SIGINT, cmdprocess);
+		signal(SIGQUIT, cmdprocess);
 		close(link[0]);
 		if (manage_io(link, cmd->redir, isnotlast, data) != 2
 			&& data->env->status != 130)

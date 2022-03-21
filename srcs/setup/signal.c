@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 10:19:48 by alemarch          #+#    #+#             */
-/*   Updated: 2022/03/21 12:19:28 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/21 14:52:55 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,13 @@ void	cmdprocess(int i)
 {
 	(void)i;
 	free_data(g_data);
-	exit(130);
+	if (i == 2)
+		exit(130);
+	else
+	{
+		printf("Quit (core dumped)\n");
+		exit(131);
+	}
 }
 
 void	heredoc_process(int i)
