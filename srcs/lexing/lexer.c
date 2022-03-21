@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 10:23:31 by alemarch          #+#    #+#             */
-/*   Updated: 2022/03/17 10:16:35 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/21 11:48:42 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ t_tok	**ft_cleantok(t_tok **toks, int i, int size, t_tok **ret)
 				break ;
 		}
 		if ((toks[i]->type == DOUBLEQUOTE || toks[i]->type == SIMPLEQUOTE)
-			&& (!instr || is_closing(toks[i]->val, ret[size]->val)))
+			&& (!instr || is_closing(toks[i], ret[size]->val)))
 			instr = !instr;
 	}
 	return (ret);
