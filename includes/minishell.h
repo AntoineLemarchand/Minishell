@@ -155,7 +155,7 @@ int		ft_heredoc(char *delim, t_data *data);
 
 //EXECUTION
 // inner_utils.c
-void	ft_print_echo(char **cmd, int i);
+void	ft_print_echo(char **cmd);
 int		exec_singlebuiltin(t_cmd *cmd, t_env *env);
 char	*gethome(char *path, t_env *env);
 // inner.c

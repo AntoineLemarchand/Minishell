@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/03 14:13:50 by alemarch          #+#    #+#             */
-/*   Updated: 2022/03/18 10:24:10 by imarushe         ###   ########.fr       */
+/*   Updated: 2022/03/21 17:45:40 by imarushe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,8 +68,23 @@ char	*gethome(char *path, t_env *env)
 	return (path);
 }
 
-void	ft_print_echo(char **cmd, int i)
+void	ft_print_echo(char **cmd)
 {
+	int	i;
+	int	j;
+
+	i = 1;
+	j = 1;
+	while (cmd[i] && !ft_strncmp(cmd[i], "-n", 2))
+	{
+		while (cmd[i][j] && cmd[i][j] == 'n')
+			j++;
+		if (!ft_strncmp(cmd[i], "-n", 2) && j == (int)ft_strlen(cmd[i]))
+			i++;
+		else
+			break ;
+		j = 1;
+	}
 	while (cmd && cmd[i])
 	{
 		printf("%s", cmd[i++]);

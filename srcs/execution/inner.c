@@ -6,7 +6,7 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:09:43 by imarushe          #+#    #+#             */
-/*   Updated: 2022/03/18 09:51:17 by imarushe         ###   ########.fr       */
+/*   Updated: 2022/03/21 17:46:29 by imarushe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,23 +96,16 @@ void	ft_inn_exit(char **cmd, t_env *g_start)
 
 void	ft_inn_echo(char **cmd)
 {
-	int	i;
-
-	i = 2;
 	if (!cmd[1])
 		printf("\n");
 	else if (!ft_strncmp(cmd[0], "echo", 4) && cmd[1]
 		&& ft_strncmp(cmd[1], "-n", 2))
 	{
-		ft_print_echo(cmd, 1);
+		ft_print_echo(cmd);
 		printf("\n");
 	}
 	else if (!ft_strncmp(cmd[0], "echo", 4) && cmd[1] && cmd[2]
 		&& !ft_strncmp(cmd[1], "-n", 2))
-	{
-		while (!ft_strncmp(cmd[i], "-n", 2))
-			i++;
-		ft_print_echo(cmd, i);
-	}
+		ft_print_echo(cmd);
 	g_data->env->status = 0;
 }
