@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 16:30:18 by alemarch          #+#    #+#             */
-/*   Updated: 2022/03/21 16:12:45 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/23 12:57:22 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ int	check_toks(t_tok **toks)
 		}
 		else if (i && (toks[i - 1]->type == INREDIR
 				|| toks[i - 1]->type == OUTREDIR) && (toks[i]->type == OUTREDIR
-						|| toks[i]->type == INREDIR))
+				|| toks[i]->type == INREDIR))
 		{
 			free_toks(toks);
 			return (1);
