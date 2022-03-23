@@ -6,7 +6,7 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/02 16:09:32 by imarushe          #+#    #+#             */
-/*   Updated: 2022/03/21 15:34:01 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/23 15:59:13 by imarushe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,8 @@ static int	fill_heredoc(char *delim, int fd, t_data *data)
 				"delimited by end-of-file", 2);
 			end = 1;
 		}
-		else if (!ft_strncmp(temp, delim, ft_strlen(delim)))
+		else if (!ft_strncmp(temp, delim, ft_strlen(delim))
+			&& ft_strlen(temp) == ft_strlen(delim))
 			end = 1;
 		else
 			end = fill_helper(temp, data, fd);
