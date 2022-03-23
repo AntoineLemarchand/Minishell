@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 10:19:48 by alemarch          #+#    #+#             */
-/*   Updated: 2022/03/21 14:52:55 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/23 16:13:26 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,25 +26,25 @@ void	ft_handler(int status)
 		return ;
 }
 
-void	childprocess(int i)
+int	manage_errno(int err)
 {
-	(void)i;
-	free_data(g_data);
-	printf("\n");
-	exit(130);
+	if (err == 2)
+	{
+		ft_putendl_fd("", 2);
+		return (err + 128);
+	}
+	else if (err == 131)
+		ft_putendl_fd("Quit (core dumped)", 2);
+	return (err);
 }
 
 void	cmdprocess(int i)
 {
-	(void)i;
 	free_data(g_data);
 	if (i == 2)
 		exit(130);
 	else
-	{
-		printf("Quit (core dumped)\n");
 		exit(131);
-	}
 }
 
 void	heredoc_process(int i)

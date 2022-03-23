@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/02 12:45:21 by alemarch          #+#    #+#             */
-/*   Updated: 2022/03/21 16:02:55 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/23 16:11:06 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,11 +52,12 @@ static void	ft_run_cmd(char **cmd, char **env, t_env *envcpy)
 	{
 		free(env);
 		waitpid(pid, &envcpy->status, 0);
-		envcpy->status = WEXITSTATUS(envcpy->status);
+		envcpy->status = manage_errno(envcpy->status);
 	}
 	else if (cmd)
 	{
-		signal(SIGINT, childprocess);
+		signal(SIGINT, cmdprocess);
+		signal(SIGQUIT, cmdprocess);
 		if (execve(*cmd, cmd, env) == -1)
 		{
 			ft_putstr_fd("minishell: ", 2);
@@ -109,7 +110,6 @@ void	ft_runout_cmd(char **cmd, t_env *envcpy)
 
 void	ft_run(char	**cmd, t_env *envcpy)
 {
-	signal(SIGQUIT, cmdprocess);
 	if (cmd && cmd[0] == NULL)
 		return ;
 	if (cmd && ft_isinn_cmd(cmd[0]))
