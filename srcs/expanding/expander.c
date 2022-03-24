@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 16:42:56 by alemarch          #+#    #+#             */
-/*   Updated: 2022/03/24 13:03:19 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/24 15:12:39 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,23 @@
 
 int	shouldexpand(char *s, int i)
 {
-	int	j;
-	int	ret;
+	int		j;
+	char	ret;
 
-	j = i;
-	ret = 0;
-	while (j >= 0)
+	j = 0;
+	ret = '\0';
+	while (s[i] && s[j] && j <= i)
 	{
-		if (s[j] == '"')
-			ret = 0;
-		else if (s[j] == '\'')
-			ret = 1;
-		j--;
+		if (s[j] == '"' || s[j] == '\'')
+		{
+			if (!ret)
+				ret = s[j];
+			else if (ret == s[j])
+				ret = '\0';
+		}
+		j++;
 	}
-	return (ret);
+	return (ret != '\'');
 }
 
 char	*ft_expandval(char *s, char **env, int i)
@@ -40,7 +43,7 @@ char	*ft_expandval(char *s, char **env, int i)
 		return (NULL);
 	while (s[i])
 	{
-		if (shouldexpand(s, i) || s[i] != '$' || (s[i] == '$'
+		if (!shouldexpand(s, i) || s[i] != '$' || (s[i] == '$'
 				&& (!s[i + 1] || ((ft_isspace(s[i + 1])
 							|| !ft_isalnum(s[i + 1]))
 						&& s[i + 1] != '_' && s[i + 1] != '?'))))
