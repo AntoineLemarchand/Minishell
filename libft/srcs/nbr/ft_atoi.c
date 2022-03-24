@@ -6,15 +6,15 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/17 11:53:02 by alemarch          #+#    #+#             */
-/*   Updated: 2021/11/23 10:25:55 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/24 15:34:10 by imarushe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 int	ft_atoi(const char *nptr)
 {
-	int	i;
-	int	result;
-	int	sign;
+	int				i;
+	long long int	result;
+	int				sign;
 
 	i = 0;
 	result = 0;
@@ -29,5 +29,7 @@ int	ft_atoi(const char *nptr)
 	}
 	while (nptr[i] >= '0' && nptr[i] <= '9')
 		result = result * 10 + nptr[i++] - 48;
+	if (result > 2147483647)
+		return (-1);
 	return (result * sign);
 }

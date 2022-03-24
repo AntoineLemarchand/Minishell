@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/02 12:45:21 by alemarch          #+#    #+#             */
-/*   Updated: 2022/03/24 12:14:58 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/24 15:30:26 by imarushe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	ft_runinn_cmd(char **cmd, t_env *envcpy, char *temp)
 	else if (!ft_strncmp(cmd[0], "echo\0", 5))
 		ft_inn_echo(cmd);
 	else if (!ft_strncmp(cmd[0], "exit\0", 5))
-		ft_inn_exit(cmd, envcpy);
+		ft_inn_exit(cmd, envcpy, -1);
 	else if (!ft_strncmp(cmd[0], "export\0", 7))
 		ft_export(cmd, envcpy);
 	else if (!ft_strncmp(cmd[0], "unset\0", 6))

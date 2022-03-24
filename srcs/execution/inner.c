@@ -6,7 +6,7 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:09:43 by imarushe          #+#    #+#             */
-/*   Updated: 2022/03/24 13:02:35 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/24 15:30:03 by imarushe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,19 +65,17 @@ void	ft_inn_env(t_env *g_start)
 	}
 }
 
-void	ft_inn_exit(char **cmd, t_env *g_start)
+void	ft_inn_exit(char **cmd, t_env *g_start, int i)
 {
-	int	i;
-
-	i = -1;
 	if (!ft_strncmp(cmd[0], "exit", 4) && cmd[1])
 	{
 		while (cmd[1][++i])
 		{
-			if (!ft_isdigit(cmd[1][i]))
+			if (!ft_isdigit(cmd[1][i]) || ft_atoi(cmd[1]) < 0)
 			{
 				ft_putendl_fd("minishell: numeric argument required", 2);
-				g_start->exit = 2;
+				g_start->status = 2;
+				g_start->exit = g_start->status;
 				return ;
 			}
 		}

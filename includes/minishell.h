@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/31 11:48:25 by alemarch          #+#    #+#             */
-/*   Updated: 2022/03/24 12:30:52 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/24 15:33:43 by imarushe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,7 +162,7 @@ char	*gethome(char *path, t_env *env);
 char	*built_in_pwd(void);
 void	ft_inn_cd(char **cmd, t_env *g_start, char *oldpwd, char *pwd);
 void	ft_inn_env(t_env *g_start);
-void	ft_inn_exit(char **cmd, t_env *g_start);
+void	ft_inn_exit(char **cmd, t_env *g_start, int i);
 void	ft_inn_echo(char **cmd);
 //	ioctl.c
 int		manage_io(int *link, t_redir **redir, int isnotlast, t_data *data);
