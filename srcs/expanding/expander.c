@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 16:42:56 by alemarch          #+#    #+#             */
-/*   Updated: 2022/03/15 10:28:29 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/24 13:03:19 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,8 @@ char	*ft_expandval(char *s, char **env, int i)
 	while (s[i])
 	{
 		if (shouldexpand(s, i) || s[i] != '$' || (s[i] == '$'
-				&& (!s[i + 1] || (ft_isspace(s[i + 1]) && !ft_isalnum(s[i + 1])
+				&& (!s[i + 1] || ((ft_isspace(s[i + 1])
+							|| !ft_isalnum(s[i + 1]))
 						&& s[i + 1] != '_' && s[i + 1] != '?'))))
 		{
 			swp = ret;
