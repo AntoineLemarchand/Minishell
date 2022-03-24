@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/31 11:48:25 by alemarch          #+#    #+#             */
-/*   Updated: 2022/03/24 12:12:22 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/24 12:30:52 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ void	ft_export(char **cmd, t_env *g_start);
 void	ft_unset(char **cmd, t_env *g_start);
 char	**ft_to_array(t_env *g_start);
 void	ft_free_env(t_env *encpy);
-void	ft_change_status(char **cmd, t_env *g_start);
+int		is_newline(char *cmd);
 //	loop_utils.c
 void	ft_end(t_env *envcpy);
 void	ft_free_array(char **array);

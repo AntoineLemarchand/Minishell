@@ -6,7 +6,7 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:09:43 by imarushe          #+#    #+#             */
-/*   Updated: 2022/03/24 12:28:39 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/24 12:30:04 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,19 +94,6 @@ void	ft_inn_exit(char **cmd, t_env *g_start)
 	g_start->status = g_start->exit;
 }
 
-int	is_newline(char *cmd)
-{
-	int	i;
-
-	if (*cmd != '-')
-		return (1);
-	i = 0;
-	while (cmd[++i])
-		if (cmd[i] != 'n')
-			return (1);
-	return (0);
-}
-
 void	ft_inn_echo(char **cmd)
 {
 	if (!cmd[1])
@@ -120,7 +107,7 @@ void	ft_inn_echo(char **cmd)
 			g_data->env->status = 0;
 		}
 		if (!ft_strncmp(cmd[0], "echo", 4) && (!cmd[1]
-			|| is_newline(cmd[1])))
+				|| is_newline(cmd[1])))
 			write(1, "\n", 1);
 	}
 	g_data->env->status = 0;
