@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/31 11:48:25 by alemarch          #+#    #+#             */
-/*   Updated: 2022/03/23 16:11:55 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/24 12:12:22 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,7 +155,7 @@ int		ft_heredoc(char *delim, t_data *data);
 
 //EXECUTION
 // inner_utils.c
-void	ft_print_echo(char **cmd);
+int		ft_print_echo(char **cmd);
 int		exec_singlebuiltin(t_cmd *cmd, t_env *env);
 char	*gethome(char *path, t_env *env);
 // inner.c

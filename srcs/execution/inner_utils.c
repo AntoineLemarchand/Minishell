@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/03 14:13:50 by alemarch          #+#    #+#             */
-/*   Updated: 2022/03/24 11:23:24 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/24 12:12:32 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ char	*gethome(char *path, t_env *env)
 	return (path);
 }
 
-void	ft_print_echo(char **cmd)
+int	ft_print_echo(char **cmd)
 {
 	int	i;
 	int	j;
@@ -87,10 +87,13 @@ void	ft_print_echo(char **cmd)
 	}
 	while (cmd && cmd[i])
 	{
-		printf("%s", cmd[i++]);
+		if (write(1, cmd[i], ft_strlen(cmd[i])) != (int)ft_strlen(cmd[i]))
+			return (1);
+		i++;
 		if (cmd[i])
 			printf(" ");
 	}
+	return (0);
 }
 
 int	exec_singlebuiltin(t_cmd *cmd, t_env *env)

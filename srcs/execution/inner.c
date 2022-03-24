@@ -6,7 +6,7 @@
 /*   By: imarushe <imarushe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 14:09:43 by imarushe          #+#    #+#             */
-/*   Updated: 2022/03/24 10:48:55 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/24 12:15:38 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,14 +98,20 @@ void	ft_inn_echo(char **cmd)
 {
 	if (!cmd[1])
 		printf("\n");
-	else if (!ft_strncmp(cmd[0], "echo", 4) && cmd[1]
-		&& ft_strncmp(cmd[1], "-n", 2))
+	else
 	{
-		ft_print_echo(cmd);
-		printf("\n");
+		if (ft_print_echo(cmd))
+		{
+			ft_putendl_fd("minishell: echo: "
+				"write error: No space left on device", 2);
+			g_data->env->status = 0;
+		}
+		if (!ft_strncmp(cmd[0], "echo", 4) && cmd[1]
+			&& ft_strncmp(cmd[1], "-n", 2))
+			printf("\n");
+		else if (!ft_strncmp(cmd[0], "echo", 4) && cmd[1] && cmd[2]
+			&& !ft_strncmp(cmd[1], "-n", 2))
+			write(1, "\0", 1);
 	}
-	else if (!ft_strncmp(cmd[0], "echo", 4) && cmd[1] && cmd[2]
-		&& !ft_strncmp(cmd[1], "-n", 2))
-		ft_print_echo(cmd);
 	g_data->env->status = 0;
 }
