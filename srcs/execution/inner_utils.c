@@ -6,7 +6,7 @@
 /*   By: alemarch <alemarch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/03 14:13:50 by alemarch          #+#    #+#             */
-/*   Updated: 2022/03/24 12:12:32 by alemarch         ###   ########.fr       */
+/*   Updated: 2022/03/24 12:17:12 by alemarch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,8 @@ int	ft_print_echo(char **cmd)
 			return (1);
 		i++;
 		if (cmd[i])
-			printf(" ");
+			if (!write(1, " ", 1))
+				return (1);
 	}
 	return (0);
 }
