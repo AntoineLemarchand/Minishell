@@ -17,6 +17,19 @@ this shell can manage error code returns, pipes, redirections and environments v
 ## Usage
 ```
 make
-./minishell
-$ bash away !
+./minishell 
+MrdShll> echo "hello"  $USER
+hello antoine
+MrdShll> ls > test
+MrdShll> cat test
+includes
+libft
+Makefile
+minishell
+README.md
+srcs
+test
+MrdShll> rm test
+MrdShll> exit 123
+exit
 ```
