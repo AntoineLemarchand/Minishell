@@ -12,6 +12,7 @@ this shell can manage error code returns, pipes, redirections and environments v
 1. export
 1. unset
 1. exit
+1. echo
 
 ## Usage
 ```
