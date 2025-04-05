@@ -1,10 +1,6 @@
 # Minishell
 
-Minishell is a tiny shell written in c (of course)
-
-## Content
-
-this shell can manage error code returns, pipes, redirections and environments variables
+A minimal shell written in C, it can manage error codes, pipes, redirections and environment variables.
 
 ## builtins
 1. cd
